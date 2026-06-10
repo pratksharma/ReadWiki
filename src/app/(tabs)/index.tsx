@@ -1,3 +1,5 @@
+import Colors from "@/constants/Colors";
+import { getFeaturedArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -11,11 +13,15 @@ import {
     View,
 } from "react-native";
 import RemixIcon from "react-native-remix-icon";
-import { getFeaturedArticle } from "../../services/wikipedia";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Home = () => {
     const [featuredArticle, setFeaturedArticle] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        loadArticle();
+    }, []);
 
     const loadArticle = async () => {
         try {
@@ -28,16 +34,12 @@ const Home = () => {
         }
     };
 
-    useEffect(() => {
-        loadArticle();
-    }, []);
-
     if (loading) {
         return (
             <View style={styles.loaderContainer}>
-                <ActivityIndicator size="large" />
+                <ActivityIndicator size="large" color={Colors.primary} />
                 <Text style={styles.loadingText}>
-                    Loading featured article...
+                    Loading today's article...
                 </Text>
             </View>
         );
@@ -45,73 +47,129 @@ const Home = () => {
 
     const article = featuredArticle?.tfa;
 
+    const textColor = article?.thumbnail?.source
+        ? Colors.textInverse
+        : Colors.text;
+
+    const secondaryTextColor = article?.thumbnail?.source
+        ? "rgba(255,255,255,0.90)"
+        : Colors.textSecondary;
+
     return (
-        <ScrollView
-            style={styles.container}
-            contentContainerStyle={styles.content}
-            showsVerticalScrollIndicator={false}
-        >
+        <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" />
 
-            <Text style={styles.logo}>WikiAtlas</Text>
-            <Text style={styles.sectionTitle}>Today's Featured Article</Text>
-
-            <Pressable
-                style={({ pressed }) => [
-                    styles.card,
-                    pressed && styles.cardPressed,
-                ]}
-                onPress={() => {
-                    console.log(
-                        "Open article:",
-                        article?.normalizedtitle ?? article?.title,
-                    );
-
-                    // Navigate to article screen here
-                    router.push({
-                        pathname: "/article/[article]",
-                        params: {
-                            article: article?.title,
-                        },
-                    });
-                }}
+            <ScrollView
+                contentContainerStyle={styles.content}
+                showsVerticalScrollIndicator={false}
             >
-                {article?.thumbnail?.source && (
-                    <Image
-                        source={article?.thumbnail?.source}
-                        style={styles.thumbnail}
-                        contentFit="cover"
-                    />
-                )}
+                <View style={styles.header}>
+                    <Text style={styles.logo}>WikiAtlas</Text>
 
-                <View style={styles.cardContent}>
-                    {/* <Text style={styles.badge}>FEATURED ARTICLE</Text> */}
+                    <Pressable style={styles.randomButton}>
+                        <RemixIcon
+                            name="shuffle-line"
+                            size={16}
+                            color={Colors.text}
+                            fallback={null}
+                        />
+                        <Text style={styles.randomButtonText}>Random</Text>
+                    </Pressable>
+                </View>
 
-                    <Text style={styles.title}>
-                        {article?.normalizedtitle ?? article?.title}
-                    </Text>
-
-                    {article?.description && (
-                        <Text style={styles.description}>
-                            {article.description}
-                        </Text>
+                <Pressable
+                    style={styles.featuredCard}
+                    onPress={() =>
+                        router.push({
+                            pathname: "/article/[article]",
+                            params: {
+                                article: article?.title,
+                            },
+                        })
+                    }
+                >
+                    {article?.thumbnail?.source && (
+                        <>
+                            <Image
+                                source={article.thumbnail.source}
+                                style={styles.featuredCardImage}
+                                contentFit="cover"
+                            />
+                            <View style={styles.featuredCardOverlay} />
+                        </>
                     )}
 
-                    <Text style={styles.extract} numberOfLines={3}>
-                        {article?.extract}
-                    </Text>
+                    <View style={styles.featuredCardContent}>
+                        <View
+                            style={[
+                                styles.featuredCardBadge,
+                                !article?.thumbnail?.source && {
+                                    backgroundColor: Colors.backgroundSecondary,
+                                },
+                            ]}
+                        >
+                            <Text
+                                style={[
+                                    styles.featuredCardBadgeText,
+                                    {
+                                        color: textColor,
+                                    },
+                                ]}
+                            >
+                                FEATURED ARTICLE
+                            </Text>
+                        </View>
 
-                    <View style={styles.readMore}>
-                        <Text style={styles.readMoreText}>Tap to read</Text>
-                        <RemixIcon
-                            name="arrow-right-s-line"
-                            size={24}
-                            color="#111827"
-                        />
+                        <Text
+                            style={[
+                                styles.featuredCardTitle,
+                                {
+                                    color: textColor,
+                                },
+                            ]}
+                            numberOfLines={4}
+                        >
+                            {article?.normalizedtitle ?? article?.title}
+                        </Text>
+
+                        {!!article?.extract && (
+                            <Text
+                                style={[
+                                    styles.featuredCardDescription,
+                                    {
+                                        color: secondaryTextColor,
+                                    },
+                                ]}
+                            >
+                                {article.description}
+                            </Text>
+                        )}
+
+                        {/* <View
+                            style={[
+                                styles.featuredCardButton,
+                                !article?.thumbnail?.source && {
+                                    backgroundColor: Colors.primary,
+                                },
+                            ]}
+                        >
+                            <Text
+                                style={[
+                                    styles.featuredCardButtonText,
+                                    {
+                                        color: article?.thumbnail?.source
+                                            ? Colors.text
+                                            : Colors.textInverse,
+                                    },
+                                ]}
+                            >
+                                Read Article
+                            </Text>
+                        </View> */}
                     </View>
-                </View>
-            </Pressable>
-        </ScrollView>
+                </Pressable>
+            </ScrollView>
+        </SafeAreaView>
     );
 };
 
@@ -120,11 +178,10 @@ export default Home;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#F8F9FB",
+        backgroundColor: Colors.background,
     },
 
     content: {
-        paddingTop: 70,
         paddingHorizontal: 20,
         paddingBottom: 40,
     },
@@ -133,99 +190,108 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#F8F9FB",
+        backgroundColor: Colors.background,
     },
 
     loadingText: {
         marginTop: 12,
-        color: "#666",
+        color: Colors.textSecondary,
         fontSize: 14,
+        fontFamily: "DMSans-Medium",
+    },
+
+    header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingVertical: 16,
+    },
+
+    randomButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4,
+        backgroundColor: Colors.surface,
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 999,
+    },
+
+    randomButtonText: {
+        fontFamily: "DMSans-SemiBold",
+        fontSize: 14,
+        color: Colors.text,
     },
 
     logo: {
-        fontSize: 34,
-        fontWeight: "700",
-        color: "#111827",
-        marginBottom: 28,
+        fontSize: 32,
+        color: Colors.text,
+        fontFamily: "DMSans-Bold",
+        letterSpacing: -1,
     },
 
-    sectionTitle: {
-        fontSize: 14,
-        fontWeight: "600",
-        color: "#6B7280",
-        textTransform: "uppercase",
-        letterSpacing: 1,
-        marginBottom: 14,
-    },
-
-    card: {
-        backgroundColor: "#FFFFFF",
-        borderRadius: 20,
+    featuredCard: {
+        height: 400,
+        borderRadius: 16,
         overflow: "hidden",
-
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.08,
-        shadowRadius: 12,
-
-        elevation: 4,
+        backgroundColor: Colors.surface,
+        borderWidth: 1,
+        borderColor: Colors.border,
+        position: "relative",
     },
 
-    cardPressed: {
-        filter: "brightness(0.95)",
+    featuredCardImage: {
+        ...StyleSheet.absoluteFill,
     },
 
-    thumbnail: {
-        width: "100%",
-        height: 220,
-        backgroundColor: "#E5E7EB",
+    featuredCardOverlay: {
+        ...StyleSheet.absoluteFill,
+        backgroundColor: "rgba(0,0,0,0.55)",
     },
 
-    cardContent: {
-        padding: 18,
+    featuredCardContent: {
+        flex: 1,
+        justifyContent: "flex-end",
+        gap: 12,
+        padding: 24,
     },
 
-    badge: {
+    featuredCardBadge: {
+        alignSelf: "flex-start",
+        backgroundColor: "rgba(255,255,255,0.20)",
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 999,
+    },
+
+    featuredCardBadgeText: {
         fontSize: 12,
-        fontWeight: "700",
-        color: "#2563EB",
         letterSpacing: 1,
-        marginBottom: 10,
+        fontFamily: "DMSans-Bold",
     },
 
-    title: {
-        fontSize: 26,
-        fontWeight: "700",
-        color: "#111827",
+    featuredCardTitle: {
+        fontSize: 32,
         lineHeight: 32,
+        fontFamily: "DMSans-Bold",
     },
 
-    description: {
-        marginTop: 8,
-        fontSize: 15,
-        color: "#4B5563",
-        lineHeight: 22,
+    featuredCardDescription: {
+        fontSize: 18,
+        lineHeight: 28,
+        fontFamily: "DMSans-Medium",
     },
 
-    extract: {
-        marginTop: 12,
-        fontSize: 15,
-        color: "#6B7280",
-        lineHeight: 24,
+    featuredCardButton: {
+        alignSelf: "flex-start",
+        backgroundColor: "#FFFFFF",
+        paddingHorizontal: 28,
+        paddingVertical: 16,
+        borderRadius: 999,
     },
 
-    readMore: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginTop: 18,
-    },
-    readMoreText: {
-        textTransform: "uppercase",
-        fontSize: 12,
-        fontWeight: "600",
-        color: "#111827",
+    featuredCardButtonText: {
+        fontSize: 16,
+        fontFamily: "DMSans-Bold",
     },
 });

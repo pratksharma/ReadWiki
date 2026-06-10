@@ -37,7 +37,6 @@ export const getFullArticle = async (title: string) => {
             },
         );
         const data = await response.json();
-        console.log(data.parse.text["*"]);
 
         return await data.parse.text["*"];
     } catch (error) {
