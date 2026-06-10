@@ -1,6 +1,7 @@
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 import { getFullArticle } from "../../services/wikipedia";
 
@@ -90,11 +91,18 @@ const Article = () => {
         );
     }
 
+    let insets = useSafeAreaInsets();
+
     return (
         <WebView
             source={{ html }}
             originWhitelist={["*"]}
-            style={styles.webview}
+            style={[
+                styles.webview,
+                {
+                    marginTop: insets.top,
+                },
+            ]}
             startInLoadingState
         />
     );
