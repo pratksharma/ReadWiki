@@ -6,6 +6,7 @@ import { WebView } from "react-native-webview";
 import { getFullArticle } from "../../services/wikipedia";
 
 const Article = () => {
+    let insets = useSafeAreaInsets();
     const { article } = useLocalSearchParams();
 
     const [html, setHtml] = useState("");
@@ -90,8 +91,6 @@ const Article = () => {
             </View>
         );
     }
-
-    let insets = useSafeAreaInsets();
 
     return (
         <WebView

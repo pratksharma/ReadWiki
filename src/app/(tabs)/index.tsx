@@ -1,5 +1,5 @@
 import Colors from "@/constants/Colors";
-import { getFeaturedArticle } from "@/services/wikipedia";
+import { getFeaturedArticle, getRandomArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -20,10 +20,10 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadArticle();
+        loadFeaturedArticle();
     }, []);
 
-    const loadArticle = async () => {
+    const loadFeaturedArticle = async () => {
         try {
             const data = await getFeaturedArticle();
             setFeaturedArticle(data);
@@ -66,7 +66,26 @@ const Home = () => {
                 <View style={styles.header}>
                     <Text style={styles.logo}>WikiAtlas</Text>
 
-                    <Pressable style={styles.randomButton}>
+                    <Pressable
+                        style={({ pressed }) => [
+                            styles.randomButton,
+                            pressed && styles.randomButtonPressed,
+                        ]}
+                        onPress={async () => {
+                            try {
+                                const randomArticle = await getRandomArticle();
+
+                                router.push({
+                                    pathname: "/article/[article]",
+                                    params: {
+                                        article: randomArticle,
+                                    },
+                                });
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        }}
+                    >
                         <RemixIcon
                             name="shuffle-line"
                             size={16}
@@ -215,6 +234,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 999,
+    },
+
+    randomButtonPressed: {
+        backgroundColor: Colors.surfaceHover,
+        transform: "scale(0.95)",
     },
 
     randomButtonText: {

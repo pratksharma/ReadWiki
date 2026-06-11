@@ -70,3 +70,26 @@ export const searchArticles = async (query: string) => {
         return [];
     }
 };
+
+export const getRandomArticle = async () => {
+    try {
+        const response = await fetch(
+            `https://en.wikipedia.org/api/rest_v1/page/random/summary`,
+            {
+                headers: {
+                    "User-Agent": "WikiAtlas/1.0",
+                    "Api-User-Agent": "WikiAtlas/1.0",
+                },
+            },
+        );
+        if (!response.ok) {
+            throw new Error("Failed to fetch random article");
+        }
+        const article = await response.json();
+
+        return article.title;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+};
