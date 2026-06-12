@@ -1,7 +1,16 @@
+import { getFeaturedDataCache, setFeaturedDataCache } from "./cache";
+
 const BASE_URL = "https://api.wikimedia.org";
 
 export const getFeaturedArticle = async () => {
     try {
+        const cachedData = getFeaturedDataCache();
+
+        if (cachedData) {
+            console.log("Using cached featured data");
+            return cachedData;
+        }
+
         const today = new Date();
 
         const year = today.getFullYear();
@@ -17,7 +26,15 @@ export const getFeaturedArticle = async () => {
             },
         });
 
-        return response.json();
+        if (!response.ok) {
+            throw new Error("Failed to fetch featured content");
+        }
+
+        const data = await response.json();
+
+        setFeaturedDataCache(data);
+
+        return data;
     } catch (error) {
         console.log(error);
     }
@@ -36,9 +53,10 @@ export const getFullArticle = async (title: string) => {
                 },
             },
         );
+
         const data = await response.json();
 
-        return await data.parse.text["*"];
+        return data.parse.text["*"];
     } catch (error) {
         console.log(error);
     }
@@ -53,7 +71,7 @@ export const searchArticles = async (query: string) => {
         const encodedQuery = encodeURIComponent(query);
 
         const response = await fetch(
-            `https://en.wikipedia.org/w/api.php?action=query&generator=prefixsearch&description&prop=pageprops%7Cpageimages%7Cdescription&piprop=thumbnail&pithumbsize=128&gpslimit=6&format=json&formatversion=2&maxage=900&smaxage=900&gpssearch=${encodeURIComponent(encodedQuery)}`,
+            `https://en.wikipedia.org/w/api.php?action=query&generator=prefixsearch&description&prop=pageprops%7Cpageimages%7Cdescription&piprop=thumbnail&pithumbsize=128&gpslimit=6&format=json&formatversion=2&maxage=900&smaxage=900&gpssearch=${encodedQuery}`,
             {
                 headers: {
                     "User-Agent": "WikiAtlas/1.0",
@@ -64,7 +82,7 @@ export const searchArticles = async (query: string) => {
 
         const data = await response.json();
 
-        return data.query.pages ?? [];
+        return data.query?.pages ?? [];
     } catch (error) {
         console.log(error);
         return [];
@@ -82,9 +100,11 @@ export const getRandomArticle = async () => {
                 },
             },
         );
+
         if (!response.ok) {
             throw new Error("Failed to fetch random article");
         }
+
         const article = await response.json();
 
         return article.title;

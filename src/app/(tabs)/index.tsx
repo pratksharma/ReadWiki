@@ -1,6 +1,7 @@
 import ArticleCard from "@/components/ArticleCard";
 import Colors from "@/constants/Colors";
-import { getFeaturedArticle, getRandomArticle } from "@/services/wikipedia";
+import { getFeaturedDataCache } from "@/services/cache";
+import { getRandomArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -14,9 +15,11 @@ import {
     View,
 } from "react-native";
 import RemixIcon from "react-native-remix-icon";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Home = () => {
+    const inset = useSafeAreaInsets();
+
     const [featuredArticle, setFeaturedArticle] = useState<any>(null);
     const [trendingArticles, setTrendingArticles] = useState<any>([]);
     const [onThisDayArticles, setOnThisDayArticles] = useState<any[]>([]);
@@ -28,12 +31,11 @@ const Home = () => {
 
     const loadData = async () => {
         try {
-            const data = await getFeaturedArticle();
+            const data = await getFeaturedDataCache();
 
             setFeaturedArticle(data.tfa);
-            setTrendingArticles(data.mostread?.articles || []);
-
-            setOnThisDayArticles(data.onthisday || []);
+            setTrendingArticles(data.mostread?.articles.slice(0, 3) || []);
+            setOnThisDayArticles(data.onthisday.slice(0, 3) || []);
         } catch (error) {
             console.error(error);
         } finally {
@@ -74,7 +76,14 @@ const Home = () => {
     ];
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View
+            style={[
+                styles.container,
+                {
+                    paddingTop: inset.top,
+                },
+            ]}
+        >
             <StatusBar barStyle="dark-content" />
 
             <SectionList
@@ -245,7 +254,7 @@ const Home = () => {
                     );
                 }}
             />
-        </SafeAreaView>
+        </View>
     );
 };
 
@@ -353,7 +362,7 @@ const styles = StyleSheet.create({
 
     featuredCardTitle: {
         fontSize: 32,
-        lineHeight: 36,
+        lineHeight: 32,
         fontFamily: "DMSans-Bold",
     },
 
