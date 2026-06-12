@@ -1,7 +1,6 @@
 import ArticleCard from "@/components/ArticleCard";
 import Colors from "@/constants/Colors";
-import { getFeaturedDataCache } from "@/services/cache";
-import { getRandomArticle } from "@/services/wikipedia";
+import { getFeaturedArticle, getRandomArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -31,7 +30,7 @@ const Home = () => {
 
     const loadData = async () => {
         try {
-            const data = await getFeaturedDataCache();
+            const data = await getFeaturedArticle();
 
             setFeaturedArticle(data.tfa);
             setTrendingArticles(data.mostread?.articles.slice(0, 3) || []);
@@ -66,11 +65,13 @@ const Home = () => {
         {
             title: "Trending",
             type: "trending",
+            slug: "trending",
             data: trendingArticles,
         },
         {
             title: "On This Day",
             type: "otd",
+            slug: "on-this-day",
             data: onThisDayArticles,
         },
     ];
@@ -253,6 +254,25 @@ const Home = () => {
                         />
                     );
                 }}
+                renderSectionFooter={({ section }) => (
+                    <Pressable
+                        onPress={() => router.navigate(section.slug as any)}
+                        style={({ pressed }) => [
+                            styles.sectionButton,
+                            pressed && styles.sectionButtonPressed,
+                        ]}
+                    >
+                        <Text style={styles.sectionButtonText}>
+                            More Articles
+                        </Text>
+                        <RemixIcon
+                            name="arrow-right-fill"
+                            color={Colors.textInverse}
+                            size={20}
+                            fallback={null}
+                        />
+                    </Pressable>
+                )}
             />
         </View>
     );
@@ -292,6 +312,13 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
     },
 
+    logo: {
+        fontSize: 32,
+        color: Colors.text,
+        fontFamily: "DMSans-Bold",
+        letterSpacing: -1,
+    },
+
     randomButton: {
         flexDirection: "row",
         alignItems: "center",
@@ -311,13 +338,6 @@ const styles = StyleSheet.create({
         fontFamily: "DMSans-SemiBold",
         fontSize: 14,
         color: Colors.text,
-    },
-
-    logo: {
-        fontSize: 32,
-        color: Colors.text,
-        fontFamily: "DMSans-Bold",
-        letterSpacing: -1,
     },
 
     featuredCard: {
@@ -380,37 +400,24 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
 
-    articleCard: {
+    sectionButton: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 12,
-        backgroundColor: Colors.surface,
-        borderWidth: 1,
-        borderColor: Colors.border,
-        borderRadius: 12,
-        padding: 16,
-        marginBottom: 10,
+        justifyContent: "center",
+        gap: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 10,
+        backgroundColor: Colors.secondary,
+    },
+    sectionButtonPressed: {
+        opacity: 0.9,
     },
 
-    articleRank: {
-        width: 54,
-        fontSize: 22,
-        color: Colors.primary,
-        fontFamily: "DMSans-Bold",
-    },
-
-    articleTitle: {
-        flex: 1,
+    sectionButtonText: {
         fontSize: 16,
-        color: Colors.text,
-        fontFamily: "DMSans-SemiBold",
-    },
-
-    articleMeta: {
-        marginTop: 4,
-        fontSize: 13,
-        color: Colors.textSecondary,
         fontFamily: "DMSans-Medium",
+        color: Colors.textInverse,
     },
 
     featuredCardButton: {
