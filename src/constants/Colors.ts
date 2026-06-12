@@ -19,7 +19,7 @@ export const Colors = {
     textInverse: "#FFFFFF",
 
     // Borders
-    border: "#E5E5E5",
+    border: "#D4D4D4",
     borderStrong: "#D4D4D4",
 
     // Status

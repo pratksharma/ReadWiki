@@ -1,3 +1,4 @@
+import ArticleCard from "@/components/ArticleCard";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle, getRandomArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
@@ -6,7 +7,7 @@ import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
     Pressable,
-    ScrollView,
+    SectionList,
     StatusBar,
     StyleSheet,
     Text,
@@ -17,16 +18,22 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const Home = () => {
     const [featuredArticle, setFeaturedArticle] = useState<any>(null);
+    const [trendingArticles, setTrendingArticles] = useState<any>([]);
+    const [onThisDayArticles, setOnThisDayArticles] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadFeaturedArticle();
+        loadData();
     }, []);
 
-    const loadFeaturedArticle = async () => {
+    const loadData = async () => {
         try {
             const data = await getFeaturedArticle();
-            setFeaturedArticle(data);
+
+            setFeaturedArticle(data.tfa);
+            setTrendingArticles(data.mostread?.articles || []);
+
+            setOnThisDayArticles(data.onthisday || []);
         } catch (error) {
             console.error(error);
         } finally {
@@ -45,149 +52,199 @@ const Home = () => {
         );
     }
 
-    const article = featuredArticle?.tfa;
-
-    const textColor = article?.thumbnail?.source
+    const textColor = featuredArticle?.thumbnail?.source
         ? Colors.textInverse
         : Colors.text;
 
-    const secondaryTextColor = article?.thumbnail?.source
-        ? "rgba(255,255,255,0.90)"
+    const secondaryTextColor = featuredArticle?.thumbnail?.source
+        ? "rgba(255,255,255,0.9)"
         : Colors.textSecondary;
+
+    const sections = [
+        {
+            title: "Trending",
+            type: "trending",
+            data: trendingArticles,
+        },
+        {
+            title: "On This Day",
+            type: "otd",
+            data: onThisDayArticles,
+        },
+    ];
 
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" />
 
-            <ScrollView
-                contentContainerStyle={styles.content}
+            <SectionList
+                sections={sections}
+                keyExtractor={(item, index) =>
+                    typeof item === "string"
+                        ? `${item}-${index}`
+                        : `${item.title}-${index}`
+                }
                 showsVerticalScrollIndicator={false}
-            >
-                <View style={styles.header}>
-                    <Text style={styles.logo}>WikiAtlas</Text>
+                contentContainerStyle={styles.content}
+                ListHeaderComponent={
+                    <>
+                        <View style={styles.header}>
+                            <Text style={styles.logo}>WikiAtlas</Text>
 
-                    <Pressable
-                        style={({ pressed }) => [
-                            styles.randomButton,
-                            pressed && styles.randomButtonPressed,
-                        ]}
-                        onPress={async () => {
-                            try {
-                                const randomArticle = await getRandomArticle();
+                            <Pressable
+                                style={({ pressed }) => [
+                                    styles.randomButton,
+                                    pressed && styles.randomButtonPressed,
+                                ]}
+                                onPress={async () => {
+                                    try {
+                                        const randomArticle =
+                                            await getRandomArticle();
 
+                                        router.push({
+                                            pathname: "/article/[article]",
+                                            params: {
+                                                article: randomArticle,
+                                            },
+                                        });
+                                    } catch (error) {
+                                        console.log(error);
+                                    }
+                                }}
+                            >
+                                <RemixIcon
+                                    name="shuffle-line"
+                                    size={16}
+                                    color={Colors.text}
+                                    fallback={null}
+                                />
+                                <Text style={styles.randomButtonText}>
+                                    Random
+                                </Text>
+                            </Pressable>
+                        </View>
+
+                        <Pressable
+                            style={styles.featuredCard}
+                            onPress={() =>
                                 router.push({
                                     pathname: "/article/[article]",
                                     params: {
-                                        article: randomArticle,
+                                        article: featuredArticle?.title,
                                     },
-                                });
-                            } catch (error) {
-                                console.log(error);
+                                })
                             }
-                        }}
-                    >
-                        <RemixIcon
-                            name="shuffle-line"
-                            size={16}
-                            color={Colors.text}
-                            fallback={null}
-                        />
-                        <Text style={styles.randomButtonText}>Random</Text>
-                    </Pressable>
-                </View>
+                        >
+                            {featuredArticle?.thumbnail?.source && (
+                                <>
+                                    <Image
+                                        source={
+                                            featuredArticle.thumbnail.source
+                                        }
+                                        style={styles.featuredCardImage}
+                                        contentFit="cover"
+                                    />
+                                    <View style={styles.featuredCardOverlay} />
+                                </>
+                            )}
 
-                <Pressable
-                    style={styles.featuredCard}
-                    onPress={() =>
-                        router.push({
-                            pathname: "/article/[article]",
-                            params: {
-                                article: article?.title,
-                            },
-                        })
-                    }
-                >
-                    {article?.thumbnail?.source && (
-                        <>
-                            <Image
-                                source={article.thumbnail.source}
-                                style={styles.featuredCardImage}
-                                contentFit="cover"
+                            <View style={styles.featuredCardContent}>
+                                <View
+                                    style={[
+                                        styles.featuredCardBadge,
+                                        !featuredArticle?.thumbnail?.source && {
+                                            backgroundColor:
+                                                Colors.backgroundSecondary,
+                                        },
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.featuredCardBadgeText,
+                                            {
+                                                color: textColor,
+                                            },
+                                        ]}
+                                    >
+                                        FEATURED ARTICLE
+                                    </Text>
+                                </View>
+
+                                <Text
+                                    style={[
+                                        styles.featuredCardTitle,
+                                        {
+                                            color: textColor,
+                                        },
+                                    ]}
+                                    numberOfLines={4}
+                                >
+                                    {featuredArticle?.normalizedtitle ??
+                                        featuredArticle?.title}
+                                </Text>
+
+                                {!!featuredArticle?.extract && (
+                                    <Text
+                                        style={[
+                                            styles.featuredCardDescription,
+                                            {
+                                                color: secondaryTextColor,
+                                            },
+                                        ]}
+                                    >
+                                        {featuredArticle.description}
+                                    </Text>
+                                )}
+                            </View>
+                        </Pressable>
+                    </>
+                }
+                renderSectionHeader={({ section }) => (
+                    <Text style={styles.sectionTitle}>{section.title}</Text>
+                )}
+                renderItem={({ item, section, index }) => {
+                    if (section.type === "trending") {
+                        return (
+                            <ArticleCard
+                                rank={index + 1}
+                                title={item.titles.normalized}
+                                subtitle={`${item.views.toLocaleString()} views`}
+                                image={item.thumbnail?.source}
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/article/[article]",
+                                        params: {
+                                            article: item.titles.normalized,
+                                        },
+                                    })
+                                }
                             />
-                            <View style={styles.featuredCardOverlay} />
-                        </>
-                    )}
+                        );
+                    }
 
-                    <View style={styles.featuredCardContent}>
-                        <View
-                            style={[
-                                styles.featuredCardBadge,
-                                !article?.thumbnail?.source && {
-                                    backgroundColor: Colors.backgroundSecondary,
-                                },
-                            ]}
-                        >
-                            <Text
-                                style={[
-                                    styles.featuredCardBadgeText,
-                                    {
-                                        color: textColor,
+                    const article = item.pages?.[0];
+
+                    if (!article) {
+                        return null;
+                    }
+
+                    return (
+                        <ArticleCard
+                            title={article.normalizedtitle}
+                            subtitle={item.text}
+                            image={article.thumbnail?.source}
+                            onPress={() =>
+                                router.push({
+                                    pathname: "/article/[article]",
+                                    params: {
+                                        article: article.normalizedtitle,
                                     },
-                                ]}
-                            >
-                                FEATURED ARTICLE
-                            </Text>
-                        </View>
-
-                        <Text
-                            style={[
-                                styles.featuredCardTitle,
-                                {
-                                    color: textColor,
-                                },
-                            ]}
-                            numberOfLines={4}
-                        >
-                            {article?.normalizedtitle ?? article?.title}
-                        </Text>
-
-                        {!!article?.extract && (
-                            <Text
-                                style={[
-                                    styles.featuredCardDescription,
-                                    {
-                                        color: secondaryTextColor,
-                                    },
-                                ]}
-                            >
-                                {article.description}
-                            </Text>
-                        )}
-
-                        {/* <View
-                            style={[
-                                styles.featuredCardButton,
-                                !article?.thumbnail?.source && {
-                                    backgroundColor: Colors.primary,
-                                },
-                            ]}
-                        >
-                            <Text
-                                style={[
-                                    styles.featuredCardButtonText,
-                                    {
-                                        color: article?.thumbnail?.source
-                                            ? Colors.text
-                                            : Colors.textInverse,
-                                    },
-                                ]}
-                            >
-                                Read Article
-                            </Text>
-                        </View> */}
-                    </View>
-                </Pressable>
-            </ScrollView>
+                                })
+                            }
+                        />
+                    );
+                }}
+            />
         </SafeAreaView>
     );
 };
@@ -201,8 +258,8 @@ const styles = StyleSheet.create({
     },
 
     content: {
-        paddingHorizontal: 20,
-        paddingBottom: 40,
+        paddingHorizontal: 16,
+        paddingBottom: 16,
     },
 
     loaderContainer: {
@@ -238,7 +295,7 @@ const styles = StyleSheet.create({
 
     randomButtonPressed: {
         backgroundColor: Colors.surfaceHover,
-        transform: "scale(0.95)",
+        transform: [{ scale: 0.95 }],
     },
 
     randomButtonText: {
@@ -282,7 +339,7 @@ const styles = StyleSheet.create({
 
     featuredCardBadge: {
         alignSelf: "flex-start",
-        backgroundColor: "rgba(255,255,255,0.20)",
+        backgroundColor: "rgba(255,255,255,0.2)",
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 999,
@@ -296,13 +353,54 @@ const styles = StyleSheet.create({
 
     featuredCardTitle: {
         fontSize: 32,
-        lineHeight: 32,
+        lineHeight: 36,
         fontFamily: "DMSans-Bold",
     },
 
     featuredCardDescription: {
         fontSize: 18,
         lineHeight: 28,
+        fontFamily: "DMSans-Medium",
+    },
+
+    sectionTitle: {
+        fontSize: 24,
+        color: Colors.text,
+        fontFamily: "DMSans-Bold",
+        marginTop: 24,
+        marginBottom: 12,
+    },
+
+    articleCard: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+        backgroundColor: Colors.surface,
+        borderWidth: 1,
+        borderColor: Colors.border,
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 10,
+    },
+
+    articleRank: {
+        width: 54,
+        fontSize: 22,
+        color: Colors.primary,
+        fontFamily: "DMSans-Bold",
+    },
+
+    articleTitle: {
+        flex: 1,
+        fontSize: 16,
+        color: Colors.text,
+        fontFamily: "DMSans-SemiBold",
+    },
+
+    articleMeta: {
+        marginTop: 4,
+        fontSize: 13,
+        color: Colors.textSecondary,
         fontFamily: "DMSans-Medium",
     },
 
