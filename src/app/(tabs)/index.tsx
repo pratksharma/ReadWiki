@@ -218,7 +218,18 @@ const Home = () => {
                                     Image of the Day
                                 </Text>
 
-                                <Pressable style={styles.imageCard}>
+                                <Pressable
+                                    style={styles.imageCard}
+                                    onPress={() => {
+                                        router.navigate({
+                                            pathname: "/image/[image]",
+                                            params: {
+                                                image: imageOfTheDay.image
+                                                    .source,
+                                            },
+                                        });
+                                    }}
+                                >
                                     <Image
                                         source={imageOfTheDay.thumbnail?.source}
                                         style={styles.imageCardImage}
