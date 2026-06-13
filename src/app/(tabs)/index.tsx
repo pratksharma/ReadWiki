@@ -87,6 +87,7 @@ const Home = () => {
                     <PrimaryButton
                         text="Random"
                         iconName="shuffle-line"
+                        iconPosition="left"
                         onPress={async () => {
                             try {
                                 const randomArticle = await getRandomArticle();
@@ -418,7 +419,7 @@ const styles = StyleSheet.create({
     featuredCardTitle: {
         fontSize: 32,
         lineHeight: 32,
-        fontFamily: "DMSans-Bold",
+        fontFamily: "BricolageGrotesque-SemiBold",
     },
 
     featuredCardDescription: {
@@ -465,10 +466,10 @@ const styles = StyleSheet.create({
     },
 
     imageCardTitle: {
-        fontSize: 20,
+        fontSize: 24,
         lineHeight: 26,
         color: Colors.text,
-        fontFamily: "DMSans-Bold",
+        fontFamily: "BricolageGrotesque-SemiBold",
     },
 
     imageCardDescription: {
@@ -479,12 +480,12 @@ const styles = StyleSheet.create({
 
     sectionTitle: {
         marginHorizontal: 16,
-        fontSize: 24,
+        fontSize: 32,
         letterSpacing: -0.5,
         color: Colors.text,
-        fontFamily: "DMSans-Bold",
+        fontFamily: "BricolageGrotesque-SemiBold",
         marginTop: 32,
-        marginBottom: 12,
+        marginBottom: 8,
     },
 
     sectionButton: {

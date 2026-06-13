@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     logo: {
         fontSize: 32,
         color: Colors.textInverse,
-        fontFamily: "DMSans-Bold",
+        fontFamily: "BricolageGrotesque-SemiBold",
         letterSpacing: -1,
     },
 });
