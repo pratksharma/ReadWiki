@@ -21,6 +21,7 @@ const Home = () => {
 
     const [featuredArticle, setFeaturedArticle] = useState<any>(null);
     const [trendingArticles, setTrendingArticles] = useState<any>([]);
+    const [imageOfTheDay, setImageOfTheDay] = useState<any>([]);
     const [onThisDayArticles, setOnThisDayArticles] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -34,6 +35,7 @@ const Home = () => {
 
             setFeaturedArticle(data.tfa);
             setTrendingArticles(data.mostread?.articles.slice(0, 3) || []);
+            setImageOfTheDay(data.image);
             setOnThisDayArticles(data.onthisday.slice(0, 3) || []);
         } catch (error) {
             console.error(error);
@@ -190,7 +192,7 @@ const Home = () => {
                                     numberOfLines={4}
                                 >
                                     {featuredArticle?.normalizedtitle ??
-                                        featuredArticle?.title}
+                                        featuredArticle?.titles.normalized}
                                 </Text>
 
                                 {!!featuredArticle?.extract && (
@@ -201,12 +203,46 @@ const Home = () => {
                                                 color: secondaryTextColor,
                                             },
                                         ]}
+                                        numberOfLines={2}
                                     >
-                                        {featuredArticle.description}
+                                        {featuredArticle.description == ""
+                                            ? featuredArticle.extract
+                                            : featuredArticle.description}
                                     </Text>
                                 )}
                             </View>
                         </Pressable>
+                        {imageOfTheDay && (
+                            <>
+                                <Text style={styles.sectionTitle}>
+                                    Image of the Day
+                                </Text>
+
+                                <Pressable style={styles.imageCard}>
+                                    <Image
+                                        source={imageOfTheDay.thumbnail?.source}
+                                        style={styles.imageCardImage}
+                                        contentFit="cover"
+                                    />
+
+                                    <View style={styles.imageCardContent}>
+                                        <Text style={styles.imageCardTitle}>
+                                            Author: {imageOfTheDay.artist.text}
+                                        </Text>
+
+                                        {!!imageOfTheDay.description?.text && (
+                                            <Text
+                                                style={
+                                                    styles.imageCardDescription
+                                                }
+                                            >
+                                                {imageOfTheDay.description.text}
+                                            </Text>
+                                        )}
+                                    </View>
+                                </Pressable>
+                            </>
+                        )}
                     </>
                 }
                 renderSectionHeader={({ section }) => (
@@ -266,7 +302,7 @@ const Home = () => {
                             More Articles
                         </Text>
                         <RemixIcon
-                            name="arrow-right-fill"
+                            name="arrow-right-long-fill"
                             color={Colors.textInverse}
                             size={20}
                             fallback={null}
@@ -392,6 +428,38 @@ const styles = StyleSheet.create({
         fontFamily: "DMSans-Medium",
     },
 
+    imageCard: {
+        marginBottom: 8,
+        borderRadius: 16,
+        overflow: "hidden",
+        backgroundColor: Colors.surface,
+        borderWidth: 1,
+        borderColor: Colors.border,
+    },
+
+    imageCardImage: {
+        width: "100%",
+        height: 240,
+    },
+
+    imageCardContent: {
+        padding: 16,
+        gap: 8,
+    },
+
+    imageCardTitle: {
+        fontSize: 20,
+        lineHeight: 26,
+        color: Colors.text,
+        fontFamily: "DMSans-Bold",
+    },
+
+    imageCardDescription: {
+        fontSize: 16,
+        color: Colors.textSecondary,
+        fontFamily: "DMSans-Medium",
+    },
+
     sectionTitle: {
         fontSize: 24,
         color: Colors.text,
@@ -409,6 +477,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         borderRadius: 10,
         backgroundColor: Colors.secondary,
+        alignSelf: "center",
     },
     sectionButtonPressed: {
         opacity: 0.9,
