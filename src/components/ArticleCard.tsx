@@ -42,6 +42,7 @@ export default function ArticleCard({
 
 const styles = StyleSheet.create({
     card: {
+        marginHorizontal: 16,
         position: "relative",
         flexDirection: "row",
         alignItems: "center",

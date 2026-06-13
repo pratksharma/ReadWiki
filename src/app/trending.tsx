@@ -100,10 +100,10 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.background,
     },
     listContent: {
-        paddingHorizontal: 16,
         paddingBottom: 24,
     },
     header: {
+        paddingHorizontal: 16,
         paddingTop: 16,
         paddingBottom: 20,
     },

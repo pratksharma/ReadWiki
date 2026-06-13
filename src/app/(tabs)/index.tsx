@@ -1,8 +1,10 @@
 import ArticleCard from "@/components/ArticleCard";
 import Header from "@/components/Header";
+import PrimaryButton from "@/components/PrimaryButton";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle, getRandomArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -82,11 +84,9 @@ const Home = () => {
             <Header
                 title={"WikiAtlas"}
                 button={
-                    <Pressable
-                        style={({ pressed }) => [
-                            styles.randomButton,
-                            pressed && styles.randomButtonPressed,
-                        ]}
+                    <PrimaryButton
+                        text="Random"
+                        iconName="shuffle-line"
                         onPress={async () => {
                             try {
                                 const randomArticle = await getRandomArticle();
@@ -101,15 +101,7 @@ const Home = () => {
                                 console.log(error);
                             }
                         }}
-                    >
-                        <RemixIcon
-                            name="shuffle-line"
-                            size={16}
-                            color={Colors.text}
-                            fallback={null}
-                        />
-                        <Text style={styles.randomButtonText}>Random</Text>
-                    </Pressable>
+                    />
                 }
             />
 
@@ -124,17 +116,7 @@ const Home = () => {
                 contentContainerStyle={styles.content}
                 ListHeaderComponent={
                     <>
-                        <Pressable
-                            style={styles.featuredCard}
-                            onPress={() =>
-                                router.push({
-                                    pathname: "/article/[article]",
-                                    params: {
-                                        article: featuredArticle?.title,
-                                    },
-                                })
-                            }
-                        >
+                        <View style={styles.featuredCard}>
                             {featuredArticle?.thumbnail?.source && (
                                 <>
                                     <Image
@@ -145,6 +127,21 @@ const Home = () => {
                                         contentFit="cover"
                                     />
                                     <View style={styles.featuredCardOverlay} />
+
+                                    <LinearGradient
+                                        colors={[
+                                            "transparent",
+                                            "rgba(0, 0, 0, 0.7)",
+                                        ]}
+                                        style={{
+                                            position: "absolute",
+                                            bottom: 0,
+                                            left: 0,
+                                            right: 0,
+                                            width: "100%",
+                                            height: "100%",
+                                        }}
+                                    />
                                 </>
                             )}
 
@@ -198,8 +195,28 @@ const Home = () => {
                                             : featuredArticle.description}
                                     </Text>
                                 )}
+                                <View style={{ alignItems: "flex-start" }}>
+                                    <PrimaryButton
+                                        text="Read More"
+                                        iconName="arrow-right-line"
+                                        theme={
+                                            featuredArticle?.thumbnail
+                                                ? "light"
+                                                : "dark"
+                                        }
+                                        onPress={() =>
+                                            router.push({
+                                                pathname: "/article/[article]",
+                                                params: {
+                                                    article:
+                                                        featuredArticle?.title,
+                                                },
+                                            })
+                                        }
+                                    />
+                                </View>
                             </View>
-                        </Pressable>
+                        </View>
                         {imageOfTheDay && (
                             <>
                                 <Text style={styles.sectionTitle}>
@@ -323,9 +340,7 @@ const styles = StyleSheet.create({
     },
 
     content: {
-        paddingHorizontal: 16,
         paddingBottom: 16,
-        paddingTop: 100,
     },
 
     loaderContainer: {
@@ -364,12 +379,9 @@ const styles = StyleSheet.create({
     },
 
     featuredCard: {
-        height: 400,
-        borderRadius: 16,
+        height: 520,
         overflow: "hidden",
         backgroundColor: Colors.surface,
-        borderWidth: 1,
-        borderColor: Colors.border,
         position: "relative",
     },
 
@@ -379,7 +391,7 @@ const styles = StyleSheet.create({
 
     featuredCardOverlay: {
         ...StyleSheet.absoluteFill,
-        backgroundColor: "rgba(0,0,0,0.55)",
+        // backgroundColor: "rgba(0,0,0,0.55)",
     },
 
     featuredCardContent: {
@@ -415,7 +427,25 @@ const styles = StyleSheet.create({
         fontFamily: "DMSans-Medium",
     },
 
+    featuredCardButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4,
+        backgroundColor: Colors.surface,
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 999,
+        alignSelf: "flex-start",
+    },
+
+    featuredCardButtonText: {
+        fontSize: 16,
+        fontFamily: "DMSans-SemiBold",
+        color: Colors.text,
+    },
+
     imageCard: {
+        marginHorizontal: 16,
         marginBottom: 8,
         borderRadius: 16,
         overflow: "hidden",
@@ -448,10 +478,12 @@ const styles = StyleSheet.create({
     },
 
     sectionTitle: {
+        marginHorizontal: 16,
         fontSize: 24,
+        letterSpacing: -0.5,
         color: Colors.text,
         fontFamily: "DMSans-Bold",
-        marginTop: 24,
+        marginTop: 32,
         marginBottom: 12,
     },
 
@@ -462,7 +494,7 @@ const styles = StyleSheet.create({
         gap: 8,
         paddingVertical: 8,
         paddingHorizontal: 16,
-        borderRadius: 10,
+        borderRadius: 999,
         backgroundColor: Colors.secondary,
         alignSelf: "center",
     },
@@ -474,18 +506,5 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: "DMSans-Medium",
         color: Colors.textInverse,
-    },
-
-    featuredCardButton: {
-        alignSelf: "flex-start",
-        backgroundColor: "#FFFFFF",
-        paddingHorizontal: 28,
-        paddingVertical: 16,
-        borderRadius: 999,
-    },
-
-    featuredCardButtonText: {
-        fontSize: 16,
-        fontFamily: "DMSans-Bold",
     },
 });
