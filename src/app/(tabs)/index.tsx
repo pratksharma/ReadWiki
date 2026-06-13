@@ -1,4 +1,5 @@
 import ArticleCard from "@/components/ArticleCard";
+import Header from "@/components/Header";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle, getRandomArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
@@ -14,11 +15,8 @@ import {
     View,
 } from "react-native";
 import RemixIcon from "react-native-remix-icon";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Home = () => {
-    const inset = useSafeAreaInsets();
-
     const [featuredArticle, setFeaturedArticle] = useState<any>(null);
     const [trendingArticles, setTrendingArticles] = useState<any>([]);
     const [imageOfTheDay, setImageOfTheDay] = useState<any>([]);
@@ -79,15 +77,41 @@ const Home = () => {
     ];
 
     return (
-        <View
-            style={[
-                styles.container,
-                {
-                    paddingTop: inset.top,
-                },
-            ]}
-        >
-            <StatusBar barStyle="dark-content" />
+        <View style={styles.container}>
+            <StatusBar barStyle="light-content" />
+            <Header
+                title={"WikiAtlas"}
+                button={
+                    <Pressable
+                        style={({ pressed }) => [
+                            styles.randomButton,
+                            pressed && styles.randomButtonPressed,
+                        ]}
+                        onPress={async () => {
+                            try {
+                                const randomArticle = await getRandomArticle();
+
+                                router.push({
+                                    pathname: "/article/[article]",
+                                    params: {
+                                        article: randomArticle,
+                                    },
+                                });
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        }}
+                    >
+                        <RemixIcon
+                            name="shuffle-line"
+                            size={16}
+                            color={Colors.text}
+                            fallback={null}
+                        />
+                        <Text style={styles.randomButtonText}>Random</Text>
+                    </Pressable>
+                }
+            />
 
             <SectionList
                 sections={sections}
@@ -100,42 +124,6 @@ const Home = () => {
                 contentContainerStyle={styles.content}
                 ListHeaderComponent={
                     <>
-                        <View style={styles.header}>
-                            <Text style={styles.logo}>WikiAtlas</Text>
-
-                            <Pressable
-                                style={({ pressed }) => [
-                                    styles.randomButton,
-                                    pressed && styles.randomButtonPressed,
-                                ]}
-                                onPress={async () => {
-                                    try {
-                                        const randomArticle =
-                                            await getRandomArticle();
-
-                                        router.push({
-                                            pathname: "/article/[article]",
-                                            params: {
-                                                article: randomArticle,
-                                            },
-                                        });
-                                    } catch (error) {
-                                        console.log(error);
-                                    }
-                                }}
-                            >
-                                <RemixIcon
-                                    name="shuffle-line"
-                                    size={16}
-                                    color={Colors.text}
-                                    fallback={null}
-                                />
-                                <Text style={styles.randomButtonText}>
-                                    Random
-                                </Text>
-                            </Pressable>
-                        </View>
-
                         <Pressable
                             style={styles.featuredCard}
                             onPress={() =>
@@ -329,6 +317,7 @@ export default Home;
 
 const styles = StyleSheet.create({
     container: {
+        position: "relative",
         flex: 1,
         backgroundColor: Colors.background,
     },
@@ -336,6 +325,7 @@ const styles = StyleSheet.create({
     content: {
         paddingHorizontal: 16,
         paddingBottom: 16,
+        paddingTop: 100,
     },
 
     loaderContainer: {
@@ -350,20 +340,6 @@ const styles = StyleSheet.create({
         color: Colors.textSecondary,
         fontSize: 14,
         fontFamily: "DMSans-Medium",
-    },
-
-    header: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingVertical: 16,
-    },
-
-    logo: {
-        fontSize: 32,
-        color: Colors.text,
-        fontFamily: "DMSans-Bold",
-        letterSpacing: -1,
     },
 
     randomButton: {
