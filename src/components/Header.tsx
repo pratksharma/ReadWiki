@@ -25,7 +25,12 @@ const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
 
             <LinearGradient
                 colors={["rgba(0,0,0,0.7)", "transparent"]}
-                style={styles.gradient}
+                style={[
+                    styles.gradient,
+                    {
+                        height: insets.top + 84,
+                    },
+                ]}
             />
 
             <View style={styles.headerContent}>
@@ -61,7 +66,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        height: 120,
+        // height: 120,
     },
 
     headerContent: {
