@@ -11,7 +11,6 @@ import {
     ActivityIndicator,
     Pressable,
     SectionList,
-    StatusBar,
     StyleSheet,
     Text,
     View,
@@ -80,7 +79,6 @@ const Home = () => {
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" />
             <Header
                 title={"WikiAtlas"}
                 button={

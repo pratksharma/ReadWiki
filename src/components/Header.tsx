@@ -1,7 +1,7 @@
 import Colors from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { ReactNode } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StatusBar, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface HeaderProps {
@@ -20,6 +20,7 @@ const Header = ({ title, button }: HeaderProps) => {
                 },
             ]}
         >
+            <StatusBar barStyle="light-content" />
             <LinearGradient
                 colors={["rgba(0, 0, 0, 0.7)", "transparent"]}
                 style={{
