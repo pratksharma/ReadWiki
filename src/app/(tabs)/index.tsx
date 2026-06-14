@@ -231,10 +231,6 @@ const Home = () => {
                                             params: {
                                                 image: imageOfTheDay.image
                                                     .source,
-                                                title: imageOfTheDay.title.replace(
-                                                    /^(File:|\s*)|(\.(jpg|png)$)/gi,
-                                                    "",
-                                                ),
                                             },
                                         });
                                     }}
