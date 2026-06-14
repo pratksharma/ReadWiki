@@ -1,5 +1,4 @@
 import ArticleCard from "@/components/ArticleCard";
-import Header from "@/components/Header";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle } from "@/services/wikipedia";
 import { router } from "expo-router";
@@ -35,7 +34,6 @@ const OnThisDay = () => {
 
     return (
         <View style={styles.container}>
-            <Header title={"On This Day"} />
             <FlatList
                 data={onThisDayArticles}
                 contentContainerStyle={styles.listContent}

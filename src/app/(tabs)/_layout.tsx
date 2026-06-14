@@ -1,3 +1,4 @@
+import Header from "@/components/Header";
 import { Tabs } from "expo-router";
 import RemixIcon from "react-native-remix-icon";
 
@@ -5,15 +6,25 @@ export default function RootLayout() {
     return (
         <Tabs
             screenOptions={{
-                headerShown: false,
                 tabBarActiveTintColor: "#000000",
                 tabBarInactiveTintColor: "#8d8d8d",
+                header: ({ options }) => (
+                    <Header
+                        title={options.title ?? ""}
+                        rightComponent={
+                            options.headerRight?.({
+                                tintColor: "#fff",
+                                canGoBack: false,
+                            }) ?? null
+                        }
+                    />
+                ),
             }}
         >
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: "Home",
+                    title: "WikiAtlas",
                     tabBarIcon: ({ focused, color, size }) => (
                         <RemixIcon
                             name={focused ? "home-5-fill" : "home-5-line"}

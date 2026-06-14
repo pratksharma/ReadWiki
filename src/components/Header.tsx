@@ -1,41 +1,56 @@
 import Colors from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { ReactNode } from "react";
-import { StatusBar, StyleSheet, Text, View } from "react-native";
+import { Pressable, StatusBar, StyleSheet, Text, View } from "react-native";
+import RemixIcon from "react-native-remix-icon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface HeaderProps {
     title: string;
-    button?: ReactNode;
+    canGoBack?: boolean;
+    rightComponent?: ReactNode;
 }
 
-const Header = ({ title, button }: HeaderProps) => {
-    const inset = useSafeAreaInsets();
+const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
+    const insets = useSafeAreaInsets();
+
     return (
         <View
             style={[
                 styles.header,
                 {
-                    paddingTop: inset.top,
+                    paddingTop: insets.top,
                 },
             ]}
         >
             <StatusBar barStyle="light-content" />
+
             <LinearGradient
-                colors={["rgba(0, 0, 0, 0.7)", "transparent"]}
-                style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    zIndex: 1000,
-                    width: "100%",
-                    height: 100,
-                }}
+                colors={["rgba(0,0,0,0.7)", "transparent"]}
+                style={styles.gradient}
             />
+
             <View style={styles.headerContent}>
-                <Text style={styles.logo}>{title}</Text>
-                {button}
+                <View style={styles.leftContainer}>
+                    {canGoBack && (
+                        <Pressable
+                            onPress={() => router.back()}
+                            style={styles.backButton}
+                        >
+                            <RemixIcon
+                                name="arrow-left-line"
+                                size={24}
+                                color={Colors.textInverse}
+                                fallback={null}
+                            />
+                        </Pressable>
+                    )}
+
+                    <Text style={styles.logo}>{title}</Text>
+                </View>
+
+                <View style={styles.rightContainer}>{rightComponent}</View>
             </View>
         </View>
     );
@@ -52,12 +67,32 @@ const styles = StyleSheet.create({
         zIndex: 1000,
     },
 
+    gradient: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 120,
+    },
+
     headerContent: {
+        height: 56,
         flexDirection: "row",
-        justifyContent: "space-between",
         alignItems: "center",
-        zIndex: 1001,
+        justifyContent: "space-between",
         paddingHorizontal: 16,
+        zIndex: 1001,
+    },
+
+    leftContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+        flex: 1,
+    },
+
+    backButton: {
+        padding: 4,
     },
 
     logo: {
@@ -65,5 +100,11 @@ const styles = StyleSheet.create({
         color: Colors.textInverse,
         fontFamily: "BricolageGrotesque-SemiBold",
         letterSpacing: -1,
+    },
+
+    rightContainer: {
+        minWidth: 40,
+        alignItems: "flex-end",
+        justifyContent: "center",
     },
 });

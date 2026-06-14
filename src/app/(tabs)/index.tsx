@@ -1,11 +1,10 @@
 import ArticleCard from "@/components/ArticleCard";
-import Header from "@/components/Header";
 import PrimaryButton from "@/components/PrimaryButton";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle, getRandomArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
+import { router, Tabs } from "expo-router";
 import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -79,29 +78,31 @@ const Home = () => {
 
     return (
         <View style={styles.container}>
-            <Header
-                title={"WikiAtlas"}
-                button={
-                    <PrimaryButton
-                        text="Random"
-                        iconName="shuffle-line"
-                        iconPosition="left"
-                        onPress={async () => {
-                            try {
-                                const randomArticle = await getRandomArticle();
+            <Tabs.Screen
+                options={{
+                    headerRight: () => (
+                        <PrimaryButton
+                            text="Random"
+                            iconName="shuffle-line"
+                            iconPosition="left"
+                            onPress={async () => {
+                                try {
+                                    const randomArticle =
+                                        await getRandomArticle();
 
-                                router.push({
-                                    pathname: "/article/[article]",
-                                    params: {
-                                        article: randomArticle,
-                                    },
-                                });
-                            } catch (error) {
-                                console.log(error);
-                            }
-                        }}
-                    />
-                }
+                                    router.push({
+                                        pathname: "/article/[article]",
+                                        params: {
+                                            article: randomArticle,
+                                        },
+                                    });
+                                } catch (error) {
+                                    console.log(error);
+                                }
+                            }}
+                        />
+                    ),
+                }}
             />
 
             <SectionList
@@ -230,6 +231,10 @@ const Home = () => {
                                             params: {
                                                 image: imageOfTheDay.image
                                                     .source,
+                                                title: imageOfTheDay.title.replace(
+                                                    /^(File:|\s*)|(\.(jpg|png)$)/gi,
+                                                    "",
+                                                ),
                                             },
                                         });
                                     }}

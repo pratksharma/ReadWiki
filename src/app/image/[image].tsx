@@ -1,59 +1,45 @@
-import Colors from "@/constants/Colors";
 import { Image as ExpoImage } from "expo-image";
-import { router, useLocalSearchParams } from "expo-router";
-import { Pressable, StatusBar, StyleSheet, Text, View } from "react-native";
-import RemixIcon from "react-native-remix-icon";
+import { Stack, useLocalSearchParams } from "expo-router";
+import { StatusBar, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Image = () => {
-    const { image } = useLocalSearchParams<{
+    const { image, title } = useLocalSearchParams<{
         image: string;
+        title: string;
     }>();
 
     const insets = useSafeAreaInsets();
 
     return (
-        <View
-            style={[
-                styles.container,
-                {
-                    paddingTop: insets.top,
-                },
-            ]}
-        >
-            <StatusBar barStyle="light-content" />
-            <ExpoImage
-                source={image}
-                style={styles.backgroundImage}
-                contentFit="cover"
-                blurRadius={30}
-            />
-            <View style={styles.overlay} />
-            <Pressable
-                onPress={() => router.back()}
-                style={({ pressed }) => [
-                    { top: insets.top + 8 },
-                    styles.backButton,
-                    pressed && styles.backButtonPressed,
+        <>
+            <Stack.Screen options={{ title: title }} />
+            <View
+                style={[
+                    styles.container,
+                    {
+                        paddingTop: insets.top,
+                    },
                 ]}
             >
-                <RemixIcon
-                    name="arrow-left-long-fill"
-                    size={16}
-                    color="#fff"
-                    fallback={null}
-                />
-                <Text style={styles.backButtonText}>Back</Text>
-            </Pressable>
-            <View style={styles.imageContainer}>
+                <StatusBar barStyle="light-content" />
                 <ExpoImage
                     source={image}
-                    style={styles.mainImage}
-                    contentFit="contain"
-                    transition={200}
+                    style={styles.backgroundImage}
+                    contentFit="cover"
+                    blurRadius={30}
                 />
+                <View style={styles.overlay} />
+                <View style={styles.imageContainer}>
+                    <ExpoImage
+                        source={image}
+                        style={styles.mainImage}
+                        contentFit="contain"
+                        transition={200}
+                    />
+                </View>
             </View>
-        </View>
+        </>
     );
 };
 
@@ -76,31 +62,6 @@ const styles = StyleSheet.create({
 
     safeArea: {
         flex: 1,
-    },
-
-    backButton: {
-        position: "absolute",
-        left: 16,
-        borderRadius: 100,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 8,
-        alignSelf: "flex-start",
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        backgroundColor: "rgba(255,255,255,0.12)",
-        backdropFilter: "blur(10px)",
-    },
-
-    backButtonPressed: {
-        opacity: 0.8,
-        transform: [{ scale: 0.95 }],
-    },
-    backButtonText: {
-        color: Colors.textInverse,
-        fontSize: 12,
-        fontFamily: "DMSans-Medium",
     },
 
     imageContainer: {

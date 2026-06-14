@@ -1,3 +1,4 @@
+import Header from "@/components/Header";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -25,8 +26,33 @@ export default function RootLayout() {
         }
     }, [loaded]);
     return (
-        <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(tabs)" />
+        <Stack
+            screenOptions={{
+                header: ({ options, navigation }) => (
+                    <Header
+                        title={options.title ?? ""}
+                        canGoBack={navigation.canGoBack()}
+                        rightComponent={
+                            options.headerRight?.({
+                                tintColor: "#fff",
+                                canGoBack: navigation.canGoBack(),
+                            }) ?? null
+                        }
+                    />
+                ),
+            }}
+        >
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+                name="article/[article]"
+                options={{ title: "Article" }}
+            />
+            <Stack.Screen name="image/[image]" options={{ title: "Image" }} />
+            <Stack.Screen name="trending" options={{ title: "Trending" }} />
+            <Stack.Screen
+                name="on-this-day"
+                options={{ title: "On This Day" }}
+            />
         </Stack>
     );
 }
