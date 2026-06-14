@@ -1,20 +1,12 @@
 import ArticleCard from "@/components/ArticleCard";
+import Header from "@/components/Header";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle } from "@/services/wikipedia";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-    ActivityIndicator,
-    FlatList,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 
 const OnThisDay = () => {
-    const inset = useSafeAreaInsets();
-
     const [loading, setLoading] = useState(true);
     const [onThisDayArticles, setOnThisDayArticles] = useState<any[]>([]);
 
@@ -42,25 +34,11 @@ const OnThisDay = () => {
     }
 
     return (
-        <View
-            style={[
-                styles.container,
-                {
-                    paddingTop: inset.top,
-                },
-            ]}
-        >
+        <View style={styles.container}>
+            <Header title={"On This Day"} />
             <FlatList
                 data={onThisDayArticles}
                 contentContainerStyle={styles.listContent}
-                ListHeaderComponent={
-                    <View style={styles.header}>
-                        <Text style={styles.title}>On This Day</Text>
-                        <Text style={styles.subtitle}>
-                            Moments from history, remembered today
-                        </Text>
-                    </View>
-                }
                 renderItem={({ item }) => {
                     const article = item.pages?.[0];
 
@@ -83,9 +61,7 @@ const OnThisDay = () => {
                         />
                     );
                 }}
-                keyExtractor={(item) =>
-                    item.id?.toString() || item.normalizedtitle
-                }
+                keyExtractor={(item) => item.text || item.pages?.[0].title}
                 showsVerticalScrollIndicator={false}
             />
         </View>
@@ -106,6 +82,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.background,
     },
     listContent: {
+        paddingTop: 100,
         paddingBottom: 24,
     },
     header: {

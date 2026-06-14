@@ -1,20 +1,12 @@
 import ArticleCard from "@/components/ArticleCard";
+import Header from "@/components/Header";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle } from "@/services/wikipedia";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-    ActivityIndicator,
-    FlatList,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 
 const Trending = () => {
-    const inset = useSafeAreaInsets();
-
     const [loading, setLoading] = useState(true);
     const [trendingArticles, setTrendingArticles] = useState<any[]>([]);
 
@@ -42,25 +34,11 @@ const Trending = () => {
     }
 
     return (
-        <View
-            style={[
-                styles.container,
-                {
-                    paddingTop: inset.top,
-                },
-            ]}
-        >
+        <View style={styles.container}>
+            <Header title={"Trending"} />
             <FlatList
                 data={trendingArticles}
                 contentContainerStyle={styles.listContent}
-                ListHeaderComponent={
-                    <View style={styles.header}>
-                        <Text style={styles.title}>Trending</Text>
-                        <Text style={styles.subtitle}>
-                            Most read articles on Wikipedia today
-                        </Text>
-                    </View>
-                }
                 renderItem={({ item, index }) => (
                     <ArticleCard
                         rank={index + 1}
@@ -100,6 +78,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.background,
     },
     listContent: {
+        paddingTop: 100,
         paddingBottom: 24,
     },
     header: {
