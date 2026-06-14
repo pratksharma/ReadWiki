@@ -28,6 +28,7 @@ export default function RootLayout() {
     return (
         <Stack
             screenOptions={{
+                headerTransparent: true,
                 header: ({ options, navigation }) => (
                     <Header
                         title={options.title ?? ""}
@@ -47,7 +48,7 @@ export default function RootLayout() {
                 name="article/[article]"
                 options={{ title: "Article" }}
             />
-            <Stack.Screen name="image/[image]" options={{ title: "Image" }} />
+            {/* <Stack.Screen name="image/[image]" options={{ title: "Image" }} /> */}
             <Stack.Screen name="trending" options={{ title: "Trending" }} />
             <Stack.Screen
                 name="on-this-day"

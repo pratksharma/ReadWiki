@@ -1,45 +1,34 @@
 import { Image as ExpoImage } from "expo-image";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { StatusBar, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Image = () => {
-    const { image, title } = useLocalSearchParams<{
+    const { image } = useLocalSearchParams<{
         image: string;
-        title: string;
     }>();
 
     const insets = useSafeAreaInsets();
 
     return (
-        <>
-            <Stack.Screen options={{ title: title }} />
-            <View
-                style={[
-                    styles.container,
-                    {
-                        paddingTop: insets.top,
-                    },
-                ]}
-            >
-                <StatusBar barStyle="light-content" />
+        <View style={styles.container}>
+            <StatusBar barStyle="light-content" />
+            <ExpoImage
+                source={image}
+                style={styles.backgroundImage}
+                contentFit="cover"
+                blurRadius={30}
+            />
+            <View style={styles.overlay} />
+            <View style={styles.imageContainer}>
                 <ExpoImage
                     source={image}
-                    style={styles.backgroundImage}
-                    contentFit="cover"
-                    blurRadius={30}
+                    style={styles.mainImage}
+                    contentFit="contain"
+                    transition={200}
                 />
-                <View style={styles.overlay} />
-                <View style={styles.imageContainer}>
-                    <ExpoImage
-                        source={image}
-                        style={styles.mainImage}
-                        contentFit="contain"
-                        transition={200}
-                    />
-                </View>
             </View>
-        </>
+        </View>
     );
 };
 

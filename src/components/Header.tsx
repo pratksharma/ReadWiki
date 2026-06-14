@@ -17,12 +17,9 @@ const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
 
     return (
         <View
-            style={[
-                styles.header,
-                {
-                    paddingTop: insets.top,
-                },
-            ]}
+            style={{
+                paddingTop: insets.top,
+            }}
         >
             <StatusBar barStyle="light-content" />
 
@@ -59,14 +56,6 @@ const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
 export default Header;
 
 const styles = StyleSheet.create({
-    header: {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-    },
-
     gradient: {
         position: "absolute",
         top: 0,
