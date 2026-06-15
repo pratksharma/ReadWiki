@@ -45,7 +45,7 @@ export const getFullArticle = async (title: string) => {
         const encodedTitle = encodeURIComponent(title);
 
         const response = await fetch(
-            `https://en.wikipedia.org/w/api.php?action=parse&page=${encodedTitle}&prop=text&format=json`,
+            `https://en.wikipedia.org/api/rest_v1/page/mobile-html/${encodedTitle}`,
             {
                 headers: {
                     "User-Agent": "WikiAtlas/1.0",
@@ -54,9 +54,9 @@ export const getFullArticle = async (title: string) => {
             },
         );
 
-        const data = await response.json();
+        const html = await response.text();
 
-        return data.parse.text["*"];
+        return html;
     } catch (error) {
         console.log(error);
     }

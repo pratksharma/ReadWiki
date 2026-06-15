@@ -1,15 +1,22 @@
+import { parseArticle } from "@/services/articleParser";
+import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import {
+    ActivityIndicator,
+    FlatList,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { WebView } from "react-native-webview";
 import { getFullArticle } from "../../services/wikipedia";
 
 const Article = () => {
-    let insets = useSafeAreaInsets();
+    const insets = useSafeAreaInsets();
     const { article } = useLocalSearchParams();
 
-    const [html, setHtml] = useState("");
+    const [content, setContent] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -22,63 +29,11 @@ const Article = () => {
         try {
             const articleHtml = await getFullArticle(article as string);
 
-            const wrappedHtml = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta
-                        name="viewport"
-                        content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-                    />
+            const parsedArticle = parseArticle(articleHtml as string);
 
-                    <style>
-                        body {
-                            padding: 16px;
-                            margin: 0;
-                            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-                            background: #ffffff;
-                            color: #222;
-                            line-height: 1.7;
-                        }
-
-                        img {
-                            max-width: 100%;
-                            height: auto;
-                            border-radius: 12px;
-                        }
-
-                        figure {
-                            margin: 16px 0;
-                        }
-
-                        table {
-                            display: block;
-                            overflow-x: auto;
-                            width: 100%;
-                        }
-
-                        a {
-                            color: #2563eb;
-                            text-decoration: none;
-                        }
-
-                        .mw-editsection,
-                        .reference,
-                        .reflist {
-                            display: none !important;
-                        }
-                    </style>
-                </head>
-
-                <body>
-                    ${articleHtml}
-                </body>
-                </html>
-            `;
-
-            setHtml(wrappedHtml);
+            setContent(parsedArticle);
         } catch (error) {
-            console.log(error);
+            console.log("ERROR", error);
         } finally {
             setLoading(false);
         }
@@ -93,31 +48,80 @@ const Article = () => {
     }
 
     return (
-        <WebView
-            source={{ html }}
-            originWhitelist={["*"]}
-            style={[
-                styles.webview,
-                {
-                    marginTop: insets.top,
-                },
-            ]}
-            startInLoadingState
-        />
+        <View style={styles.container}>
+            <FlatList
+                data={content}
+                keyExtractor={(_, index) => index.toString()}
+                contentContainerStyle={styles.content}
+                renderItem={({ item }) => {
+                    switch (item.type) {
+                        case "heading":
+                            return (
+                                <Text style={styles.heading}>{item.text}</Text>
+                            );
+
+                        case "paragraph":
+                            return (
+                                <Text style={styles.paragraph}>
+                                    {item.text}
+                                </Text>
+                            );
+
+                        case "image":
+                            return (
+                                <Image
+                                    source={{ uri: item.src }}
+                                    style={styles.image}
+                                    contentFit="cover"
+                                />
+                            );
+
+                        default:
+                            return null;
+                    }
+                }}
+            />
+        </View>
     );
 };
 
 export default Article;
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#fff",
+    },
+
     loader: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
     },
 
-    webview: {
-        flex: 1,
-        backgroundColor: "#fff",
+    content: {
+        paddingTop: 100,
+        paddingHorizontal: 16,
+        paddingBottom: 40,
+    },
+
+    heading: {
+        fontSize: 28,
+        fontWeight: "700",
+        marginTop: 24,
+        marginBottom: 12,
+    },
+
+    paragraph: {
+        fontSize: 16,
+        lineHeight: 28,
+        marginBottom: 16,
+    },
+
+    image: {
+        width: "100%",
+        height: 240,
+        borderRadius: 16,
+        marginVertical: 16,
     },
 });
