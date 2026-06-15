@@ -26,6 +26,7 @@ export default function RootLayout() {
                 name="index"
                 options={{
                     title: "WikiAtlas",
+                    tabBarLabel: "Home",
                     tabBarIcon: ({ focused, color, size }) => (
                         <RemixIcon
                             name={focused ? "home-5-fill" : "home-5-line"}

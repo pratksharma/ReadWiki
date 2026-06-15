@@ -41,8 +41,8 @@ const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
                             style={styles.backButton}
                         >
                             <RemixIcon
-                                name="arrow-left-line"
-                                size={24}
+                                name="arrow-left-long-fill"
+                                size={20}
                                 color={Colors.textInverse}
                                 fallback={null}
                             />
@@ -66,11 +66,9 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        // height: 120,
     },
 
     headerContent: {
-        height: 56,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
@@ -86,11 +84,14 @@ const styles = StyleSheet.create({
     },
 
     backButton: {
-        padding: 4,
+        paddingVertical: 4,
+        paddingHorizontal: 12,
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        borderRadius: 100,
     },
 
     logo: {
-        fontSize: 32,
+        fontSize: 28,
         color: Colors.textInverse,
         fontFamily: "BricolageGrotesque-SemiBold",
         letterSpacing: -1,
