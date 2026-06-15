@@ -14,7 +14,6 @@ import {
     Text,
     View,
 } from "react-native";
-import RemixIcon from "react-native-remix-icon";
 
 const Home = () => {
     const [featuredArticle, setFeaturedArticle] = useState<any>(null);
@@ -315,23 +314,21 @@ const Home = () => {
                         );
                     }}
                     renderSectionFooter={({ section }) => (
-                        <Pressable
-                            onPress={() => router.navigate(section.slug as any)}
-                            style={({ pressed }) => [
-                                styles.sectionButton,
-                                pressed && styles.sectionButtonPressed,
-                            ]}
+                        <View
+                            style={{
+                                alignItems: "center",
+                            }}
                         >
-                            <Text style={styles.sectionButtonText}>
-                                More Articles
-                            </Text>
-                            <RemixIcon
-                                name="arrow-right-long-fill"
-                                color={Colors.textInverse}
-                                size={20}
-                                fallback={null}
+                            <PrimaryButton
+                                text={`More ${section.title} Articles`}
+                                iconName="arrow-right-long-fill"
+                                iconPosition="right"
+                                theme="dark"
+                                onPress={() =>
+                                    router.navigate(section.slug as any)
+                                }
                             />
-                        </Pressable>
+                        </View>
                     )}
                 />
             )}
@@ -455,7 +452,6 @@ const styles = StyleSheet.create({
 
     imageCard: {
         marginHorizontal: 16,
-        marginBottom: 8,
         borderRadius: 16,
         overflow: "hidden",
         backgroundColor: Colors.surface,
@@ -493,7 +489,7 @@ const styles = StyleSheet.create({
         color: Colors.text,
         fontFamily: "BricolageGrotesque-SemiBold",
         marginTop: 32,
-        marginBottom: 8,
+        marginBottom: 4,
     },
 
     sectionButton: {
@@ -506,6 +502,7 @@ const styles = StyleSheet.create({
         borderRadius: 999,
         backgroundColor: Colors.secondary,
         alignSelf: "center",
+        marginTop: 10,
     },
     sectionButtonPressed: {
         opacity: 0.9,

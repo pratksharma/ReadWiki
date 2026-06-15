@@ -61,12 +61,11 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.background,
         fontFamily: "DMSans-SemiBold",
         position: "absolute",
-        top: 0,
-        right: 0,
+        top: 8,
+        right: 8,
         paddingVertical: 2,
         paddingHorizontal: 8,
-        borderBottomLeftRadius: 12,
-        borderTopRightRadius: 15,
+        borderRadius: 12,
     },
 
     thumbnail: {
