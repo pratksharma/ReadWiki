@@ -94,7 +94,8 @@ const styles = StyleSheet.create({
         fontSize: 28,
         color: Colors.textInverse,
         fontFamily: "BricolageGrotesque-SemiBold",
-        letterSpacing: -1,
+        letterSpacing: -0.5,
+        marginTop: -4,
     },
 
     rightContainer: {

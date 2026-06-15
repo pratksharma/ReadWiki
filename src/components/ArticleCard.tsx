@@ -19,8 +19,6 @@ export default function ArticleCard({
 }: ArticleCardProps) {
     return (
         <Pressable style={styles.card} onPress={onPress}>
-            {rank && <Text style={styles.rank}>#{rank}</Text>}
-
             {image && (
                 <Image
                     source={image}
@@ -30,7 +28,12 @@ export default function ArticleCard({
             )}
 
             <View style={styles.content}>
-                <Text style={styles.title} numberOfLines={2}>
+                {rank && <Text style={styles.rank}>#{rank}</Text>}
+
+                <Text
+                    style={[styles.title, !rank && { marginTop: -8 }]}
+                    numberOfLines={2}
+                >
                     {title}
                 </Text>
 
@@ -56,16 +59,14 @@ const styles = StyleSheet.create({
     },
 
     rank: {
-        fontSize: 14,
+        fontSize: 12,
         color: Colors.primary,
         backgroundColor: Colors.background,
         fontFamily: "DMSans-SemiBold",
-        position: "absolute",
-        top: 8,
-        right: 8,
         paddingVertical: 2,
         paddingHorizontal: 8,
         borderRadius: 12,
+        alignSelf: "flex-start",
     },
 
     thumbnail: {
@@ -82,8 +83,8 @@ const styles = StyleSheet.create({
 
     title: {
         color: Colors.text,
-        fontSize: 16,
-        fontFamily: "DMSans-SemiBold",
+        fontSize: 18,
+        fontFamily: "BricolageGrotesque-SemiBold",
     },
 
     subtitle: {

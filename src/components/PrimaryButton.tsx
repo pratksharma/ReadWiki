@@ -26,7 +26,7 @@ const PrimaryButton = ({
     const icon = (
         <RemixIcon
             name={iconName as any}
-            size={16}
+            size={18}
             color={textColor}
             fallback={null}
         />
@@ -75,5 +75,6 @@ const styles = StyleSheet.create({
     buttonText: {
         fontFamily: "BricolageGrotesque-SemiBold",
         fontSize: 14,
+        marginTop: -2,
     },
 });

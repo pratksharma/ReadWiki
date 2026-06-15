@@ -162,7 +162,7 @@ const Home = () => {
                                                 },
                                             ]}
                                         >
-                                            FEATURED ARTICLE
+                                            Featured Article
                                         </Text>
                                     </View>
 
@@ -191,13 +191,13 @@ const Home = () => {
                                         >
                                             {featuredArticle.description == ""
                                                 ? featuredArticle.extract
-                                                : featuredArticle.description}
+                                                : featuredArticle.extract}
                                         </Text>
                                     )}
                                     <View style={{ alignItems: "flex-start" }}>
                                         <PrimaryButton
                                             text="Read More"
-                                            iconName="arrow-right-line"
+                                            iconName="arrow-right-long-fill"
                                             theme={
                                                 featuredArticle?.thumbnail
                                                     ? "light"
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
     },
 
     featuredCard: {
-        height: 520,
+        height: 560,
         overflow: "hidden",
         backgroundColor: Colors.surface,
         position: "relative",
@@ -403,8 +403,9 @@ const styles = StyleSheet.create({
     featuredCardContent: {
         flex: 1,
         justifyContent: "flex-end",
-        gap: 12,
-        padding: 24,
+        gap: 4,
+        padding: 16,
+        paddingBottom: 32,
     },
 
     featuredCardBadge: {
@@ -416,21 +417,21 @@ const styles = StyleSheet.create({
     },
 
     featuredCardBadgeText: {
+        textTransform: "uppercase",
         fontSize: 12,
         letterSpacing: 1,
         fontFamily: "DMSans-Bold",
     },
 
     featuredCardTitle: {
-        fontSize: 32,
-        lineHeight: 32,
+        fontSize: 28,
         fontFamily: "BricolageGrotesque-SemiBold",
     },
 
     featuredCardDescription: {
-        fontSize: 18,
-        lineHeight: 28,
+        fontSize: 14,
         fontFamily: "DMSans-Medium",
+        marginBottom: 12,
     },
 
     featuredCardButton: {
@@ -470,14 +471,15 @@ const styles = StyleSheet.create({
     },
 
     imageCardTitle: {
-        fontSize: 24,
-        lineHeight: 26,
+        fontSize: 20,
+        lineHeight: 20,
+        letterSpacing: -0.5,
         color: Colors.text,
         fontFamily: "BricolageGrotesque-SemiBold",
     },
 
     imageCardDescription: {
-        fontSize: 16,
+        fontSize: 14,
         color: Colors.textSecondary,
         fontFamily: "DMSans-Medium",
     },
