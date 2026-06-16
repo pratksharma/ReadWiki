@@ -18,7 +18,7 @@ const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
     return (
         <View
             style={{
-                paddingTop: insets.top,
+                paddingTop: insets.top + 8,
             }}
         >
             <StatusBar barStyle="light-content" />

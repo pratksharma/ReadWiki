@@ -189,8 +189,8 @@ const Home = () => {
                                             ]}
                                             numberOfLines={2}
                                         >
-                                            {featuredArticle.description == ""
-                                                ? featuredArticle.extract
+                                            {featuredArticle.extract == ""
+                                                ? featuredArticle.description
                                                 : featuredArticle.extract}
                                         </Text>
                                     )}
