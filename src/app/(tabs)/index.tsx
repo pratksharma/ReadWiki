@@ -224,7 +224,10 @@ const Home = () => {
                                     </Text>
 
                                     <Pressable
-                                        style={styles.imageCard}
+                                        style={({ pressed }) => [
+                                            styles.imageCard,
+                                            pressed && styles.imageCardPressed,
+                                        ]}
                                         onPress={() => {
                                             router.navigate({
                                                 pathname: "/image/[image]",
@@ -275,9 +278,9 @@ const Home = () => {
                         if (section.type === "trending") {
                             return (
                                 <ArticleCard
-                                    rank={index + 1}
+                                    tag={`#${index + 1} • ${item.views.toLocaleString()} views`}
                                     title={item.titles.normalized}
-                                    subtitle={`${item.views.toLocaleString()} views`}
+                                    subtitle={item.extract}
                                     image={item.thumbnail?.source}
                                     onPress={() =>
                                         router.push({
@@ -301,6 +304,7 @@ const Home = () => {
                             <ArticleCard
                                 title={article.normalizedtitle}
                                 subtitle={item.text}
+                                tag={item.year}
                                 image={article.thumbnail?.source}
                                 onPress={() =>
                                     router.push({
@@ -458,6 +462,10 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.surface,
         borderWidth: 1,
         borderColor: Colors.border,
+    },
+
+    imageCardPressed: {
+        filter: "brightness(0.95)",
     },
 
     imageCardImage: {

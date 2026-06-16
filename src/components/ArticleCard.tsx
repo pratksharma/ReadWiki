@@ -7,7 +7,7 @@ type ArticleCardProps = {
     title: string;
     subtitle?: string;
     image?: string;
-    rank?: number;
+    tag?: string;
     onPress: () => void;
 };
 
@@ -15,7 +15,7 @@ export default function ArticleCard({
     title,
     subtitle,
     image,
-    rank,
+    tag,
     onPress,
 }: ArticleCardProps) {
     return (
@@ -44,16 +44,15 @@ export default function ArticleCard({
             )}
 
             <View style={styles.content}>
-                {rank && <Text style={styles.rank}>#{rank}</Text>}
+                {tag && <Text style={styles.tag}>{tag}</Text>}
 
-                <Text
-                    style={[styles.title, !rank && { marginTop: -6 }]}
-                    numberOfLines={2}
-                >
-                    {title}
-                </Text>
+                <Text style={styles.title}>{title}</Text>
 
-                {!!subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+                {!!subtitle && (
+                    <Text style={styles.subtitle} numberOfLines={2}>
+                        {subtitle}
+                    </Text>
+                )}
             </View>
         </Pressable>
     );
@@ -74,7 +73,7 @@ const styles = StyleSheet.create({
     },
 
     cardPressed: {
-        backgroundColor: Colors.surfaceHover,
+        filter: "brightness(0.95)",
     },
 
     thumbnail: {
@@ -97,26 +96,28 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 
-    rank: {
+    tag: {
         fontSize: 12,
-        color: Colors.primary,
+        color: Colors.textSecondary,
         backgroundColor: Colors.background,
         fontFamily: "DMSans-SemiBold",
         paddingVertical: 2,
         paddingHorizontal: 8,
         borderRadius: 12,
         alignSelf: "flex-start",
+        marginBottom: 8,
     },
 
     title: {
         color: Colors.text,
         fontSize: 18,
+        lineHeight: 18,
         fontFamily: "BricolageGrotesque-SemiBold",
     },
 
     subtitle: {
         marginTop: 4,
-        color: Colors.textSecondary,
+        color: Colors.textMuted,
         fontSize: 13,
         fontFamily: "DMSans-Medium",
     },

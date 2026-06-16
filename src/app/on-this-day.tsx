@@ -47,6 +47,7 @@ const OnThisDay = () => {
                         <ArticleCard
                             title={article.normalizedtitle}
                             subtitle={item.text}
+                            tag={item.year}
                             image={article.thumbnail?.source}
                             onPress={() =>
                                 router.push({

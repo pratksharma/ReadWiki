@@ -39,9 +39,9 @@ const Trending = () => {
                 contentContainerStyle={styles.listContent}
                 renderItem={({ item, index }) => (
                     <ArticleCard
-                        rank={index + 1}
+                        tag={`#${index + 1} • ${item.views.toLocaleString()} views`}
                         title={item.titles.normalized}
-                        subtitle={`${item.views.toLocaleString()} views`}
+                        subtitle={item.extract}
                         image={item.thumbnail?.source}
                         onPress={() =>
                             router.push({
