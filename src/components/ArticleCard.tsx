@@ -1,6 +1,7 @@
 import Colors from "@/constants/Colors";
 import { Image } from "expo-image";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import RemixIcon from "react-native-remix-icon";
 
 type ArticleCardProps = {
     title: string;
@@ -18,20 +19,35 @@ export default function ArticleCard({
     onPress,
 }: ArticleCardProps) {
     return (
-        <Pressable style={styles.card} onPress={onPress}>
-            {image && (
+        <Pressable
+            style={({ pressed }) => [
+                styles.card,
+                pressed && styles.cardPressed,
+            ]}
+            onPress={onPress}
+        >
+            {image ? (
                 <Image
                     source={image}
                     style={styles.thumbnail}
                     contentFit="cover"
                 />
+            ) : (
+                <View style={styles.fallbackImageIcon}>
+                    <RemixIcon
+                        name="file-list-2-line"
+                        size={24}
+                        color={Colors.textMuted}
+                        fallback={null}
+                    />
+                </View>
             )}
 
             <View style={styles.content}>
                 {rank && <Text style={styles.rank}>#{rank}</Text>}
 
                 <Text
-                    style={[styles.title, !rank && { marginTop: -8 }]}
+                    style={[styles.title, !rank && { marginTop: -6 }]}
                     numberOfLines={2}
                 >
                     {title}
@@ -48,7 +64,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         position: "relative",
         flexDirection: "row",
-        alignItems: "center",
         gap: 12,
         backgroundColor: Colors.surface,
         borderWidth: 1,
@@ -56,6 +71,30 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: 12,
         marginBottom: 10,
+    },
+
+    cardPressed: {
+        backgroundColor: Colors.surfaceHover,
+    },
+
+    thumbnail: {
+        width: 72,
+        height: 72,
+        borderRadius: 8,
+        backgroundColor: Colors.background,
+    },
+
+    fallbackImageIcon: {
+        width: 72,
+        height: 72,
+        borderRadius: 8,
+        backgroundColor: Colors.background,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+
+    content: {
+        flex: 1,
     },
 
     rank: {
@@ -67,18 +106,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         borderRadius: 12,
         alignSelf: "flex-start",
-    },
-
-    thumbnail: {
-        width: 72,
-        height: 72,
-        borderRadius: 8,
-        backgroundColor: Colors.surfaceHover,
-        alignSelf: "flex-start",
-    },
-
-    content: {
-        flex: 1,
     },
 
     title: {

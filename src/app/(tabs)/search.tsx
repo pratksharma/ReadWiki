@@ -1,7 +1,8 @@
+import ArticleCard from "@/components/ArticleCard";
+import Colors from "@/constants/Colors";
 import { searchArticles } from "@/services/wikipedia";
-import { Image } from "expo-image";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -18,13 +19,13 @@ const Search = () => {
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
 
-    const loadSearchResults = async () => {
-        if (!query.trim()) return;
+    const loadSearchResults = async (searchQuery: string) => {
+        if (!searchQuery.trim()) return;
 
         try {
             setLoading(true);
 
-            const data = await searchArticles(query);
+            const data = await searchArticles(searchQuery);
 
             const sortedData = [...data].sort((a, b) => a.index - b.index);
 
@@ -36,35 +37,62 @@ const Search = () => {
         }
     };
 
+    useEffect(() => {
+        const trimmedQuery = query.trim();
+
+        if (!trimmedQuery) {
+            setSearchResults([]);
+            setLoading(false);
+            return;
+        }
+
+        const timeout = setTimeout(() => {
+            loadSearchResults(trimmedQuery);
+        }, 500);
+
+        return () => clearTimeout(timeout);
+    }, [query]);
+
+    const clearSearch = () => {
+        setQuery("");
+        setSearchResults([]);
+    };
+
     return (
         <View style={styles.container}>
-            <Text style={styles.heading}>Search</Text>
-
             <View style={styles.searchContainer}>
-                <TextInput
-                    value={query}
-                    onChangeText={setQuery}
-                    placeholder="Search Wikipedia..."
-                    placeholderTextColor="#9CA3AF"
-                    style={styles.searchInput}
-                    returnKeyType="search"
-                    onSubmitEditing={loadSearchResults}
-                />
-
-                <Pressable
-                    style={({ pressed }) => [
-                        styles.searchButton,
-                        pressed && { opacity: 0.8 },
-                    ]}
-                    onPress={loadSearchResults}
-                >
+                <View style={styles.inputWrapper}>
                     <RemixIcon
-                        name="search-2-fill"
-                        size={24}
-                        color="#ffffff"
+                        name="search-2-line"
+                        size={20}
+                        color={Colors.textMuted}
+                        style={styles.leftIcon}
                         fallback={null}
                     />
-                </Pressable>
+
+                    <TextInput
+                        value={query}
+                        onChangeText={setQuery}
+                        placeholder="Search Wikipedia..."
+                        placeholderTextColor={Colors.textMuted}
+                        style={styles.searchInput}
+                        returnKeyType="search"
+                    />
+
+                    {query.length > 0 && (
+                        <Pressable
+                            onPress={clearSearch}
+                            style={styles.clearButton}
+                        >
+                            <RemixIcon
+                                name="close-line"
+                                size={20}
+                                color={Colors.textMuted}
+                                fallback={null}
+                            />
+                        </Pressable>
+                    )}
+                </View>
             </View>
 
             {loading ? (
@@ -86,11 +114,10 @@ const Search = () => {
                         </View>
                     }
                     renderItem={({ item }) => (
-                        <Pressable
-                            style={({ pressed }) => [
-                                styles.card,
-                                pressed && styles.cardPressed,
-                            ]}
+                        <ArticleCard
+                            title={item.title}
+                            subtitle={item.description}
+                            image={item.thumbnail?.source}
                             onPress={() =>
                                 router.push({
                                     pathname: "/article/[article]",
@@ -99,37 +126,7 @@ const Search = () => {
                                     },
                                 })
                             }
-                        >
-                            <View style={styles.content}>
-                                <View style={styles.textContainer}>
-                                    <Text
-                                        style={styles.title}
-                                        numberOfLines={2}
-                                    >
-                                        {item.title}
-                                    </Text>
-
-                                    {item.description && (
-                                        <Text
-                                            style={styles.description}
-                                            numberOfLines={2}
-                                        >
-                                            {item.description}
-                                        </Text>
-                                    )}
-                                </View>
-
-                                {item.thumbnail?.source && (
-                                    <Image
-                                        source={{
-                                            uri: item.thumbnail.source,
-                                        }}
-                                        style={styles.thumbnail}
-                                        contentFit="cover"
-                                    />
-                                )}
-                            </View>
-                        </Pressable>
+                        />
                     )}
                 />
             )}
@@ -142,64 +139,59 @@ export default Search;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#F8F9FB",
-        paddingTop: 70,
-    },
-
-    heading: {
-        fontSize: 32,
-        fontWeight: "700",
-        color: "#111827",
-        marginHorizontal: 20,
-        marginBottom: 20,
+        backgroundColor: Colors.background,
+        paddingTop: 120,
     },
 
     searchContainer: {
-        flexDirection: "row",
-        marginHorizontal: 20,
-        marginBottom: 20,
-        gap: 10,
+        paddingHorizontal: 16,
+        paddingBottom: 16,
+    },
+
+    inputWrapper: {
+        position: "relative",
+        justifyContent: "center",
     },
 
     searchInput: {
-        flex: 1,
-        height: 52,
-        backgroundColor: "#FFFFFF",
-        borderRadius: 14,
-        paddingHorizontal: 16,
+        backgroundColor: Colors.surface,
+        borderRadius: 100,
+        paddingLeft: 44,
+        paddingRight: 44,
         fontSize: 16,
-
-        shadowColor: "#000",
+        shadowColor: Colors.primary,
         shadowOffset: {
             width: 0,
             height: 2,
         },
         shadowOpacity: 0.05,
         shadowRadius: 6,
-
         elevation: 2,
+        fontFamily: "DMSans-Medium",
     },
 
-    searchButton: {
-        width: 52,
-        height: 52,
-        borderRadius: 14,
-        backgroundColor: "#111827",
+    leftIcon: {
+        position: "absolute",
+        left: 12,
+        zIndex: 1,
+    },
+
+    clearButton: {
+        position: "absolute",
+        right: 12,
+        zIndex: 1,
         justifyContent: "center",
         alignItems: "center",
     },
 
     loaderContainer: {
         flex: 1,
-        justifyContent: "center",
         alignItems: "center",
     },
 
     listContent: {
-        paddingHorizontal: 16,
         paddingBottom: 16,
         flexGrow: 1,
-        gap: 12,
     },
 
     emptyContainer: {
@@ -210,47 +202,7 @@ const styles = StyleSheet.create({
 
     emptyText: {
         fontSize: 16,
-        color: "#6B7280",
-    },
-
-    card: {
-        backgroundColor: "#FFFFFF",
-        borderRadius: 16,
-        padding: 12,
-    },
-
-    cardPressed: {
-        opacity: 0.8,
-    },
-
-    content: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 12,
-    },
-
-    textContainer: {
-        flex: 1,
-    },
-
-    title: {
-        fontSize: 18,
-        fontWeight: "700",
-        color: "#111827",
-        marginBottom: 4,
-    },
-
-    description: {
-        fontSize: 14,
-        color: "#4B5563",
-        lineHeight: 20,
-    },
-
-    thumbnail: {
-        width: 56,
-        height: 56,
-        borderRadius: 10,
-        backgroundColor: "#E5E7EB",
+        color: Colors.textMuted,
+        fontFamily: "DMSans-Medium",
     },
 });

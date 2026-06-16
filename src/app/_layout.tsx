@@ -7,7 +7,7 @@ import { useEffect } from "react";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-    const [loaded] = useFonts({
+    const [loaded, error] = useFonts({
         "DMSans-Regular": require("../../assets/fonts/DMSans-Regular.ttf"),
         "DMSans-Medium": require("../../assets/fonts/DMSans-Medium.ttf"),
         "DMSans-SemiBold": require("../../assets/fonts/DMSans-SemiBold.ttf"),
@@ -21,10 +21,14 @@ export default function RootLayout() {
     });
 
     useEffect(() => {
-        if (loaded) {
+        if (loaded || error) {
             SplashScreen.hideAsync();
         }
-    }, [loaded]);
+    }, [loaded, error]);
+
+    if (!loaded && !error) {
+        return null;
+    }
     return (
         <Stack
             screenOptions={{
