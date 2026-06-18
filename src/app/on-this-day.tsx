@@ -60,7 +60,10 @@ const OnThisDay = () => {
                         />
                     );
                 }}
-                keyExtractor={(item) => item.text || item.pages?.[0].title}
+                keyExtractor={(item, index) =>
+                    `${item.text}-${index}` ||
+                    `${item.pages?.[0].title}-${index}`
+                }
                 showsVerticalScrollIndicator={false}
             />
         </View>

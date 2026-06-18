@@ -53,8 +53,8 @@ const Trending = () => {
                         }
                     />
                 )}
-                keyExtractor={(item) =>
-                    item.id?.toString() || item.titles.normalized
+                keyExtractor={(item, index) =>
+                    `${item.title}-${index}` || `${item.titles.normalized}`
                 }
                 showsVerticalScrollIndicator={false}
             />
