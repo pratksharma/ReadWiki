@@ -272,7 +272,13 @@ const Home = () => {
                         </>
                     }
                     renderSectionHeader={({ section }) => (
-                        <Text style={styles.sectionTitle}>{section.title}</Text>
+                        <View>
+                            {section.data.length > 0 && (
+                                <Text style={styles.sectionTitle}>
+                                    {section.title}
+                                </Text>
+                            )}
+                        </View>
                     )}
                     renderItem={({ item, section, index }) => {
                         if (section.type === "trending") {
@@ -323,15 +329,17 @@ const Home = () => {
                                 alignItems: "center",
                             }}
                         >
-                            <PrimaryButton
-                                text={`More ${section.title} Articles`}
-                                iconName="arrow-right-long-fill"
-                                iconPosition="right"
-                                theme="dark"
-                                onPress={() =>
-                                    router.navigate(section.slug as any)
-                                }
-                            />
+                            {section.data.length > 0 && (
+                                <PrimaryButton
+                                    text={`More ${section.title} Articles`}
+                                    iconName="arrow-right-long-fill"
+                                    iconPosition="right"
+                                    theme="dark"
+                                    onPress={() =>
+                                        router.navigate(section.slug as any)
+                                    }
+                                />
+                            )}
                         </View>
                     )}
                 />
