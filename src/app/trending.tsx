@@ -39,7 +39,7 @@ const Trending = () => {
                 contentContainerStyle={styles.listContent}
                 renderItem={({ item, index }) => (
                     <ArticleCard
-                        tag={`#${index + 1} • ${item.views.toLocaleString()} views`}
+                        tag={`${item.views.toLocaleString()} views`}
                         title={item.titles.normalized}
                         subtitle={item.extract}
                         image={item.thumbnail?.source}

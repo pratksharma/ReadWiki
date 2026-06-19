@@ -173,7 +173,7 @@ const Home = () => {
                                                 color: textColor,
                                             },
                                         ]}
-                                        numberOfLines={4}
+                                        numberOfLines={2}
                                     >
                                         {featuredArticle?.normalizedtitle ??
                                             featuredArticle?.titles.normalized}
@@ -187,7 +187,7 @@ const Home = () => {
                                                     color: secondaryTextColor,
                                                 },
                                             ]}
-                                            numberOfLines={2}
+                                            numberOfLines={4}
                                         >
                                             {featuredArticle.extract == ""
                                                 ? featuredArticle.description
@@ -284,7 +284,7 @@ const Home = () => {
                         if (section.type === "trending") {
                             return (
                                 <ArticleCard
-                                    tag={`#${index + 1} • ${item.views.toLocaleString()} views`}
+                                    tag={`${item.views.toLocaleString()} views`}
                                     title={item.titles.normalized}
                                     subtitle={item.extract}
                                     image={item.thumbnail?.source}
