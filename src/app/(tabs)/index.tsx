@@ -232,8 +232,8 @@ const Home = () => {
                                             router.navigate({
                                                 pathname: "/image/[image]",
                                                 params: {
-                                                    image: imageOfTheDay.image
-                                                        .source,
+                                                    image: imageOfTheDay
+                                                        .thumbnail.source,
                                                 },
                                             });
                                         }}
