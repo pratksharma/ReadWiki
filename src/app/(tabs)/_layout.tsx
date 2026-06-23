@@ -31,7 +31,7 @@ export default function RootLayout() {
                         <RemixIcon
                             name={focused ? "home-5-fill" : "home-5-line"}
                             size={size}
-                            color={color}
+                            color={color as string}
                             fallback={null}
                         />
                     ),
@@ -46,7 +46,7 @@ export default function RootLayout() {
                         <RemixIcon
                             name={focused ? "search-fill" : "search-line"}
                             size={size}
-                            color={color}
+                            color={color as string}
                             fallback={null}
                         />
                     ),
@@ -63,7 +63,7 @@ export default function RootLayout() {
                                 focused ? "settings-3-fill" : "settings-3-line"
                             }
                             size={size}
-                            color={color}
+                            color={color as string}
                             fallback={null}
                         />
                     ),

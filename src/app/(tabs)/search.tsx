@@ -1,8 +1,8 @@
 import ArticleCard from "@/components/ArticleCard";
 import Colors from "@/constants/Colors";
 import { searchArticles } from "@/services/wikipedia";
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -58,6 +58,17 @@ const Search = () => {
         setSearchResults([]);
     };
 
+    const inputRef = useRef<TextInput>(null);
+    useFocusEffect(
+        useCallback(() => {
+            const timer = setTimeout(() => {
+                inputRef.current?.focus();
+            }, 100);
+
+            return () => clearTimeout(timer);
+        }, []),
+    );
+
     return (
         <View style={styles.container}>
             <View style={styles.searchContainer}>
@@ -73,10 +84,11 @@ const Search = () => {
                     <TextInput
                         value={query}
                         onChangeText={setQuery}
-                        placeholder="Search Wikipedia..."
+                        placeholder="Search articles..."
                         placeholderTextColor={Colors.textMuted}
                         style={styles.searchInput}
                         returnKeyType="search"
+                        ref={inputRef}
                     />
 
                     {query.length > 0 && (
@@ -107,11 +119,9 @@ const Search = () => {
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps="handled"
                     ListEmptyComponent={
-                        <View style={styles.emptyContainer}>
-                            <Text style={styles.emptyText}>
-                                Search for any Wikipedia article
-                            </Text>
-                        </View>
+                        <Text style={styles.emptyText}>
+                            Search for any Wikipedia article
+                        </Text>
                     }
                     renderItem={({ item }) => (
                         <ArticleCard
@@ -194,13 +204,10 @@ const styles = StyleSheet.create({
         flexGrow: 1,
     },
 
-    emptyContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-
     emptyText: {
+        alignSelf: "center",
+        textAlign: "center",
+        paddingHorizontal: 16,
         fontSize: 16,
         color: Colors.textMuted,
         fontFamily: "DMSans-Medium",
