@@ -45,7 +45,7 @@ export default function RootLayout() {
                     title: "Search",
                     tabBarIcon: ({ focused, color }) => (
                         <RemixIcon
-                            name={focused ? "search-fill" : "search-line"}
+                            name={focused ? "search-2-fill" : "search-2-line"}
                             size={TAB_ICON_SIZE}
                             color={color as string}
                             fallback={null}
