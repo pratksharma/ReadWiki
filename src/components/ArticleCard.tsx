@@ -60,7 +60,6 @@ export default function ArticleCard({
 
 const styles = StyleSheet.create({
     card: {
-        marginHorizontal: 16,
         position: "relative",
         flexDirection: "row",
         gap: 12,
@@ -69,7 +68,6 @@ const styles = StyleSheet.create({
         borderColor: Colors.border,
         borderRadius: 16,
         padding: 12,
-        marginBottom: 10,
     },
 
     cardPressed: {

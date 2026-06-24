@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
     Pressable,
-    SectionList,
+    ScrollView,
     StyleSheet,
     Text,
     View,
@@ -101,248 +101,262 @@ const Home = () => {
                     </Text>
                 </View>
             ) : (
-                <SectionList
-                    sections={sections}
-                    keyExtractor={(item, index) =>
-                        typeof item === "string"
-                            ? `${item}-${index}`
-                            : `${item.title}-${index}`
-                    }
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={styles.content}
-                    ListHeaderComponent={
-                        <>
-                            <View style={styles.featuredCard}>
-                                {featuredArticle?.thumbnail?.source && (
-                                    <>
-                                        <Image
-                                            source={
-                                                featuredArticle.thumbnail.source
-                                            }
-                                            style={styles.featuredCardImage}
-                                            contentFit="cover"
-                                        />
-                                        <View
-                                            style={styles.featuredCardOverlay}
-                                        />
+                <ScrollView contentContainerStyle={styles.sectionContainer}>
+                    <View style={styles.featuredCard}>
+                        {featuredArticle?.thumbnail?.source && (
+                            <>
+                                <Image
+                                    source={featuredArticle.thumbnail.source}
+                                    style={styles.featuredCardImage}
+                                    contentFit="cover"
+                                />
+                                <View style={styles.featuredCardOverlay} />
 
-                                        <LinearGradient
-                                            colors={[
-                                                "transparent",
-                                                "rgba(0, 0, 0, 0.7)",
-                                            ]}
-                                            style={{
-                                                position: "absolute",
-                                                bottom: 0,
-                                                left: 0,
-                                                right: 0,
-                                                width: "100%",
-                                                height: "100%",
-                                            }}
-                                        />
-                                    </>
-                                )}
+                                <LinearGradient
+                                    colors={[
+                                        "transparent",
+                                        "rgba(0, 0, 0, 0.7)",
+                                    ]}
+                                    style={{
+                                        position: "absolute",
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                        width: "100%",
+                                        height: "100%",
+                                    }}
+                                />
+                            </>
+                        )}
 
-                                <View style={styles.featuredCardContent}>
-                                    <View
-                                        style={[
-                                            styles.featuredCardBadge,
-                                            !featuredArticle?.thumbnail
-                                                ?.source && {
-                                                backgroundColor:
-                                                    Colors.backgroundSecondary,
-                                            },
-                                        ]}
-                                    >
-                                        <Text
-                                            style={[
-                                                styles.featuredCardBadgeText,
-                                                {
-                                                    color: textColor,
-                                                },
-                                            ]}
-                                        >
-                                            Featured Article
-                                        </Text>
-                                    </View>
-
-                                    <Text
-                                        style={[
-                                            styles.featuredCardTitle,
-                                            {
-                                                color: textColor,
-                                            },
-                                        ]}
-                                        numberOfLines={2}
-                                    >
-                                        {featuredArticle?.normalizedtitle ??
-                                            featuredArticle?.titles.normalized}
-                                    </Text>
-
-                                    {!!featuredArticle?.extract && (
-                                        <Text
-                                            style={[
-                                                styles.featuredCardDescription,
-                                                {
-                                                    color: secondaryTextColor,
-                                                },
-                                            ]}
-                                            numberOfLines={4}
-                                        >
-                                            {featuredArticle.extract == ""
-                                                ? featuredArticle.description
-                                                : featuredArticle.extract}
-                                        </Text>
-                                    )}
-                                    <View style={{ alignItems: "flex-start" }}>
-                                        <PrimaryButton
-                                            text="Read More"
-                                            iconName="arrow-right-long-fill"
-                                            theme={
-                                                featuredArticle?.thumbnail
-                                                    ? "light"
-                                                    : "dark"
-                                            }
-                                            onPress={() =>
-                                                router.push({
-                                                    pathname:
-                                                        "/article/[article]",
-                                                    params: {
-                                                        article:
-                                                            featuredArticle?.title,
-                                                    },
-                                                })
-                                            }
-                                        />
-                                    </View>
-                                </View>
+                        <View style={styles.featuredCardContent}>
+                            <View
+                                style={[
+                                    styles.featuredCardBadge,
+                                    !featuredArticle?.thumbnail?.source && {
+                                        backgroundColor:
+                                            Colors.backgroundSecondary,
+                                    },
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.featuredCardBadgeText,
+                                        {
+                                            color: textColor,
+                                        },
+                                    ]}
+                                >
+                                    Featured Article
+                                </Text>
                             </View>
-                            {imageOfTheDay && (
-                                <>
-                                    <Text style={styles.sectionTitle}>
-                                        Image of the Day
-                                    </Text>
 
-                                    <Pressable
-                                        style={({ pressed }) => [
-                                            styles.imageCard,
-                                            pressed && styles.imageCardPressed,
-                                        ]}
-                                        onPress={() => {
-                                            router.navigate({
-                                                pathname: "/image/[image]",
-                                                params: {
-                                                    image: imageOfTheDay
-                                                        .thumbnail.source,
-                                                },
-                                            });
-                                        }}
-                                    >
-                                        <Image
-                                            source={
-                                                imageOfTheDay.thumbnail?.source
-                                            }
-                                            style={styles.imageCardImage}
-                                            contentFit="cover"
-                                        />
+                            <Text
+                                style={[
+                                    styles.featuredCardTitle,
+                                    {
+                                        color: textColor,
+                                    },
+                                ]}
+                                numberOfLines={2}
+                            >
+                                {featuredArticle?.normalizedtitle ??
+                                    featuredArticle?.titles.normalized}
+                            </Text>
 
-                                        <View style={styles.imageCardContent}>
-                                            <Text style={styles.imageCardTitle}>
-                                                Author:{" "}
-                                                {imageOfTheDay.artist.text}
-                                            </Text>
-
-                                            {!!imageOfTheDay.description
-                                                ?.text && (
-                                                <Text
-                                                    style={
-                                                        styles.imageCardDescription
-                                                    }
-                                                >
-                                                    {
-                                                        imageOfTheDay
-                                                            .description.text
-                                                    }
-                                                </Text>
-                                            )}
-                                        </View>
-                                    </Pressable>
-                                </>
-                            )}
-                        </>
-                    }
-                    renderSectionHeader={({ section }) => (
-                        <View>
-                            {section.data.length > 0 && (
-                                <Text style={styles.sectionTitle}>
-                                    {section.title}
+                            {!!featuredArticle?.extract && (
+                                <Text
+                                    style={[
+                                        styles.featuredCardDescription,
+                                        {
+                                            color: secondaryTextColor,
+                                        },
+                                    ]}
+                                    numberOfLines={4}
+                                >
+                                    {featuredArticle.extract == ""
+                                        ? featuredArticle.description
+                                        : featuredArticle.extract}
                                 </Text>
                             )}
-                        </View>
-                    )}
-                    renderItem={({ item, section, index }) => {
-                        if (section.type === "trending") {
-                            return (
-                                <ArticleCard
-                                    tag={`${item.views.toLocaleString()} views`}
-                                    title={item.titles.normalized}
-                                    subtitle={item.extract}
-                                    image={item.thumbnail?.source}
+                            <View style={{ alignItems: "flex-start" }}>
+                                <PrimaryButton
+                                    text="Read More"
+                                    iconName="arrow-right-long-fill"
+                                    theme={
+                                        featuredArticle?.thumbnail
+                                            ? "light"
+                                            : "dark"
+                                    }
                                     onPress={() =>
                                         router.push({
                                             pathname: "/article/[article]",
                                             params: {
-                                                article: item.titles.normalized,
+                                                article: featuredArticle?.title,
                                             },
                                         })
                                     }
                                 />
-                            );
-                        }
-
-                        const article = item.pages?.[0];
-
-                        if (!article) {
-                            return null;
-                        }
-
-                        return (
-                            <ArticleCard
-                                title={article.normalizedtitle}
-                                subtitle={item.text}
-                                tag={item.year}
-                                image={article.thumbnail?.source}
-                                onPress={() =>
-                                    router.push({
-                                        pathname: "/article/[article]",
+                            </View>
+                        </View>
+                    </View>
+                    {imageOfTheDay && (
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>
+                                Image of the Day
+                            </Text>
+                            <Pressable
+                                style={({ pressed }) => [
+                                    styles.imageCard,
+                                    pressed && styles.imageCardPressed,
+                                ]}
+                                onPress={() => {
+                                    router.navigate({
+                                        pathname: "/image/[image]",
                                         params: {
-                                            article: article.normalizedtitle,
+                                            image: imageOfTheDay.thumbnail
+                                                .source,
                                         },
-                                    })
-                                }
-                            />
-                        );
-                    }}
-                    renderSectionFooter={({ section }) => (
-                        <View
-                            style={{
-                                alignItems: "center",
-                            }}
-                        >
-                            {section.data.length > 0 && (
+                                    });
+                                }}
+                            >
+                                <Image
+                                    source={imageOfTheDay.thumbnail?.source}
+                                    style={styles.imageCardImage}
+                                    contentFit="cover"
+                                />
+
+                                <View style={styles.imageCardContent}>
+                                    <Text style={styles.imageCardTitle}>
+                                        Author: {imageOfTheDay.artist.text}
+                                    </Text>
+
+                                    {!!imageOfTheDay.description?.text && (
+                                        <Text
+                                            style={styles.imageCardDescription}
+                                        >
+                                            {imageOfTheDay.description.text}
+                                        </Text>
+                                    )}
+                                </View>
+                            </Pressable>
+                        </View>
+                    )}
+                    {trendingArticles && (
+                        <View style={styles.section}>
+                            <View>
+                                <Text style={styles.sectionTitle}>
+                                    Trending
+                                </Text>
+                            </View>
+                            <View style={styles.sectionContent}>
+                                {trendingArticles.map(
+                                    (item: any, index: number) => {
+                                        return (
+                                            <ArticleCard
+                                                key={
+                                                    item.titles.normalized +
+                                                    index
+                                                }
+                                                tag={`${item.views.toLocaleString()} views`}
+                                                title={item.titles.normalized}
+                                                subtitle={item.extract}
+                                                image={item.thumbnail?.source}
+                                                onPress={() =>
+                                                    router.push({
+                                                        pathname:
+                                                            "/article/[article]",
+                                                        params: {
+                                                            article:
+                                                                item.titles
+                                                                    .normalized,
+                                                        },
+                                                    })
+                                                }
+                                            />
+                                        );
+                                    },
+                                )}
+                            </View>
+
+                            <View
+                                style={{
+                                    alignItems: "center",
+                                    marginTop: 10,
+                                }}
+                            >
                                 <PrimaryButton
-                                    text={`More ${section.title} Articles`}
+                                    text={`More Trending Articles`}
+                                    iconName="arrow-right-long-fill"
+                                    iconPosition="right"
+                                    theme="dark"
+                                    onPress={() => router.navigate("/trending")}
+                                />
+                            </View>
+                        </View>
+                    )}
+                    {onThisDayArticles && (
+                        <View style={styles.section}>
+                            <View>
+                                <Text style={styles.sectionTitle}>
+                                    On This Day
+                                </Text>
+                            </View>
+                            <View style={styles.sectionContent}>
+                                {onThisDayArticles.map(
+                                    (item: any, index: number) => {
+                                        const article = item.pages?.[0];
+
+                                        if (!article) {
+                                            return null;
+                                        }
+                                        return (
+                                            <ArticleCard
+                                                key={
+                                                    article.normalizedtitle +
+                                                    index
+                                                }
+                                                title={article.normalizedtitle}
+                                                subtitle={item.text}
+                                                tag={item.year}
+                                                image={
+                                                    article.thumbnail?.source
+                                                }
+                                                onPress={() =>
+                                                    router.push({
+                                                        pathname:
+                                                            "/article/[article]",
+                                                        params: {
+                                                            article:
+                                                                article.normalizedtitle,
+                                                        },
+                                                    })
+                                                }
+                                            />
+                                        );
+                                    },
+                                )}
+                            </View>
+
+                            <View
+                                style={{
+                                    alignItems: "center",
+                                    marginTop: 10,
+                                }}
+                            >
+                                <PrimaryButton
+                                    text={`More On This Day Articles`}
                                     iconName="arrow-right-long-fill"
                                     iconPosition="right"
                                     theme="dark"
                                     onPress={() =>
-                                        router.navigate(section.slug as any)
+                                        router.navigate("/on-this-day")
                                     }
                                 />
-                            )}
+                            </View>
                         </View>
                     )}
-                />
+                </ScrollView>
             )}
         </View>
     );
@@ -354,6 +368,7 @@ const styles = StyleSheet.create({
     container: {
         position: "relative",
         flex: 1,
+        gap: 32,
         backgroundColor: Colors.background,
     },
 
@@ -394,6 +409,12 @@ const styles = StyleSheet.create({
         fontFamily: "DMSans-SemiBold",
         fontSize: 14,
         color: Colors.text,
+    },
+
+    sectionContainer: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
     },
 
     featuredCard: {
@@ -464,7 +485,6 @@ const styles = StyleSheet.create({
     },
 
     imageCard: {
-        marginHorizontal: 16,
         borderRadius: 16,
         overflow: "hidden",
         backgroundColor: Colors.surface,
@@ -500,35 +520,18 @@ const styles = StyleSheet.create({
         fontFamily: "DMSans-Medium",
     },
 
+    section: {
+        padding: 16,
+    },
+
     sectionTitle: {
-        marginHorizontal: 16,
         fontSize: 32,
         letterSpacing: -0.5,
         color: Colors.text,
         fontFamily: "BricolageGrotesque-SemiBold",
-        marginTop: 32,
-        marginBottom: 4,
     },
 
-    sectionButton: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 8,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 999,
-        backgroundColor: Colors.secondary,
-        alignSelf: "center",
-        marginTop: 10,
-    },
-    sectionButtonPressed: {
-        opacity: 0.9,
-    },
-
-    sectionButtonText: {
-        fontSize: 16,
-        fontFamily: "DMSans-Medium",
-        color: Colors.textInverse,
+    sectionContent: {
+        gap: 10,
     },
 });
