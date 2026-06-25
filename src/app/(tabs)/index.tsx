@@ -8,6 +8,7 @@ import { router, Tabs } from "expo-router";
 import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
+    FlatList,
     Pressable,
     ScrollView,
     StyleSheet,
@@ -208,6 +209,9 @@ const Home = () => {
                             <Pressable
                                 style={({ pressed }) => [
                                     styles.imageCard,
+                                    {
+                                        marginHorizontal: 16,
+                                    },
                                     pressed && styles.imageCardPressed,
                                 ]}
                                 onPress={() => {
@@ -250,33 +254,69 @@ const Home = () => {
                                 </Text>
                             </View>
                             <View style={styles.sectionContent}>
-                                {trendingArticles.map(
-                                    (item: any, index: number) => {
-                                        return (
-                                            <ArticleCard
-                                                key={
-                                                    item.titles.normalized +
-                                                    index
-                                                }
-                                                tag={`${item.views.toLocaleString()} views`}
-                                                title={item.titles.normalized}
-                                                subtitle={item.extract}
-                                                image={item.thumbnail?.source}
-                                                onPress={() =>
-                                                    router.push({
-                                                        pathname:
-                                                            "/article/[article]",
-                                                        params: {
-                                                            article:
-                                                                item.titles
-                                                                    .normalized,
-                                                        },
-                                                    })
-                                                }
+                                <FlatList
+                                    data={trendingArticles}
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    keyExtractor={(item, index) =>
+                                        item.titles.normalized + index
+                                    }
+                                    contentContainerStyle={styles.trendingList}
+                                    renderItem={({ item }) => (
+                                        <Pressable
+                                            onPress={() =>
+                                                router.push({
+                                                    pathname:
+                                                        "/article/[article]",
+                                                    params: {
+                                                        article:
+                                                            item.titles
+                                                                .normalized,
+                                                    },
+                                                })
+                                            }
+                                            style={styles.trendingCard}
+                                        >
+                                            {item.thumbnail && (
+                                                <Image
+                                                    source={
+                                                        item.thumbnail.source
+                                                    }
+                                                    contentFit="cover"
+                                                    style={styles.trendingImage}
+                                                />
+                                            )}
+
+                                            <LinearGradient
+                                                colors={[
+                                                    "transparent",
+                                                    "rgba(0,0,0,0.7)",
+                                                ]}
+                                                style={styles.trendingGradient}
                                             />
-                                        );
-                                    },
-                                )}
+
+                                            <View
+                                                style={styles.trendingContent}
+                                            >
+                                                <Text
+                                                    style={styles.trendingTitle}
+                                                    numberOfLines={2}
+                                                >
+                                                    {item.titles.normalized}
+                                                </Text>
+
+                                                <Text
+                                                    style={
+                                                        styles.trendingDescription
+                                                    }
+                                                    numberOfLines={3}
+                                                >
+                                                    {item.extract}
+                                                </Text>
+                                            </View>
+                                        </Pressable>
+                                    )}
+                                />
                             </View>
 
                             <View
@@ -390,31 +430,11 @@ const styles = StyleSheet.create({
         fontFamily: "DMSans-Medium",
     },
 
-    randomButton: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 4,
-        backgroundColor: Colors.surface,
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 999,
-    },
-
-    randomButtonPressed: {
-        backgroundColor: Colors.surfaceHover,
-        transform: [{ scale: 0.95 }],
-    },
-
-    randomButtonText: {
-        fontFamily: "DMSans-SemiBold",
-        fontSize: 14,
-        color: Colors.text,
-    },
-
     sectionContainer: {
         display: "flex",
         flexDirection: "column",
         gap: 16,
+        paddingBottom: 16,
     },
 
     featuredCard: {
@@ -430,7 +450,6 @@ const styles = StyleSheet.create({
 
     featuredCardOverlay: {
         ...StyleSheet.absoluteFill,
-        // backgroundColor: "rgba(0,0,0,0.55)",
     },
 
     featuredCardContent: {
@@ -521,7 +540,7 @@ const styles = StyleSheet.create({
     },
 
     section: {
-        padding: 16,
+        // padding: 16,
     },
 
     sectionTitle: {
@@ -529,9 +548,57 @@ const styles = StyleSheet.create({
         letterSpacing: -0.5,
         color: Colors.text,
         fontFamily: "BricolageGrotesque-SemiBold",
+        paddingHorizontal: 16,
+        marginTop: 16,
     },
 
     sectionContent: {
-        gap: 10,
+        // gap: 10,
+    },
+
+    trendingList: {
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        gap: 16,
+    },
+
+    trendingCard: {
+        width: 280,
+        height: 280,
+        borderRadius: 16,
+        overflow: "hidden",
+        backgroundColor: Colors.surfaceMuted,
+        position: "relative",
+    },
+
+    trendingImage: {
+        ...StyleSheet.absoluteFill,
+    },
+
+    trendingGradient: {
+        height: "50%",
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+
+    trendingContent: {
+        flex: 1,
+        justifyContent: "flex-end",
+        padding: 16,
+    },
+
+    trendingTitle: {
+        fontFamily: "BricolageGrotesque-SemiBold",
+        color: "#fff",
+        fontSize: 20,
+        marginBottom: 6,
+    },
+
+    trendingDescription: {
+        color: "rgba(255,255,255,0.9)",
+        fontSize: 14,
+        lineHeight: 20,
     },
 });

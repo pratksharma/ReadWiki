@@ -63,11 +63,11 @@ const styles = StyleSheet.create({
         position: "relative",
         flexDirection: "row",
         gap: 12,
-        backgroundColor: Colors.surface,
-        borderWidth: 1,
-        borderColor: Colors.border,
-        borderRadius: 16,
-        padding: 12,
+        backgroundColor: Colors.background,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: Colors.border,
     },
 
     cardPressed: {
@@ -78,14 +78,13 @@ const styles = StyleSheet.create({
         width: 72,
         height: 72,
         borderRadius: 8,
-        backgroundColor: Colors.background,
     },
 
     fallbackImageIcon: {
         width: 72,
         height: 72,
         borderRadius: 8,
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.surfaceMuted,
         alignItems: "center",
         justifyContent: "center",
     },
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
     tag: {
         fontSize: 12,
         color: Colors.textSecondary,
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.surfaceMuted,
         fontFamily: "DMSans-SemiBold",
         paddingVertical: 2,
         paddingHorizontal: 8,

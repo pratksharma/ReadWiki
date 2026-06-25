@@ -10,7 +10,7 @@ export const Colors = {
     background: "#e4e4e4",
     backgroundSecondary: "#F5F5F4",
     surface: "#FFFFFF",
-    surfaceHover: "#F5F5F5",
+    surfaceMuted: "#F5F5F5",
 
     // Text
     text: "#111111",

@@ -20,7 +20,7 @@ const PrimaryButton = ({
     const isDark = theme === "dark";
 
     const backgroundColor = isDark ? Colors.primary : Colors.surface;
-    const pressedColor = isDark ? Colors.secondary : Colors.surfaceHover;
+    const pressedColor = isDark ? Colors.secondary : Colors.surfaceMuted;
     const textColor = isDark ? Colors.textInverse : Colors.text;
 
     const icon = (
