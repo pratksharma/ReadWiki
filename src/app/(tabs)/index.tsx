@@ -15,6 +15,7 @@ import {
     Text,
     View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Home = () => {
     const [featuredArticle, setFeaturedArticle] = useState<any>(null);
@@ -50,20 +51,7 @@ const Home = () => {
         ? "rgba(255,255,255,0.9)"
         : Colors.textSecondary;
 
-    const sections = [
-        {
-            title: "Trending",
-            type: "trending",
-            slug: "trending",
-            data: trendingArticles,
-        },
-        {
-            title: "On This Day",
-            type: "otd",
-            slug: "on-this-day",
-            data: onThisDayArticles,
-        },
-    ];
+    const insets = useSafeAreaInsets();
 
     return (
         <View style={styles.container}>
@@ -97,12 +85,17 @@ const Home = () => {
             {loading ? (
                 <View style={styles.loaderContainer}>
                     <ActivityIndicator size="large" color={Colors.primary} />
-                    <Text style={styles.loadingText}>
-                        Loading today's article...
-                    </Text>
+                    <Text style={styles.loadingText}>Loading...</Text>
                 </View>
             ) : (
-                <ScrollView contentContainerStyle={styles.sectionContainer}>
+                <ScrollView
+                    contentContainerStyle={[
+                        styles.sectionContainer,
+                        {
+                            paddingBottom: insets.bottom + 80,
+                        },
+                    ]}
+                >
                     <View style={styles.featuredCard}>
                         {featuredArticle?.thumbnail?.source && (
                             <>
@@ -434,7 +427,6 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         gap: 16,
-        paddingBottom: 100,
     },
 
     featuredCard: {

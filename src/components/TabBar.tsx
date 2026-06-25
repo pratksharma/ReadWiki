@@ -9,16 +9,27 @@ export default function TabBar({
     descriptors,
     navigation,
 }: BottomTabBarProps) {
-    let insets = useSafeAreaInsets();
+    const insets = useSafeAreaInsets();
     return (
-        <View style={styles.wrapper}>
+        <View
+            style={[
+                styles.wrapper,
+                {
+                    paddingBottom: insets.bottom,
+                },
+            ]}
+        >
             <LinearGradient
                 colors={["transparent", "rgba(0,0,0,0.7)"]}
-                style={styles.gradient}
+                style={[
+                    styles.gradient,
+                    {
+                        height: insets.bottom + 80,
+                    },
+                ]}
             />
             <View style={styles.container}>
                 {state.routes.map((route, index) => {
-                    console.log(state.routes);
                     const { options } = descriptors[route.key];
 
                     const label =
@@ -73,7 +84,6 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        height: 80,
     },
 
     container: {
@@ -82,7 +92,7 @@ const styles = StyleSheet.create({
         borderRadius: 999,
         padding: 6,
         marginHorizontal: 16,
-        marginBottom: 25,
+        marginBottom: 16,
     },
 
     tab: {

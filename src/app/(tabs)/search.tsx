@@ -13,6 +13,7 @@ import {
     View,
 } from "react-native";
 import RemixIcon from "react-native-remix-icon";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Search = () => {
     const [query, setQuery] = useState("");
@@ -69,6 +70,8 @@ const Search = () => {
         }, []),
     );
 
+    const insets = useSafeAreaInsets();
+
     return (
         <View style={styles.container}>
             <View style={styles.searchContainer}>
@@ -115,7 +118,12 @@ const Search = () => {
                 <FlatList
                     data={searchResults}
                     keyExtractor={(item) => item.title}
-                    contentContainerStyle={styles.listContent}
+                    contentContainerStyle={[
+                        styles.listContent,
+                        {
+                            paddingBottom: insets.bottom + 80,
+                        },
+                    ]}
                     showsVerticalScrollIndicator={false}
                     keyboardShouldPersistTaps="handled"
                     ListEmptyComponent={
@@ -200,7 +208,6 @@ const styles = StyleSheet.create({
     },
 
     listContent: {
-        paddingBottom: 100,
         flexGrow: 1,
     },
 
