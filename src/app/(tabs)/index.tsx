@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         gap: 16,
-        paddingBottom: 16,
+        paddingBottom: 100,
     },
 
     featuredCard: {
@@ -597,6 +597,7 @@ const styles = StyleSheet.create({
     },
 
     trendingDescription: {
+        fontFamily: "DMSans-Medium",
         color: "rgba(255,255,255,0.9)",
         fontSize: 14,
         lineHeight: 20,
