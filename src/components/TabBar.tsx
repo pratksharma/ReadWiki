@@ -1,8 +1,18 @@
 import Colors from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import type { BottomTabBarProps } from "expo-router/js-tabs";
-import { Pressable, StyleSheet, View } from "react-native";
+import { useEffect } from "react";
+import { Dimensions, Pressable, StyleSheet, View } from "react-native";
+import Animated, {
+    Easing,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+const HORIZONTAL_MARGIN = 32;
+const CONTAINER_PADDING = 4;
 
 export default function TabBar({
     state,
@@ -10,6 +20,29 @@ export default function TabBar({
     navigation,
 }: BottomTabBarProps) {
     const insets = useSafeAreaInsets();
+
+    const tabWidth =
+        (Dimensions.get("window").width -
+            HORIZONTAL_MARGIN * 2 -
+            CONTAINER_PADDING * 2) /
+        state.routes.length;
+
+    const translateX = useSharedValue(0);
+
+    useEffect(() => {
+        translateX.value = withTiming(state.index * tabWidth, {
+            duration: 400,
+            easing: Easing.bezier(0.22, 1, 0.36, 1),
+        });
+    }, [state.index, tabWidth]);
+
+    const indicatorStyle = useAnimatedStyle(() => ({
+        transform: [
+            {
+                translateX: translateX.value,
+            },
+        ],
+    }));
 
     return (
         <View
@@ -31,6 +64,16 @@ export default function TabBar({
             />
 
             <View style={styles.container}>
+                <Animated.View
+                    style={[
+                        styles.indicator,
+                        {
+                            width: tabWidth,
+                        },
+                        indicatorStyle,
+                    ]}
+                />
+
                 {state.routes.map((route, index) => {
                     const { options } = descriptors[route.key];
                     const isFocused = state.index === index;
@@ -62,7 +105,7 @@ export default function TabBar({
                         <Pressable
                             key={route.key}
                             onPress={onPress}
-                            style={[styles.tab, isFocused && styles.activeTab]}
+                            style={styles.tab}
                         >
                             {icon}
                         </Pressable>
@@ -92,9 +135,19 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         backgroundColor: Colors.surface,
         borderRadius: 999,
-        padding: 4,
-        marginHorizontal: 32,
+        padding: CONTAINER_PADDING,
+        marginHorizontal: HORIZONTAL_MARGIN,
         marginBottom: 16,
+        position: "relative",
+    },
+
+    indicator: {
+        position: "absolute",
+        top: CONTAINER_PADDING,
+        bottom: CONTAINER_PADDING,
+        left: CONTAINER_PADDING,
+        borderRadius: 999,
+        backgroundColor: Colors.primary,
     },
 
     tab: {
@@ -102,10 +155,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         paddingVertical: 10,
-        borderRadius: 999,
-    },
-
-    activeTab: {
-        backgroundColor: Colors.primary,
+        zIndex: 1,
     },
 });
