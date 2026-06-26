@@ -1,8 +1,10 @@
 import Header from "@/components/Header";
+import { initializeNotifications } from "@/services/notification";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import * as Notifications from "expo-notifications";
+import { Href, router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -20,15 +22,65 @@ export default function RootLayout() {
         "BricolageGrotesque-SemiBold": require("../../assets/fonts/BricolageGrotesque-SemiBold.ttf"),
     });
 
+    const lastNotificationResponse =
+        Notifications.useLastNotificationResponse();
+
+    const handledNotificationId = useRef<string | null>(null);
+
     useEffect(() => {
         if (loaded || error) {
-            SplashScreen.hideAsync();
+            void SplashScreen.hideAsync();
         }
     }, [loaded, error]);
+
+    useEffect(() => {
+        void initializeNotifications();
+    }, []);
+
+    const handleNotificationResponse = (
+        response: Notifications.NotificationResponse,
+    ) => {
+        const { notification } = response;
+
+        // Prevent handling the same notification twice
+        if (handledNotificationId.current === notification.request.identifier) {
+            return;
+        }
+
+        handledNotificationId.current = notification.request.identifier;
+
+        const data = notification.request.content.data;
+
+        if (
+            data &&
+            data.type === "featured-article" &&
+            typeof data.href === "string"
+        ) {
+            router.push(data.href as Href);
+        }
+    };
+
+    // App launched from a notification
+    useEffect(() => {
+        if (lastNotificationResponse) {
+            handleNotificationResponse(lastNotificationResponse);
+        }
+    }, [lastNotificationResponse]);
+
+    // App already running (foreground/background)
+    useEffect(() => {
+        const subscription =
+            Notifications.addNotificationResponseReceivedListener(
+                handleNotificationResponse,
+            );
+
+        return () => subscription.remove();
+    }, []);
 
     if (!loaded && !error) {
         return null;
     }
+
     return (
         <Stack
             screenOptions={{
@@ -52,7 +104,6 @@ export default function RootLayout() {
                 name="article/[article]"
                 options={{ title: "Article" }}
             />
-            {/* <Stack.Screen name="image/[image]" options={{ title: "Image" }} /> */}
             <Stack.Screen name="trending" options={{ title: "Trending" }} />
             <Stack.Screen
                 name="on-this-day"

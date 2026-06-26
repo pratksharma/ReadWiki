@@ -40,6 +40,37 @@ export const getFeaturedArticle = async () => {
     }
 };
 
+export const getTomorrowFeaturedArticleTitle = async () => {
+    try {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        const year = tomorrow.getFullYear();
+        const month = String(tomorrow.getMonth() + 1).padStart(2, "0");
+        const day = String(tomorrow.getDate()).padStart(2, "0");
+
+        const url = `${BASE_URL}/feed/v1/wikipedia/en/featured/${year}/${month}/${day}`;
+
+        const response = await fetch(url, {
+            headers: {
+                "User-Agent": "WikiAtlas/1.0",
+                "Api-User-Agent": "WikiAtlas/1.0",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch tomorrow's featured article");
+        }
+
+        const data = await response.json();
+
+        return data.tfa.titles.normalized;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+};
+
 export const getFullArticle = async (title: string) => {
     try {
         const encodedTitle = encodeURIComponent(title);
