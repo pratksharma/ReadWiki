@@ -1,7 +1,7 @@
 import Colors from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import type { BottomTabBarProps } from "expo-router/js-tabs";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabBar({
@@ -10,6 +10,7 @@ export default function TabBar({
     navigation,
 }: BottomTabBarProps) {
     const insets = useSafeAreaInsets();
+
     return (
         <View
             style={[
@@ -28,14 +29,22 @@ export default function TabBar({
                     },
                 ]}
             />
+
             <View style={styles.container}>
                 {state.routes.map((route, index) => {
                     const { options } = descriptors[route.key];
-
-                    const label =
-                        options.tabBarLabel ?? options.title ?? route.name;
-
                     const isFocused = state.index === index;
+
+                    const icon =
+                        typeof options.tabBarIcon === "function"
+                            ? options.tabBarIcon({
+                                  focused: isFocused,
+                                  color: isFocused
+                                      ? Colors.textInverse
+                                      : "#666",
+                                  size: 24,
+                              })
+                            : null;
 
                     const onPress = () => {
                         const event = navigation.emit({
@@ -55,14 +64,7 @@ export default function TabBar({
                             onPress={onPress}
                             style={[styles.tab, isFocused && styles.activeTab]}
                         >
-                            <Text
-                                style={[
-                                    styles.text,
-                                    isFocused && styles.activeText,
-                                ]}
-                            >
-                                {label as string}
-                            </Text>
+                            {icon}
                         </Pressable>
                     );
                 })}
@@ -90,8 +92,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         backgroundColor: Colors.surface,
         borderRadius: 999,
-        padding: 6,
-        marginHorizontal: 16,
+        padding: 4,
+        marginHorizontal: 32,
         marginBottom: 16,
     },
 
@@ -99,20 +101,11 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        paddingVertical: 8,
+        paddingVertical: 10,
         borderRadius: 999,
     },
 
     activeTab: {
         backgroundColor: Colors.primary,
-    },
-
-    text: {
-        fontFamily: "DMSans-Medium",
-        color: "#666",
-    },
-
-    activeText: {
-        color: Colors.textInverse,
     },
 });
