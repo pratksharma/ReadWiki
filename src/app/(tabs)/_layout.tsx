@@ -58,18 +58,6 @@ export default function RootLayout() {
                 name="flow"
                 options={{
                     title: "Flow",
-                    tabBarIcon: ({ focused, color }) => (
-                        <RemixIcon
-                            name={
-                                focused
-                                    ? "loop-left-ai-fill"
-                                    : "loop-left-ai-line"
-                            }
-                            size={TAB_ICON_SIZE}
-                            color={color as string}
-                            fallback={null}
-                        />
-                    ),
                 }}
             />
 

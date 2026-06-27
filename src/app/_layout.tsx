@@ -1,10 +1,8 @@
 import Header from "@/components/Header";
-import { initializeNotifications } from "@/services/notification";
 import { useFonts } from "expo-font";
-import * as Notifications from "expo-notifications";
-import { Href, router, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,60 +20,60 @@ export default function RootLayout() {
         "BricolageGrotesque-SemiBold": require("../../assets/fonts/BricolageGrotesque-SemiBold.ttf"),
     });
 
-    const lastNotificationResponse =
-        Notifications.useLastNotificationResponse();
-
-    const handledNotificationId = useRef<string | null>(null);
-
     useEffect(() => {
         if (loaded || error) {
             void SplashScreen.hideAsync();
         }
     }, [loaded, error]);
 
-    useEffect(() => {
-        void initializeNotifications();
-    }, []);
+    // const lastNotificationResponse =
+    //     Notifications.useLastNotificationResponse();
 
-    const handleNotificationResponse = (
-        response: Notifications.NotificationResponse,
-    ) => {
-        const { notification } = response;
+    // const handledNotificationId = useRef<string | null>(null);
 
-        // Prevent handling the same notification twice
-        if (handledNotificationId.current === notification.request.identifier) {
-            return;
-        }
+    // useEffect(() => {
+    //     void initializeNotifications();
+    // }, []);
 
-        handledNotificationId.current = notification.request.identifier;
+    // const handleNotificationResponse = (
+    //     response: Notifications.NotificationResponse,
+    // ) => {
+    //     const { notification } = response;
 
-        const data = notification.request.content.data;
+    //     // Prevent handling the same notification twice
+    //     if (handledNotificationId.current === notification.request.identifier) {
+    //         return;
+    //     }
 
-        if (
-            data &&
-            data.type === "featured-article" &&
-            typeof data.href === "string"
-        ) {
-            router.push(data.href as Href);
-        }
-    };
+    //     handledNotificationId.current = notification.request.identifier;
 
-    // App launched from a notification
-    useEffect(() => {
-        if (lastNotificationResponse) {
-            handleNotificationResponse(lastNotificationResponse);
-        }
-    }, [lastNotificationResponse]);
+    //     const data = notification.request.content.data;
 
-    // App already running (foreground/background)
-    useEffect(() => {
-        const subscription =
-            Notifications.addNotificationResponseReceivedListener(
-                handleNotificationResponse,
-            );
+    //     if (
+    //         data &&
+    //         data.type === "featured-article" &&
+    //         typeof data.href === "string"
+    //     ) {
+    //         router.push(data.href as Href);
+    //     }
+    // };
 
-        return () => subscription.remove();
-    }, []);
+    // // App launched from a notification
+    // useEffect(() => {
+    //     if (lastNotificationResponse) {
+    //         handleNotificationResponse(lastNotificationResponse);
+    //     }
+    // }, [lastNotificationResponse]);
+
+    // // App already running (foreground/background)
+    // useEffect(() => {
+    //     const subscription =
+    //         Notifications.addNotificationResponseReceivedListener(
+    //             handleNotificationResponse,
+    //         );
+
+    //     return () => subscription.remove();
+    // }, []);
 
     if (!loaded && !error) {
         return null;

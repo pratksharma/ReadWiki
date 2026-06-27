@@ -2,7 +2,7 @@ import Colors from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import type { BottomTabBarProps } from "expo-router/js-tabs";
 import { useEffect } from "react";
-import { Dimensions, Pressable, StyleSheet, View } from "react-native";
+import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
     Easing,
     useAnimatedStyle,
@@ -84,7 +84,7 @@ export default function TabBar({
                                   focused: isFocused,
                                   color: isFocused
                                       ? Colors.textInverse
-                                      : "#666",
+                                      : Colors.textMuted,
                                   size: 24,
                               })
                             : null;
@@ -107,7 +107,22 @@ export default function TabBar({
                             onPress={onPress}
                             style={styles.tab}
                         >
-                            {icon}
+                            {route.name === "flow" ? (
+                                <Text
+                                    style={[
+                                        styles.tabLabel,
+                                        {
+                                            color: isFocused
+                                                ? Colors.textInverse
+                                                : Colors.textMuted,
+                                        },
+                                    ]}
+                                >
+                                    {options.title || route.name}
+                                </Text>
+                            ) : (
+                                icon
+                            )}
                         </Pressable>
                     );
                 })}
@@ -156,5 +171,10 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         paddingVertical: 10,
         zIndex: 1,
+    },
+
+    tabLabel: {
+        fontSize: 14,
+        fontFamily: "DMSans-Medium",
     },
 });
