@@ -144,3 +144,23 @@ export const getRandomArticle = async () => {
         return [];
     }
 };
+
+export async function getRandomArticles(limit = 20) {
+    const response = await fetch(
+        `https://en.wikipedia.org/w/api.php?action=query&format=json&generator=random&grnnamespace=0&prop=extracts|info|pageimages&inprop=url|varianttitles&grnlimit=${limit}&exintro=1&exlimit=max&exsentences=5&explaintext=1&piprop=thumbnail&pithumbsize=800&origin=*`,
+        {
+            headers: {
+                "User-Agent": "WikiAtlas/1.0",
+                "Api-User-Agent": "WikiAtlas/1.0",
+            },
+        },
+    );
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch random articles");
+    }
+
+    const data = await response.json();
+
+    return Object.values(data.query?.pages ?? {});
+}
