@@ -1,10 +1,10 @@
 import ArticleCard from "@/components/ArticleCard";
 import PrimaryButton from "@/components/PrimaryButton";
 import Colors from "@/constants/Colors";
-import { getFeaturedArticle, getRandomArticle } from "@/services/wikipedia";
+import { getFeaturedArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { router, Tabs } from "expo-router";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -45,43 +45,12 @@ const Home = () => {
 
     const textColor = featuredArticle?.thumbnail?.source
         ? Colors.textInverse
-        : Colors.text;
-
-    const secondaryTextColor = featuredArticle?.thumbnail?.source
-        ? "rgba(255,255,255,0.9)"
-        : Colors.textSecondary;
+        : Colors.textInverse;
 
     const insets = useSafeAreaInsets();
 
     return (
         <View style={styles.container}>
-            <Tabs.Screen
-                options={{
-                    headerRight: () => (
-                        <PrimaryButton
-                            text="Random"
-                            iconName="shuffle-line"
-                            iconPosition="left"
-                            onPress={async () => {
-                                try {
-                                    const randomArticle =
-                                        await getRandomArticle();
-
-                                    router.push({
-                                        pathname: "/article/[article]",
-                                        params: {
-                                            article: randomArticle,
-                                        },
-                                    });
-                                } catch (error) {
-                                    console.log(error);
-                                }
-                            }}
-                        />
-                    ),
-                }}
-            />
-
             {loading ? (
                 <View style={styles.loaderContainer}>
                     <ActivityIndicator size="large" color={Colors.primary} />
@@ -97,61 +66,38 @@ const Home = () => {
                     ]}
                 >
                     <View style={styles.featuredCard}>
-                        {featuredArticle?.thumbnail?.source && (
-                            <>
-                                <Image
-                                    source={featuredArticle.thumbnail.source}
-                                    style={styles.featuredCardImage}
-                                    contentFit="cover"
-                                />
-                                <View style={styles.featuredCardOverlay} />
+                        <Image
+                            source={
+                                featuredArticle?.thumbnail?.source
+                                    ? featuredArticle.thumbnail.source
+                                    : require("../../../assets/gradient-background.jpg")
+                            }
+                            style={styles.featuredCardImage}
+                            contentFit="cover"
+                        />
+                        <View style={styles.featuredCardOverlay} />
 
-                                <LinearGradient
-                                    colors={[
-                                        "transparent",
-                                        "rgba(0, 0, 0, 0.7)",
-                                    ]}
-                                    style={{
-                                        position: "absolute",
-                                        bottom: 0,
-                                        left: 0,
-                                        right: 0,
-                                        width: "100%",
-                                        height: "100%",
-                                    }}
-                                />
-                            </>
-                        )}
+                        <LinearGradient
+                            colors={["transparent", "rgba(0, 0, 0, 0.7)"]}
+                            style={{
+                                position: "absolute",
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                width: "100%",
+                                height: "100%",
+                            }}
+                        />
 
                         <View style={styles.featuredCardContent}>
-                            <View
-                                style={[
-                                    styles.featuredCardBadge,
-                                    !featuredArticle?.thumbnail?.source && {
-                                        backgroundColor:
-                                            Colors.backgroundSecondary,
-                                    },
-                                ]}
-                            >
-                                <Text
-                                    style={[
-                                        styles.featuredCardBadgeText,
-                                        {
-                                            color: textColor,
-                                        },
-                                    ]}
-                                >
+                            <View style={styles.featuredCardBadge}>
+                                <Text style={styles.featuredCardBadgeText}>
                                     Featured Article
                                 </Text>
                             </View>
 
                             <Text
-                                style={[
-                                    styles.featuredCardTitle,
-                                    {
-                                        color: textColor,
-                                    },
-                                ]}
+                                style={styles.featuredCardTitle}
                                 numberOfLines={2}
                             >
                                 {featuredArticle?.normalizedtitle ??
@@ -160,12 +106,7 @@ const Home = () => {
 
                             {!!featuredArticle?.extract && (
                                 <Text
-                                    style={[
-                                        styles.featuredCardDescription,
-                                        {
-                                            color: secondaryTextColor,
-                                        },
-                                    ]}
+                                    style={styles.featuredCardDescription}
                                     numberOfLines={4}
                                 >
                                     {featuredArticle.extract == ""
@@ -177,11 +118,7 @@ const Home = () => {
                                 <PrimaryButton
                                     text="Read More"
                                     iconName="arrow-right-long-fill"
-                                    theme={
-                                        featuredArticle?.thumbnail
-                                            ? "light"
-                                            : "dark"
-                                    }
+                                    theme="light"
                                     onPress={() =>
                                         router.push({
                                             pathname: "/article/[article]",
@@ -465,17 +402,20 @@ const styles = StyleSheet.create({
         fontSize: 12,
         letterSpacing: 1,
         fontFamily: "DMSans-Bold",
+        color: Colors.textInverse,
     },
 
     featuredCardTitle: {
         fontSize: 28,
         fontFamily: "PTSerif-Bold",
+        color: Colors.textInverse,
     },
 
     featuredCardDescription: {
         fontSize: 14,
         fontFamily: "DMSans-Medium",
         marginBottom: 12,
+        color: "rgba(255,255,255,0.9)",
     },
 
     featuredCardButton: {
