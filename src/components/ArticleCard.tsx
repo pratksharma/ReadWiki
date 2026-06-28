@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         color: Colors.text,
         fontSize: 18,
         lineHeight: 18,
-        fontFamily: "BricolageGrotesque-SemiBold",
+        fontFamily: "PTSerif-Bold",
     },
 
     subtitle: {

@@ -239,7 +239,7 @@ const Home = () => {
                             </Pressable>
                         </View>
                     )}
-                    {trendingArticles && (
+                    {trendingArticles.length > 0 && (
                         <View style={styles.section}>
                             <View>
                                 <Text style={styles.sectionTitle}>
@@ -328,7 +328,7 @@ const Home = () => {
                             </View>
                         </View>
                     )}
-                    {onThisDayArticles && (
+                    {onThisDayArticles.length > 0 && (
                         <View style={styles.section}>
                             <View>
                                 <Text style={styles.sectionTitle}>
@@ -469,7 +469,7 @@ const styles = StyleSheet.create({
 
     featuredCardTitle: {
         fontSize: 28,
-        fontFamily: "BricolageGrotesque-SemiBold",
+        fontFamily: "PTSerif-Bold",
     },
 
     featuredCardDescription: {
@@ -522,7 +522,7 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         letterSpacing: -0.5,
         color: Colors.text,
-        fontFamily: "BricolageGrotesque-SemiBold",
+        fontFamily: "PTSerif-Bold",
     },
 
     imageCardDescription: {
@@ -539,7 +539,7 @@ const styles = StyleSheet.create({
         fontSize: 32,
         letterSpacing: -0.5,
         color: Colors.text,
-        fontFamily: "BricolageGrotesque-SemiBold",
+        fontFamily: "PTSerif-Bold",
         paddingHorizontal: 16,
         marginTop: 16,
     },
@@ -582,7 +582,7 @@ const styles = StyleSheet.create({
     },
 
     trendingTitle: {
-        fontFamily: "BricolageGrotesque-SemiBold",
+        fontFamily: "PTSerif-Bold",
         color: "#fff",
         fontSize: 20,
         marginBottom: 6,

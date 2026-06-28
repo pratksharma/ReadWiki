@@ -73,8 +73,7 @@ const styles = StyleSheet.create({
     },
 
     buttonText: {
-        fontFamily: "BricolageGrotesque-SemiBold",
+        fontFamily: "DMSans-Medium",
         fontSize: 14,
-        marginTop: -2,
     },
 });

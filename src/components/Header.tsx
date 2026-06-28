@@ -93,9 +93,7 @@ const styles = StyleSheet.create({
     logo: {
         fontSize: 28,
         color: Colors.textInverse,
-        fontFamily: "BricolageGrotesque-SemiBold",
-        letterSpacing: -0.5,
-        marginTop: -4,
+        fontFamily: "PTSerif-Bold",
     },
 
     rightContainer: {
