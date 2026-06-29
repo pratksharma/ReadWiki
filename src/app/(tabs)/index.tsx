@@ -407,7 +407,7 @@ const styles = StyleSheet.create({
 
     featuredCardTitle: {
         fontSize: 28,
-        fontFamily: "PTSerif-Bold",
+        fontFamily: "Fraunces-SemiBold",
         color: Colors.textInverse,
     },
 
@@ -462,7 +462,7 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         letterSpacing: -0.5,
         color: Colors.text,
-        fontFamily: "PTSerif-Bold",
+        fontFamily: "Fraunces-SemiBold",
     },
 
     imageCardDescription: {
@@ -477,9 +477,8 @@ const styles = StyleSheet.create({
 
     sectionTitle: {
         fontSize: 32,
-        letterSpacing: -0.5,
         color: Colors.text,
-        fontFamily: "PTSerif-Bold",
+        fontFamily: "Fraunces-SemiBold",
         paddingHorizontal: 16,
         marginTop: 16,
     },
@@ -522,7 +521,7 @@ const styles = StyleSheet.create({
     },
 
     trendingTitle: {
-        fontFamily: "PTSerif-Bold",
+        fontFamily: "Fraunces-SemiBold",
         color: "#fff",
         fontSize: 20,
         marginBottom: 6,

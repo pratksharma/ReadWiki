@@ -102,14 +102,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         borderRadius: 12,
         alignSelf: "flex-start",
-        marginBottom: 8,
+        marginBottom: 4,
     },
 
     title: {
         color: Colors.text,
         fontSize: 18,
-        lineHeight: 18,
-        fontFamily: "PTSerif-Bold",
+        fontFamily: "Fraunces-SemiBold",
     },
 
     subtitle: {

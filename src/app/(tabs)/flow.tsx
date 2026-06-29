@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     title: {
         color: "#fff",
         fontSize: 24,
-        fontFamily: "PTSerif-Bold",
+        fontFamily: "Fraunces-SemiBold",
     },
 
     extract: {

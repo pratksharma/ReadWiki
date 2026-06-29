@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     logo: {
         fontSize: 28,
         color: Colors.textInverse,
-        fontFamily: "PTSerif-Bold",
+        fontFamily: "Fraunces-SemiBold",
     },
 
     rightContainer: {

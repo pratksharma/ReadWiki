@@ -12,8 +12,12 @@ export default function RootLayout() {
         "DMSans-Medium": require("../../assets/fonts/DMSans-Medium.ttf"),
         "DMSans-SemiBold": require("../../assets/fonts/DMSans-SemiBold.ttf"),
         "DMSans-Bold": require("../../assets/fonts/DMSans-Bold.ttf"),
-        "PTSerif-Regular": require("../../assets/fonts/PTSerif-Regular.ttf"),
-        "PTSerif-Bold": require("../../assets/fonts/PTSerif-Bold.ttf"),
+        "Fraunces-Thin": require("../../assets/fonts/Fraunces-Thin.ttf"),
+        "Fraunces-Light": require("../../assets/fonts/Fraunces-Light.ttf"),
+        "Fraunces-Regular": require("../../assets/fonts/Fraunces-Regular.ttf"),
+        "Fraunces-SemiBold": require("../../assets/fonts/Fraunces-SemiBold.ttf"),
+        "Fraunces-Bold": require("../../assets/fonts/Fraunces-Bold.ttf"),
+        "Fraunces-Black": require("../../assets/fonts/Fraunces-Black.ttf"),
     });
 
     useEffect(() => {
