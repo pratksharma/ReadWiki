@@ -13,6 +13,7 @@ import {
 import RemixIcon from "react-native-remix-icon";
 
 const GITHUB_USER = "https://api.github.com/users/pratksharma";
+const GITHUB_REPO = "https://api.github.com/repos/pratksharma/WikiAtlas";
 
 type GithubUser = {
     avatar_url: string;
@@ -22,17 +23,42 @@ type GithubUser = {
     blog: string;
 };
 
+type GithubRepo = {
+    html_url: string;
+    homepage: string | null;
+    description: string;
+    stargazers_count: number;
+    forks_count: number;
+    open_issues_count: number;
+    license: {
+        name: string;
+    } | null;
+};
+
 export default function About() {
     const [author, setAuthor] = useState<GithubUser | null>(null);
+    const [repo, setRepo] = useState<GithubRepo | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function load() {
             try {
-                const res = await fetch(GITHUB_USER);
-                const data = await res.json();
-                setAuthor(data);
-            } catch (e) {
-                console.log(e);
+                const [userRes, repoRes] = await Promise.all([
+                    fetch(GITHUB_USER),
+                    fetch(GITHUB_REPO),
+                ]);
+
+                const [user, repository] = await Promise.all([
+                    userRes.json(),
+                    repoRes.json(),
+                ]);
+
+                setAuthor(user);
+                setRepo(repository);
+            } catch (err) {
+                console.log(err);
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -56,64 +82,97 @@ export default function About() {
                 <Text style={styles.version}>Version 1.0.0</Text>
 
                 <Text style={styles.description}>
-                    A clean and modern Wikipedia reader built with React Native
-                    and Expo.
+                    {repo?.description ??
+                        "A clean and modern Wikipedia reader."}
                 </Text>
+
+                <View style={styles.appLinks}>
+                    {repo && (
+                        <Pressable
+                            style={styles.linkChip}
+                            onPress={() => Linking.openURL(repo.html_url)}
+                        >
+                            <RemixIcon
+                                name="github-fill"
+                                size={16}
+                                color={Colors.text}
+                            />
+                            <Text style={styles.linkChipText}>GitHub</Text>
+                        </Pressable>
+                    )}
+
+                    {repo?.homepage ? (
+                        <Pressable
+                            style={styles.linkChip}
+                            onPress={() =>
+                                Linking.openURL(repo.homepage as string)
+                            }
+                        >
+                            <RemixIcon
+                                name="global-line"
+                                size={16}
+                                color={Colors.text}
+                            />
+                            <Text style={styles.linkChipText}>Homepage</Text>
+                        </Pressable>
+                    ) : null}
+                </View>
             </View>
 
-            <Text style={styles.sectionTitle}>Developer</Text>
+            <Text style={styles.sectionTitle}>Author</Text>
 
-            {!author ? (
+            {loading ? (
                 <ActivityIndicator color={Colors.primary} />
             ) : (
-                <View style={styles.card}>
-                    <Image source={author.avatar_url} style={styles.avatar} />
+                author && (
+                    <View style={styles.card}>
+                        <Image
+                            source={author.avatar_url}
+                            style={styles.avatar}
+                        />
 
-                    <View style={{ flex: 1 }}>
-                        <Text style={styles.name}>{author.name}</Text>
-                        <Text style={styles.username}>@{author.login}</Text>
-                        <Text style={styles.bio}>{author.bio}</Text>
+                        <View style={styles.cardContent}>
+                            <Text style={styles.name}>{author.name}</Text>
+
+                            <Text style={styles.username}>@{author.login}</Text>
+
+                            {!!author.bio && (
+                                <Text style={styles.bio}>{author.bio}</Text>
+                            )}
+
+                            {!!author.blog && (
+                                <Pressable
+                                    style={styles.portfolio}
+                                    onPress={() => Linking.openURL(author.blog)}
+                                >
+                                    <RemixIcon
+                                        name="global-line"
+                                        size={16}
+                                        color={Colors.primary}
+                                    />
+
+                                    <Text style={styles.portfolioText}>
+                                        {author.blog.replace(
+                                            /^https?:\/\//,
+                                            "",
+                                        )}
+                                    </Text>
+                                </Pressable>
+                            )}
+                        </View>
                     </View>
-                </View>
+                )
             )}
-
-            <Text style={styles.sectionTitle}>Links</Text>
-
-            <Pressable
-                style={styles.item}
-                onPress={() =>
-                    Linking.openURL("https://github.com/pratksharma/WikiAtlas")
-                }
-            >
-                <Text style={styles.itemText}>Source Code</Text>
-
-                <RemixIcon
-                    name="external-link-line"
-                    size={20}
-                    color={Colors.textSecondary}
-                />
-            </Pressable>
-
-            <Pressable
-                style={styles.item}
-                onPress={() => Linking.openURL(author?.blog as string)}
-            >
-                <Text style={styles.itemText}>Developer Website</Text>
-
-                <RemixIcon
-                    name="external-link-line"
-                    size={20}
-                    color={Colors.textSecondary}
-                />
-            </Pressable>
 
             <View style={styles.footer}>
                 <Text style={styles.footerText}>
-                    WikiAtlas is open source and uses Wikimedia APIs to provide
-                    access to Wikipedia content.
+                    WikiAtlas is open source and uses the Wikimedia APIs to
+                    provide access to Wikipedia content.
                 </Text>
 
-                <Text style={styles.copyright}>© 2026 Prateek Sharma</Text>
+                <Text style={styles.copyright}>
+                    © {new Date().getFullYear()} {author?.name}
+                </Text>
             </View>
         </ScrollView>
     );
@@ -127,6 +186,7 @@ const styles = StyleSheet.create({
     content: {
         padding: 20,
         paddingTop: 120,
+        paddingBottom: 32,
     },
     header: {
         alignItems: "center",
@@ -135,12 +195,12 @@ const styles = StyleSheet.create({
     icon: {
         width: 88,
         height: 88,
-        borderRadius: 24,
+        borderRadius: 22,
         marginBottom: 16,
     },
     title: {
-        fontFamily: "DMSans-Bold",
         fontSize: 28,
+        fontFamily: "DMSans-Bold",
         color: Colors.text,
     },
     version: {
@@ -151,20 +211,36 @@ const styles = StyleSheet.create({
     description: {
         marginTop: 16,
         textAlign: "center",
-        fontFamily: "DMSans-Regular",
-        color: Colors.textSecondary,
         lineHeight: 22,
+        color: Colors.textSecondary,
+        fontFamily: "DMSans-Regular",
+    },
+    appLinks: {
+        flexDirection: "row",
+        gap: 12,
+        marginTop: 18,
+    },
+    linkChip: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+        backgroundColor: Colors.surface,
+        paddingHorizontal: 14,
+        paddingVertical: 8,
+        borderRadius: 999,
+    },
+    linkChipText: {
+        fontFamily: "DMSans-Medium",
+        color: Colors.text,
     },
     sectionTitle: {
-        fontFamily: "DMSans-Bold",
         fontSize: 18,
-        color: Colors.text,
         marginBottom: 12,
-        marginTop: 12,
+        fontFamily: "DMSans-Bold",
+        color: Colors.text,
     },
     card: {
         flexDirection: "row",
-        gap: 16,
         backgroundColor: Colors.surface,
         borderRadius: 16,
         padding: 16,
@@ -173,36 +249,58 @@ const styles = StyleSheet.create({
         width: 64,
         height: 64,
         borderRadius: 32,
+        marginRight: 16,
+    },
+    cardContent: {
+        flex: 1,
     },
     name: {
-        fontFamily: "DMSans-Bold",
         fontSize: 18,
+        fontFamily: "DMSans-Bold",
         color: Colors.text,
     },
     username: {
+        marginTop: 2,
+        marginBottom: 8,
         fontFamily: "DMSans-Regular",
         color: Colors.textSecondary,
-        marginBottom: 6,
     },
     bio: {
-        fontFamily: "DMSans-Regular",
-        color: Colors.text,
         lineHeight: 20,
+        color: Colors.text,
+        fontFamily: "DMSans-Regular",
     },
-    item: {
-        height: 56,
-        backgroundColor: Colors.surface,
-        borderRadius: 14,
-        paddingHorizontal: 16,
+    portfolio: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: 10,
+        gap: 6,
+        marginTop: 12,
+        alignSelf: "flex-start",
     },
-    itemText: {
+    portfolioText: {
+        color: Colors.primary,
         fontFamily: "DMSans-Medium",
+    },
+    stats: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        backgroundColor: Colors.surface,
+        borderRadius: 16,
+        paddingVertical: 20,
+    },
+    stat: {
+        flex: 1,
+        alignItems: "center",
+        gap: 4,
+    },
+    statValue: {
+        fontSize: 18,
+        fontFamily: "DMSans-Bold",
         color: Colors.text,
-        fontSize: 16,
+    },
+    statLabel: {
+        fontFamily: "DMSans-Regular",
+        color: Colors.textSecondary,
     },
     footer: {
         marginTop: 32,
@@ -210,13 +308,13 @@ const styles = StyleSheet.create({
     },
     footerText: {
         textAlign: "center",
+        lineHeight: 22,
         color: Colors.textSecondary,
         fontFamily: "DMSans-Regular",
-        lineHeight: 22,
     },
     copyright: {
         marginTop: 16,
-        color: Colors.textSecondary,
         fontFamily: "DMSans-Medium",
+        color: Colors.textSecondary,
     },
 });
