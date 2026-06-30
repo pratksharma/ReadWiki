@@ -64,6 +64,7 @@ const Home = () => {
                             paddingBottom: insets.bottom + 80,
                         },
                     ]}
+                    showsVerticalScrollIndicator={false}
                 >
                     <View style={styles.featuredCard}>
                         <Image

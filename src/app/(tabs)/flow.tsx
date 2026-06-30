@@ -22,9 +22,20 @@ const Flow = () => {
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
 
+    const preloadImages = async (items: any[]) => {
+        const urls = items
+            .map((item) => item.thumbnail?.source)
+            .filter(Boolean);
+
+        if (urls.length) {
+            await Image.prefetch(urls);
+        }
+    };
+
     const loadInitial = async () => {
         try {
             const data = await getRandomArticles(BATCH_SIZE);
+            await preloadImages(data);
             setArticles(data);
         } finally {
             setLoading(false);
@@ -38,6 +49,7 @@ const Flow = () => {
 
         try {
             const more = await getRandomArticles(BATCH_SIZE);
+            await preloadImages(more);
             setArticles((prev) => [...prev, ...more]);
         } finally {
             setLoadingMore(false);
@@ -58,27 +70,17 @@ const Flow = () => {
 
         return (
             <View style={styles.page}>
-                {thumbnail ? (
-                    <>
-                        <Image
-                            source={{ uri: thumbnail }}
-                            style={styles.background}
-                            contentFit="cover"
-                            blurRadius={30}
-                        />
-                        <View style={styles.overlay} />
-                    </>
-                ) : (
-                    <>
-                        <Image
-                            source={require("../../../assets/gradient-background.jpg")}
-                            style={styles.background}
-                            contentFit="cover"
-                            transition={200}
-                        />
-                        <View style={styles.overlay} />
-                    </>
-                )}
+                <Image
+                    source={
+                        thumbnail
+                            ? thumbnail
+                            : require("../../../assets/gradient-background.jpg")
+                    }
+                    style={styles.background}
+                    contentFit="cover"
+                    blurRadius={30}
+                />
+                <View style={styles.overlay} />
 
                 <View style={styles.content}>
                     {thumbnail && (
@@ -132,6 +134,7 @@ const Flow = () => {
                     style={styles.background}
                     contentFit="cover"
                     transition={200}
+                    blurRadius={30}
                 />
                 <View style={styles.overlay} />
                 <ActivityIndicator size="large" color="#fff" />
@@ -167,6 +170,7 @@ const Flow = () => {
                             style={styles.background}
                             contentFit="cover"
                             transition={200}
+                            blurRadius={30}
                         />
                         <View style={styles.overlay} />
                         <ActivityIndicator size="large" color="#fff" />
