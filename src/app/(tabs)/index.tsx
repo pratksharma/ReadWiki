@@ -139,10 +139,7 @@ const Home = () => {
                             <Pressable
                                 style={({ pressed }) => [
                                     styles.imageCard,
-                                    {
-                                        marginHorizontal: 16,
-                                    },
-                                    pressed && styles.imageCardPressed,
+                                    pressed && styles.cardPressed,
                                 ]}
                                 onPress={() => {
                                     router.navigate({
@@ -160,6 +157,11 @@ const Home = () => {
                                     contentFit="cover"
                                 />
 
+                                <LinearGradient
+                                    colors={["transparent", "rgba(0,0,0,1)"]}
+                                    style={styles.trendingGradient}
+                                />
+
                                 <View style={styles.imageCardContent}>
                                     <Text style={styles.imageCardTitle}>
                                         Author: {imageOfTheDay.artist.text}
@@ -168,6 +170,7 @@ const Home = () => {
                                     {!!imageOfTheDay.description?.text && (
                                         <Text
                                             style={styles.imageCardDescription}
+                                            numberOfLines={3}
                                         >
                                             {imageOfTheDay.description.text}
                                         </Text>
@@ -205,7 +208,10 @@ const Home = () => {
                                                     },
                                                 })
                                             }
-                                            style={styles.trendingCard}
+                                            style={({ pressed }) => [
+                                                styles.trendingCard,
+                                                pressed && styles.cardPressed,
+                                            ]}
                                         >
                                             {item.thumbnail && (
                                                 <Image
@@ -220,7 +226,7 @@ const Home = () => {
                                             <LinearGradient
                                                 colors={[
                                                     "transparent",
-                                                    "rgba(0,0,0,0.7)",
+                                                    "rgba(0,0,0,1)",
                                                 ]}
                                                 style={styles.trendingGradient}
                                             />
@@ -415,7 +421,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily: "DMSans-Medium",
         marginBottom: 12,
-        color: "rgba(255,255,255,0.9)",
+        color: "rgba(255,255,255,0.8)",
     },
 
     featuredCardButton: {
@@ -441,34 +447,37 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.surface,
         borderWidth: 1,
         borderColor: Colors.border,
+        marginHorizontal: 16,
+        height: 300,
     },
 
-    imageCardPressed: {
-        filter: "brightness(0.95)",
+    cardPressed: {
+        filter: "brightness(0.90)",
     },
 
     imageCardImage: {
         width: "100%",
-        height: 240,
+        height: "100%",
+        ...StyleSheet.absoluteFill,
     },
 
     imageCardContent: {
+        flex: 1,
+        justifyContent: "flex-end",
         padding: 16,
         gap: 8,
     },
 
     imageCardTitle: {
         fontSize: 20,
-        lineHeight: 20,
-        letterSpacing: -0.5,
-        color: Colors.text,
+        color: Colors.textInverse,
         fontFamily: "Fraunces-SemiBold",
     },
 
     imageCardDescription: {
         fontSize: 14,
-        color: Colors.textSecondary,
         fontFamily: "DMSans-Medium",
+        color: "rgba(255,255,255,0.8)",
     },
 
     section: {
@@ -476,11 +485,12 @@ const styles = StyleSheet.create({
     },
 
     sectionTitle: {
-        fontSize: 32,
+        fontSize: 28,
         color: Colors.text,
         fontFamily: "Fraunces-SemiBold",
         paddingHorizontal: 16,
         marginTop: 16,
+        marginBottom: 8,
     },
 
     sectionContent: {
@@ -489,7 +499,6 @@ const styles = StyleSheet.create({
 
     trendingList: {
         paddingHorizontal: 16,
-        paddingVertical: 8,
         gap: 16,
     },
 
@@ -518,18 +527,18 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "flex-end",
         padding: 16,
+        gap: 8,
     },
 
     trendingTitle: {
         fontFamily: "Fraunces-SemiBold",
-        color: "#fff",
+        color: Colors.textInverse,
         fontSize: 20,
-        marginBottom: 6,
     },
 
     trendingDescription: {
         fontFamily: "DMSans-Medium",
-        color: "rgba(255,255,255,0.9)",
+        color: "rgba(255,255,255,0.8)",
         fontSize: 14,
         lineHeight: 20,
     },
