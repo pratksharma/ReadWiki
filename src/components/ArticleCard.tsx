@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
         width: 72,
         height: 72,
         borderRadius: 8,
-        backgroundColor: Colors.surfaceMuted,
+        backgroundColor: Colors.surface,
         alignItems: "center",
         justifyContent: "center",
     },
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     tag: {
         fontSize: 12,
         color: Colors.textSecondary,
-        backgroundColor: Colors.surfaceMuted,
+        backgroundColor: Colors.surface,
         fontFamily: "DMSans-SemiBold",
         paddingVertical: 2,
         paddingHorizontal: 8,
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     title: {
         color: Colors.text,
         fontSize: 18,
-        fontFamily: "Fraunces-SemiBold",
+        fontFamily: "DMSans-SemiBold",
     },
 
     subtitle: {

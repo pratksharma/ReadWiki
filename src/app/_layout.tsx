@@ -107,6 +107,7 @@ export default function RootLayout() {
                 name="on-this-day"
                 options={{ title: "On This Day" }}
             />
+            <Stack.Screen name="about" options={{ title: "About" }} />
         </Stack>
     );
 }
