@@ -55,9 +55,7 @@ const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
                 paddingTop: insets.top + 8,
             }}
         >
-            <StatusBar
-                barStyle={scrolled ? "light-content" : "dark-content"}
-            />
+            <StatusBar barStyle={scrolled ? "light-content" : "dark-content"} />
 
             <Animated.View
                 style={[

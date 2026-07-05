@@ -58,7 +58,9 @@ export const GlassView = ({
             {/* Android's plain BlurView is barely visible, so lay a soft white
                 tint under the content to keep the surface readable. */}
             {Platform.OS === "android" && (
-                <View style={[StyleSheet.absoluteFill, styles.androidFallback]} />
+                <View
+                    style={[StyleSheet.absoluteFill, styles.androidFallback]}
+                />
             )}
             {children}
         </View>

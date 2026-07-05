@@ -1,18 +1,18 @@
 import ArticleCard from "@/components/ArticleCard";
 import { useScreenScroll } from "@/components/HeaderScroll";
 import Colors from "@/constants/Colors";
-import {
-    removeArticle,
-    useSavedArticles,
-} from "@/services/savedArticles";
+import { removeArticle, useSavedArticles } from "@/services/savedArticles";
 import { router } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
 import RemixIcon from "react-native-remix-icon";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Saved = () => {
     const savedArticles = useSavedArticles();
     const onScroll = useScreenScroll();
+
+    const insets = useSafeAreaInsets();
 
     if (savedArticles.length === 0) {
         return (
@@ -37,7 +37,12 @@ const Saved = () => {
             <Animated.FlatList
                 data={savedArticles}
                 keyExtractor={(item) => item.title}
-                contentContainerStyle={styles.content}
+                contentContainerStyle={[
+                    styles.content,
+                    {
+                        paddingBottom: insets.bottom + 80,
+                    },
+                ]}
                 showsVerticalScrollIndicator={false}
                 onScroll={onScroll}
                 scrollEventThrottle={16}
@@ -69,8 +74,7 @@ const styles = StyleSheet.create({
     },
 
     content: {
-        paddingTop: 120,
-        paddingBottom: 24,
+        paddingTop: 100,
     },
 
     empty: {

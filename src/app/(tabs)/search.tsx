@@ -1,18 +1,18 @@
 import ArticleCard from "@/components/ArticleCard";
-import { useScreenScroll } from "@/components/HeaderScroll";
+import { useStaticHeader } from "@/components/HeaderScroll";
 import Colors from "@/constants/Colors";
 import { searchArticles } from "@/services/wikipedia";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
     ActivityIndicator,
+    FlatList,
     Pressable,
     StyleSheet,
     Text,
     TextInput,
     View,
 } from "react-native";
-import Animated from "react-native-reanimated";
 import RemixIcon from "react-native-remix-icon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -72,7 +72,10 @@ const Search = () => {
     );
 
     const insets = useSafeAreaInsets();
-    const onScroll = useScreenScroll();
+
+    // The results list sits below a fixed search bar, so nothing scrolls under
+    // the header — keep it in its default (black, no gradient) state.
+    useStaticHeader();
 
     return (
         <View style={styles.container}>
@@ -117,7 +120,7 @@ const Search = () => {
                     <ActivityIndicator size="large" />
                 </View>
             ) : (
-                <Animated.FlatList
+                <FlatList
                     data={searchResults}
                     keyExtractor={(item) => item.title}
                     contentContainerStyle={[
@@ -127,8 +130,6 @@ const Search = () => {
                         },
                     ]}
                     showsVerticalScrollIndicator={false}
-                    onScroll={onScroll}
-                    scrollEventThrottle={16}
                     keyboardShouldPersistTaps="handled"
                     ListEmptyComponent={
                         <Text style={styles.emptyText}>
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.background,
-        paddingTop: 120,
+        paddingTop: 100,
     },
 
     searchContainer: {

@@ -1,10 +1,10 @@
 import Colors from "@/constants/Colors";
 import { StyleSheet, View } from "react-native";
-import RemixIcon, { type IconName } from "react-native-remix-icon";
 import Animated, {
     SharedValue,
     useAnimatedStyle,
 } from "react-native-reanimated";
+import RemixIcon, { type IconName } from "react-native-remix-icon";
 
 type CrossfadeIconProps = {
     name: IconName;

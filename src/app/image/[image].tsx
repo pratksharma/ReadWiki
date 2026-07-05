@@ -1,14 +1,15 @@
+import { useSolidHeader } from "@/components/HeaderScroll";
 import { Image as ExpoImage } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import { StatusBar, StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Image = () => {
     const { image } = useLocalSearchParams<{
         image: string;
     }>();
 
-    const insets = useSafeAreaInsets();
+    // Full-screen dark viewer, so keep the header's back button white.
+    useSolidHeader();
 
     return (
         <View style={styles.container}>
