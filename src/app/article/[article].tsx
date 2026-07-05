@@ -8,11 +8,7 @@ import { usePreferences } from "@/services/preferences";
 import { toggleSavedArticle, useIsSaved } from "@/services/savedArticles";
 import { getArticleSummary, getFullArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
-import {
-    router,
-    useLocalSearchParams,
-    useNavigation,
-} from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -30,6 +26,8 @@ type ArticleMeta = {
     description?: string;
     thumbnail?: string;
     heroImage?: string;
+    heroWidth?: number;
+    heroHeight?: number;
 };
 
 // Wikipedia thumbnails embed their width (e.g. ".../250px-Foo.jpg").
@@ -105,12 +103,17 @@ const Article = () => {
                 getFullArticle(article),
             ]);
 
+            // Prefer the full-resolution image; fall back to the thumbnail.
+            // Both carry their own width/height for the aspect ratio.
+            const hero = summary?.originalimage ?? summary?.thumbnail;
+
             setMeta({
                 title: summary?.title ?? article,
                 description: summary?.description ?? summary?.extract,
                 thumbnail: summary?.thumbnail?.source,
-                heroImage:
-                    summary?.originalimage?.source ?? summary?.thumbnail?.source,
+                heroImage: hero?.source,
+                heroWidth: hero?.width,
+                heroHeight: hero?.height,
             });
 
             if (html) {
@@ -142,7 +145,10 @@ const Article = () => {
                             block.level === 2
                                 ? styles.heading2
                                 : styles.heading3,
-                            { fontSize: (block.level === 2 ? 24 : 20) * fontScale },
+                            {
+                                fontSize:
+                                    (block.level === 2 ? 24 : 20) * fontScale,
+                            },
                         ]}
                     >
                         {block.text}
@@ -241,7 +247,17 @@ const Article = () => {
                                 >
                                     <Image
                                         source={meta.heroImage}
-                                        style={styles.hero}
+                                        style={[
+                                            styles.hero,
+                                            {
+                                                aspectRatio:
+                                                    meta.heroWidth &&
+                                                    meta.heroHeight
+                                                        ? meta.heroWidth /
+                                                          meta.heroHeight
+                                                        : 3 / 2,
+                                            },
+                                        ]}
                                         contentFit="cover"
                                         transition={200}
                                     />
@@ -290,7 +306,6 @@ const styles = StyleSheet.create({
 
     hero: {
         width: "100%",
-        height: 300,
         backgroundColor: Colors.surfaceMuted,
     },
 

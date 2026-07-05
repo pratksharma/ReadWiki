@@ -39,7 +39,7 @@ const CrossfadeIcon = ({ name, size, progress }: CrossfadeIconProps) => {
                 <RemixIcon
                     name={name}
                     size={size}
-                    color={Colors.textInverse}
+                    color={Colors.text}
                     fallback={null}
                 />
             </Animated.View>
