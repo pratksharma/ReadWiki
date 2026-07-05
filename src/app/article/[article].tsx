@@ -147,7 +147,7 @@ const Article = () => {
                                 : styles.heading3,
                             {
                                 fontSize:
-                                    (block.level === 2 ? 24 : 20) * fontScale,
+                                    (block.level === 2 ? 32 : 28) * fontScale,
                             },
                         ]}
                     >
@@ -286,14 +286,14 @@ export default Article;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.background,
     },
 
     loader: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.background,
     },
 
     content: {
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
     },
 
     heading3: {
-        fontFamily: "Fraunces-Regular",
+        fontFamily: "Fraunces-SemiBold",
         color: Colors.text,
         marginTop: 20,
         marginBottom: 10,
