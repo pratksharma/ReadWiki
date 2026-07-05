@@ -1,21 +1,21 @@
 import ArticleCard from "@/components/ArticleCard";
+import { useSolidHeader } from "@/components/HeaderScroll";
 import PrimaryButton from "@/components/PrimaryButton";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { useScreenScroll } from "@/components/HeaderScroll";
 import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
     Pressable,
+    ScrollView,
     StyleSheet,
     Text,
     View,
 } from "react-native";
-import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Home = () => {
@@ -49,7 +49,10 @@ const Home = () => {
         : Colors.textInverse;
 
     const insets = useSafeAreaInsets();
-    const onScroll = useScreenScroll();
+
+    // The home screen leads with a full-bleed featured image, so keep the header
+    // in its scrolled state (white logo + gradient + light status bar) always.
+    useSolidHeader();
 
     return (
         <View style={styles.container}>
@@ -59,7 +62,7 @@ const Home = () => {
                     <Text style={styles.loadingText}>Loading...</Text>
                 </View>
             ) : (
-                <Animated.ScrollView
+                <ScrollView
                     contentContainerStyle={[
                         styles.sectionContainer,
                         {
@@ -67,7 +70,6 @@ const Home = () => {
                         },
                     ]}
                     showsVerticalScrollIndicator={false}
-                    onScroll={onScroll}
                     scrollEventThrottle={16}
                 >
                     <View style={styles.featuredCard}>
@@ -337,7 +339,7 @@ const Home = () => {
                             </View>
                         </View>
                     )}
-                </Animated.ScrollView>
+                </ScrollView>
             )}
         </View>
     );
