@@ -1,12 +1,17 @@
+import { BlurTargetProvider } from "@/components/BlurBackdrop";
 import Header from "@/components/Header";
+import { HeaderScrollProvider } from "@/components/HeaderScroll";
+import { usePreferences } from "@/services/preferences";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+    const preferences = usePreferences();
+
     const [loaded, error] = useFonts({
         "DMSans-Regular": require("../../assets/fonts/DMSans-Regular.ttf"),
         "DMSans-Medium": require("../../assets/fonts/DMSans-Medium.ttf"),
@@ -22,8 +27,15 @@ export default function RootLayout() {
 
     useEffect(() => {
         if (loaded || error) {
+            // Send first-time users to onboarding before showing the app.
+            if (!preferences.onboarded) {
+                router.replace("/onboarding");
+            }
+
             void SplashScreen.hideAsync();
         }
+        // Only run this decision once fonts have resolved.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loaded, error]);
 
     // const lastNotificationResponse =
@@ -80,34 +92,42 @@ export default function RootLayout() {
     }
 
     return (
-        <Stack
-            screenOptions={{
-                headerTransparent: true,
-                header: ({ options, navigation }) => (
-                    <Header
-                        title={options.title ?? ""}
-                        canGoBack={navigation.canGoBack()}
-                        rightComponent={
-                            options.headerRight?.({
-                                tintColor: "#fff",
-                                canGoBack: navigation.canGoBack(),
-                            }) ?? null
-                        }
+        <BlurTargetProvider>
+            <HeaderScrollProvider>
+                <Stack
+                    screenOptions={{
+                        headerTransparent: true,
+                        header: ({ options, navigation }) => (
+                            <Header
+                                title={options.title ?? ""}
+                                canGoBack={navigation.canGoBack()}
+                                rightComponent={
+                                    options.headerRight?.({
+                                        tintColor: "#fff",
+                                        canGoBack: navigation.canGoBack(),
+                                    }) ?? null
+                                }
+                            />
+                        ),
+                    }}
+                >
+                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                    <Stack.Screen
+                        name="onboarding"
+                        options={{ headerShown: false }}
                     />
-                ),
-            }}
-        >
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen
-                name="article/[article]"
-                options={{ title: "Article" }}
-            />
-            <Stack.Screen name="trending" options={{ title: "Trending" }} />
-            <Stack.Screen
-                name="on-this-day"
-                options={{ title: "On This Day" }}
-            />
-            <Stack.Screen name="about" options={{ title: "About" }} />
-        </Stack>
+                    <Stack.Screen
+                        name="article/[article]"
+                        options={{ title: "" }}
+                    />
+                    <Stack.Screen name="trending" options={{ title: "Trending" }} />
+                    <Stack.Screen
+                        name="on-this-day"
+                        options={{ title: "On This Day" }}
+                    />
+                    <Stack.Screen name="about" options={{ title: "About" }} />
+                </Stack>
+            </HeaderScrollProvider>
+        </BlurTargetProvider>
     );
 }

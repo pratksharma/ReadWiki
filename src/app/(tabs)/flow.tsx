@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 import PrimaryButton from "@/components/PrimaryButton";
+import { useSolidHeader } from "@/components/HeaderScroll";
 import { getRandomArticles } from "@/services/wikipedia";
 
 const { height } = Dimensions.get("window");
@@ -21,6 +22,9 @@ const Flow = () => {
     const [articles, setArticles] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
+
+    // Flow is a full-screen dark pager, so keep the header in its white state.
+    useSolidHeader();
 
     const preloadImages = async (items: any[]) => {
         const urls = items

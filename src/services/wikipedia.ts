@@ -71,12 +71,17 @@ export const getTomorrowFeaturedArticleTitle = async () => {
     }
 };
 
+// Fetches the clean article HTML from the MediaWiki "parse" endpoint.
+// This returns standard HTML (real <img> tags and /wiki/ links) which is
+// far easier to render nicely than the lazy-loaded mobile-html format.
 export const getFullArticle = async (title: string) => {
     try {
         const encodedTitle = encodeURIComponent(title);
 
         const response = await fetch(
-            `https://en.wikipedia.org/api/rest_v1/page/mobile-html/${encodedTitle}`,
+            `https://en.wikipedia.org/w/api.php?action=parse&page=${encodedTitle}` +
+                `&prop=text&format=json&formatversion=2&redirects=1` +
+                `&disableeditsection=1&disabletoc=1`,
             {
                 headers: {
                     "User-Agent": "WikiAtlas/1.0",
@@ -85,11 +90,38 @@ export const getFullArticle = async (title: string) => {
             },
         );
 
-        const html = await response.text();
+        const data = await response.json();
 
-        return html;
+        return data?.parse?.text as string | undefined;
     } catch (error) {
         console.log(error);
+    }
+};
+
+// Short summary of an article: title, one-line description, extract and
+// lead image. Used for the article header and for saving articles.
+export const getArticleSummary = async (title: string) => {
+    try {
+        const encodedTitle = encodeURIComponent(title);
+
+        const response = await fetch(
+            `https://en.wikipedia.org/api/rest_v1/page/summary/${encodedTitle}`,
+            {
+                headers: {
+                    "User-Agent": "WikiAtlas/1.0",
+                    "Api-User-Agent": "WikiAtlas/1.0",
+                },
+            },
+        );
+
+        if (!response.ok) {
+            return null;
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.log(error);
+        return null;
     }
 };
 

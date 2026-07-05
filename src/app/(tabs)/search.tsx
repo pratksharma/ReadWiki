@@ -1,17 +1,18 @@
 import ArticleCard from "@/components/ArticleCard";
+import { useScreenScroll } from "@/components/HeaderScroll";
 import Colors from "@/constants/Colors";
 import { searchArticles } from "@/services/wikipedia";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
     ActivityIndicator,
-    FlatList,
     Pressable,
     StyleSheet,
     Text,
     TextInput,
     View,
 } from "react-native";
+import Animated from "react-native-reanimated";
 import RemixIcon from "react-native-remix-icon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -71,6 +72,7 @@ const Search = () => {
     );
 
     const insets = useSafeAreaInsets();
+    const onScroll = useScreenScroll();
 
     return (
         <View style={styles.container}>
@@ -115,7 +117,7 @@ const Search = () => {
                     <ActivityIndicator size="large" />
                 </View>
             ) : (
-                <FlatList
+                <Animated.FlatList
                     data={searchResults}
                     keyExtractor={(item) => item.title}
                     contentContainerStyle={[
@@ -125,6 +127,8 @@ const Search = () => {
                         },
                     ]}
                     showsVerticalScrollIndicator={false}
+                    onScroll={onScroll}
+                    scrollEventThrottle={16}
                     keyboardShouldPersistTaps="handled"
                     ListEmptyComponent={
                         <Text style={styles.emptyText}>

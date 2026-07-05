@@ -1,22 +1,85 @@
-import { parseArticle } from "@/services/articleParser";
+import { GlassView } from "@/components/BlurBackdrop";
+import CrossfadeIcon from "@/components/CrossfadeIcon";
+import { useHeaderProgress, useScreenScroll } from "@/components/HeaderScroll";
+import RichText from "@/components/RichText";
+import Colors from "@/constants/Colors";
+import { parseArticle, type Block } from "@/services/articleParser";
+import { usePreferences } from "@/services/preferences";
+import { toggleSavedArticle, useIsSaved } from "@/services/savedArticles";
+import { getArticleSummary, getFullArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
-import { useLocalSearchParams } from "expo-router";
+import {
+    router,
+    useLocalSearchParams,
+    useNavigation,
+} from "expo-router";
 import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
-    FlatList,
+    Pressable,
     StyleSheet,
     Text,
     View,
 } from "react-native";
+import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getFullArticle } from "../../services/wikipedia";
+
+// Metadata used for the article header and for saving the article.
+type ArticleMeta = {
+    title: string;
+    description?: string;
+    thumbnail?: string;
+    heroImage?: string;
+};
+
+// Wikipedia thumbnails embed their width (e.g. ".../250px-Foo.jpg").
+// Bump it up so the full-screen image viewer shows a sharp version.
+const biggerImage = (src: string) => src.replace(/\/(\d+)px-/, "/1024px-");
+
+const openImage = (src: string) => {
+    router.push({
+        pathname: "/image/[image]",
+        params: { image: biggerImage(src) },
+    });
+};
+
+// Header button that saves / unsaves the current article. Kept inside this
+// file so it can share the loaded metadata.
+const SaveButton = ({ meta }: { meta: ArticleMeta }) => {
+    const saved = useIsSaved(meta.title);
+    const progress = useHeaderProgress();
+
+    return (
+        <Pressable
+            onPress={() =>
+                toggleSavedArticle({
+                    title: meta.title,
+                    description: meta.description,
+                    thumbnail: meta.thumbnail,
+                    savedAt: Date.now(),
+                })
+            }
+        >
+            <GlassView style={styles.saveButton}>
+                <CrossfadeIcon
+                    name={saved ? "bookmark-fill" : "bookmark-line"}
+                    size={20}
+                    progress={progress}
+                />
+            </GlassView>
+        </Pressable>
+    );
+};
 
 const Article = () => {
+    const { article } = useLocalSearchParams<{ article: string }>();
+    const navigation = useNavigation();
+    const preferences = usePreferences();
     const insets = useSafeAreaInsets();
-    const { article } = useLocalSearchParams();
+    const onScroll = useScreenScroll();
 
-    const [content, setContent] = useState<any[]>([]);
+    const [blocks, setBlocks] = useState<Block[]>([]);
+    const [meta, setMeta] = useState<ArticleMeta | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -25,15 +88,36 @@ const Article = () => {
         }
     }, [article]);
 
+    // Once we know the article, show the save button in the header.
+    useEffect(() => {
+        if (meta) {
+            navigation.setOptions({
+                headerRight: () => <SaveButton meta={meta} />,
+            });
+        }
+    }, [meta, navigation]);
+
     const loadArticle = async () => {
         try {
-            const articleHtml = await getFullArticle(article as string);
+            // Fetch the summary (title / lead image) and the full HTML together.
+            const [summary, html] = await Promise.all([
+                getArticleSummary(article),
+                getFullArticle(article),
+            ]);
 
-            const parsedArticle = parseArticle(articleHtml as string);
+            setMeta({
+                title: summary?.title ?? article,
+                description: summary?.description ?? summary?.extract,
+                thumbnail: summary?.thumbnail?.source,
+                heroImage:
+                    summary?.originalimage?.source ?? summary?.thumbnail?.source,
+            });
 
-            setContent(parsedArticle);
+            if (html) {
+                setBlocks(parseArticle(html));
+            }
         } catch (error) {
-            console.log("ERROR", error);
+            console.log("Failed to load article:", error);
         } finally {
             setLoading(false);
         }
@@ -42,44 +126,140 @@ const Article = () => {
     if (loading) {
         return (
             <View style={styles.loader}>
-                <ActivityIndicator size="large" />
+                <ActivityIndicator size="large" color={Colors.primary} />
             </View>
         );
     }
 
+    const fontScale = preferences.fontScale;
+
+    const renderBlock = (block: Block) => {
+        switch (block.type) {
+            case "heading":
+                return (
+                    <Text
+                        style={[
+                            block.level === 2
+                                ? styles.heading2
+                                : styles.heading3,
+                            { fontSize: (block.level === 2 ? 24 : 20) * fontScale },
+                        ]}
+                    >
+                        {block.text}
+                    </Text>
+                );
+
+            case "paragraph":
+                return (
+                    <RichText
+                        spans={block.spans}
+                        style={[
+                            styles.paragraph,
+                            {
+                                fontSize: 17 * fontScale,
+                                lineHeight: 28 * fontScale,
+                            },
+                        ]}
+                    />
+                );
+
+            case "list":
+                return (
+                    <View style={styles.list}>
+                        {block.items.map((item, index) => (
+                            <View key={index} style={styles.listItem}>
+                                <Text style={styles.bullet}>
+                                    {block.ordered ? `${index + 1}.` : "•"}
+                                </Text>
+                                <RichText
+                                    spans={item}
+                                    style={[
+                                        styles.paragraph,
+                                        {
+                                            flex: 1,
+                                            marginBottom: 0,
+                                            fontSize: 17 * fontScale,
+                                            lineHeight: 28 * fontScale,
+                                        },
+                                    ]}
+                                />
+                            </View>
+                        ))}
+                    </View>
+                );
+
+            case "image": {
+                const ratio =
+                    block.width && block.height
+                        ? block.width / block.height
+                        : 3 / 2;
+
+                return (
+                    <View style={styles.figure}>
+                        <Pressable onPress={() => openImage(block.src)}>
+                            <Image
+                                source={block.src}
+                                style={[styles.image, { aspectRatio: ratio }]}
+                                contentFit="cover"
+                                transition={200}
+                            />
+                        </Pressable>
+                        {!!block.caption && (
+                            <Text style={styles.caption}>{block.caption}</Text>
+                        )}
+                    </View>
+                );
+            }
+
+            default:
+                return null;
+        }
+    };
+
     return (
         <View style={styles.container}>
-            <FlatList
-                data={content}
+            <Animated.FlatList
+                data={blocks}
                 keyExtractor={(_, index) => index.toString()}
-                contentContainerStyle={styles.content}
-                renderItem={({ item }) => {
-                    switch (item.type) {
-                        case "heading":
-                            return (
-                                <Text style={styles.heading}>{item.text}</Text>
-                            );
+                contentContainerStyle={[
+                    styles.content,
+                    // With no hero image the title would sit under the transparent
+                    // header, so push the content below it. Keep it immersive when
+                    // there is a hero image.
+                    !meta?.heroImage && { paddingTop: insets.top + 52 },
+                ]}
+                showsVerticalScrollIndicator={false}
+                onScroll={onScroll}
+                scrollEventThrottle={16}
+                renderItem={({ item }) => renderBlock(item as Block)}
+                ListHeaderComponent={
+                    meta ? (
+                        <View style={styles.header}>
+                            {!!meta.heroImage && (
+                                <Pressable
+                                    onPress={() => openImage(meta.heroImage!)}
+                                >
+                                    <Image
+                                        source={meta.heroImage}
+                                        style={styles.hero}
+                                        contentFit="cover"
+                                        transition={200}
+                                    />
+                                </Pressable>
+                            )}
 
-                        case "paragraph":
-                            return (
-                                <Text style={styles.paragraph}>
-                                    {item.text}
+                            <Text style={styles.title}>{meta.title}</Text>
+
+                            {!!meta.description && (
+                                <Text style={styles.description}>
+                                    {meta.description}
                                 </Text>
-                            );
+                            )}
 
-                        case "image":
-                            return (
-                                <Image
-                                    source={{ uri: item.src }}
-                                    style={styles.image}
-                                    contentFit="cover"
-                                />
-                            );
-
-                        default:
-                            return null;
-                    }
-                }}
+                            <View style={styles.divider} />
+                        </View>
+                    ) : null
+                }
             />
         </View>
     );
@@ -90,38 +270,115 @@ export default Article;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: Colors.surface,
     },
 
     loader: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: Colors.surface,
     },
 
     content: {
-        paddingTop: 100,
-        paddingHorizontal: 16,
-        paddingBottom: 40,
+        paddingBottom: 48,
     },
 
-    heading: {
-        fontSize: 28,
-        fontWeight: "700",
-        marginTop: 24,
+    header: {
+        marginBottom: 8,
+    },
+
+    hero: {
+        width: "100%",
+        height: 300,
+        backgroundColor: Colors.surfaceMuted,
+    },
+
+    title: {
+        fontSize: 34,
+        lineHeight: 40,
+        fontFamily: "Fraunces-SemiBold",
+        color: Colors.text,
+        paddingHorizontal: 16,
+        marginTop: 20,
+    },
+
+    description: {
+        fontSize: 16,
+        fontFamily: "DMSans-Medium",
+        color: Colors.textMuted,
+        paddingHorizontal: 16,
+        marginTop: 8,
+    },
+
+    divider: {
+        height: 1,
+        backgroundColor: Colors.border,
+        marginTop: 20,
+        marginHorizontal: 16,
+    },
+
+    heading2: {
+        fontFamily: "Fraunces-SemiBold",
+        color: Colors.text,
+        marginTop: 28,
         marginBottom: 12,
+        paddingHorizontal: 16,
+    },
+
+    heading3: {
+        fontFamily: "Fraunces-Regular",
+        color: Colors.text,
+        marginTop: 20,
+        marginBottom: 10,
+        paddingHorizontal: 16,
     },
 
     paragraph: {
-        fontSize: 16,
-        lineHeight: 28,
+        fontFamily: "DMSans-Regular",
+        color: Colors.text,
         marginBottom: 16,
+        paddingHorizontal: 16,
+    },
+
+    list: {
+        paddingHorizontal: 16,
+        marginBottom: 16,
+        gap: 8,
+    },
+
+    listItem: {
+        flexDirection: "row",
+        gap: 10,
+    },
+
+    bullet: {
+        fontFamily: "DMSans-SemiBold",
+        color: Colors.textSecondary,
+        fontSize: 17,
+        lineHeight: 28,
+    },
+
+    figure: {
+        marginVertical: 12,
     },
 
     image: {
         width: "100%",
-        height: 240,
-        borderRadius: 16,
-        marginVertical: 16,
+        backgroundColor: Colors.surfaceMuted,
+    },
+
+    caption: {
+        fontSize: 13,
+        fontFamily: "DMSans-Regular",
+        color: Colors.textMuted,
+        paddingHorizontal: 16,
+        marginTop: 8,
+    },
+
+    saveButton: {
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 100,
     },
 });

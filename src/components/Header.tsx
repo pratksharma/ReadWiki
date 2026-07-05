@@ -1,9 +1,17 @@
+import { GlassView } from "@/components/BlurBackdrop";
+import CrossfadeIcon from "@/components/CrossfadeIcon";
+import { useHeaderProgress } from "@/components/HeaderScroll";
 import Colors from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { ReactNode } from "react";
-import { Pressable, StatusBar, StyleSheet, Text, View } from "react-native";
-import RemixIcon from "react-native-remix-icon";
+import { ReactNode, useState } from "react";
+import { Pressable, StatusBar, StyleSheet, View } from "react-native";
+import Animated, {
+    interpolateColor,
+    runOnJS,
+    useAnimatedReaction,
+    useAnimatedStyle,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface HeaderProps {
@@ -14,6 +22,32 @@ interface HeaderProps {
 
 const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
     const insets = useSafeAreaInsets();
+    const progress = useHeaderProgress();
+
+    // Dark status bar icons while the header is black (top); light once scrolled.
+    const [scrolled, setScrolled] = useState(false);
+    useAnimatedReaction(
+        () => progress.value > 0.5,
+        (isScrolled, previous) => {
+            if (isScrolled !== previous) {
+                runOnJS(setScrolled)(isScrolled);
+            }
+        },
+    );
+
+    // Gradient fades in as you scroll.
+    const gradientStyle = useAnimatedStyle(() => ({
+        opacity: progress.value,
+    }));
+
+    // Title crossfades black → white.
+    const titleStyle = useAnimatedStyle(() => ({
+        color: interpolateColor(
+            progress.value,
+            [0, 1],
+            [Colors.text, Colors.textInverse],
+        ),
+    }));
 
     return (
         <View
@@ -21,35 +55,40 @@ const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
                 paddingTop: insets.top + 8,
             }}
         >
-            <StatusBar barStyle="light-content" />
+            <StatusBar
+                barStyle={scrolled ? "light-content" : "dark-content"}
+            />
 
-            <LinearGradient
-                colors={["rgba(0,0,0,0.7)", "transparent"]}
+            <Animated.View
                 style={[
                     styles.gradient,
-                    {
-                        height: insets.top + 84,
-                    },
+                    { height: insets.top + 84 },
+                    gradientStyle,
                 ]}
-            />
+            >
+                <LinearGradient
+                    colors={["rgba(0,0,0,0.7)", "transparent"]}
+                    style={StyleSheet.absoluteFill}
+                />
+            </Animated.View>
 
             <View style={styles.headerContent}>
                 <View style={styles.leftContainer}>
                     {canGoBack && (
-                        <Pressable
-                            onPress={() => router.back()}
-                            style={styles.backButton}
-                        >
-                            <RemixIcon
-                                name="arrow-left-long-fill"
-                                size={20}
-                                color={Colors.textInverse}
-                                fallback={null}
-                            />
+                        <Pressable onPress={() => router.back()}>
+                            <GlassView style={styles.pill}>
+                                <CrossfadeIcon
+                                    name="arrow-left-long-fill"
+                                    size={20}
+                                    progress={progress}
+                                />
+                            </GlassView>
                         </Pressable>
                     )}
 
-                    <Text style={styles.logo}>{title}</Text>
+                    <Animated.Text style={[styles.logo, titleStyle]}>
+                        {title}
+                    </Animated.Text>
                 </View>
 
                 <View style={styles.rightContainer}>{rightComponent}</View>
@@ -83,16 +122,14 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 
-    backButton: {
-        paddingVertical: 4,
+    pill: {
+        paddingVertical: 8,
         paddingHorizontal: 12,
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
         borderRadius: 100,
     },
 
     logo: {
         fontSize: 28,
-        color: Colors.textInverse,
         fontFamily: "Fraunces-SemiBold",
     },
 

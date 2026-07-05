@@ -1,13 +1,16 @@
 import ArticleCard from "@/components/ArticleCard";
+import { useScreenScroll } from "@/components/HeaderScroll";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle } from "@/services/wikipedia";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import Animated from "react-native-reanimated";
 
 const OnThisDay = () => {
     const [loading, setLoading] = useState(true);
     const [onThisDayArticles, setOnThisDayArticles] = useState<any[]>([]);
+    const onScroll = useScreenScroll();
 
     useEffect(() => {
         loadData();
@@ -34,9 +37,11 @@ const OnThisDay = () => {
 
     return (
         <View style={styles.container}>
-            <FlatList
+            <Animated.FlatList
                 data={onThisDayArticles}
                 contentContainerStyle={styles.listContent}
+                onScroll={onScroll}
+                scrollEventThrottle={16}
                 renderItem={({ item }) => {
                     const article = item.pages?.[0];
 

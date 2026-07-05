@@ -1,13 +1,16 @@
 import ArticleCard from "@/components/ArticleCard";
+import { useScreenScroll } from "@/components/HeaderScroll";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle } from "@/services/wikipedia";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import Animated from "react-native-reanimated";
 
 const Trending = () => {
     const [loading, setLoading] = useState(true);
     const [trendingArticles, setTrendingArticles] = useState<any[]>([]);
+    const onScroll = useScreenScroll();
 
     useEffect(() => {
         loadData();
@@ -34,9 +37,11 @@ const Trending = () => {
 
     return (
         <View style={styles.container}>
-            <FlatList
+            <Animated.FlatList
                 data={trendingArticles}
                 contentContainerStyle={styles.listContent}
+                onScroll={onScroll}
+                scrollEventThrottle={16}
                 renderItem={({ item, index }) => (
                     <ArticleCard
                         tag={`${item.views.toLocaleString()} views`}

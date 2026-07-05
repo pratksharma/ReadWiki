@@ -1,3 +1,4 @@
+import { useScreenScroll } from "@/components/HeaderScroll";
 import Colors from "@/constants/Colors";
 import { Image } from "expo-image";
 import * as Linking from "expo-linking";
@@ -5,11 +6,11 @@ import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
     Pressable,
-    ScrollView,
     StyleSheet,
     Text,
     View,
 } from "react-native";
+import Animated from "react-native-reanimated";
 import RemixIcon from "react-native-remix-icon";
 
 const GITHUB_USER = "https://api.github.com/users/pratksharma";
@@ -39,6 +40,7 @@ export default function About() {
     const [author, setAuthor] = useState<GithubUser | null>(null);
     const [repo, setRepo] = useState<GithubRepo | null>(null);
     const [loading, setLoading] = useState(true);
+    const onScroll = useScreenScroll();
 
     useEffect(() => {
         async function load() {
@@ -66,10 +68,12 @@ export default function About() {
     }, []);
 
     return (
-        <ScrollView
+        <Animated.ScrollView
             style={styles.container}
             contentContainerStyle={styles.content}
             showsVerticalScrollIndicator={false}
+            onScroll={onScroll}
+            scrollEventThrottle={16}
         >
             <View style={styles.header}>
                 <Image
@@ -174,7 +178,7 @@ export default function About() {
                     © {new Date().getFullYear()} {author?.name}
                 </Text>
             </View>
-        </ScrollView>
+        </Animated.ScrollView>
     );
 }
 

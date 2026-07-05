@@ -9,6 +9,9 @@ type ArticleCardProps = {
     image?: string;
     tag?: string;
     onPress: () => void;
+    // When provided, a bookmark button is shown on the right (used in the
+    // Saved tab to quickly remove an article).
+    onRemove?: () => void;
 };
 
 export default function ArticleCard({
@@ -17,6 +20,7 @@ export default function ArticleCard({
     image,
     tag,
     onPress,
+    onRemove,
 }: ArticleCardProps) {
     return (
         <Pressable
@@ -54,6 +58,17 @@ export default function ArticleCard({
                     </Text>
                 )}
             </View>
+
+            {onRemove && (
+                <Pressable style={styles.removeButton} onPress={onRemove}>
+                    <RemixIcon
+                        name="bookmark-fill"
+                        size={22}
+                        color={Colors.primary}
+                        fallback={null}
+                    />
+                </Pressable>
+            )}
         </Pressable>
     );
 }
@@ -116,5 +131,10 @@ const styles = StyleSheet.create({
         color: Colors.textMuted,
         fontSize: 13,
         fontFamily: "DMSans-Medium",
+    },
+
+    removeButton: {
+        alignSelf: "center",
+        padding: 8,
     },
 });
