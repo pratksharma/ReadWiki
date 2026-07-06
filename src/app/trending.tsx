@@ -7,8 +7,11 @@ import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Trending = () => {
+    const insets = useSafeAreaInsets();
+
     const [loading, setLoading] = useState(true);
     const [trendingArticles, setTrendingArticles] = useState<any[]>([]);
     const onScroll = useScreenScroll();
@@ -40,7 +43,12 @@ const Trending = () => {
         <View style={styles.container}>
             <Animated.FlatList
                 data={trendingArticles}
-                contentContainerStyle={styles.listContent}
+                contentContainerStyle={[
+                    styles.listContent,
+                    {
+                        paddingBottom: insets.bottom + 32,
+                    },
+                ]}
                 onScroll={onScroll}
                 scrollEventThrottle={16}
                 renderItem={({ item, index }) => (

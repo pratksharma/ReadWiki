@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
 import RemixIcon from "react-native-remix-icon";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const GITHUB_USER = "https://api.github.com/users/pratksharma";
 const GITHUB_REPO = "https://api.github.com/repos/pratksharma/readwiki";
@@ -32,6 +33,8 @@ type GithubRepo = {
 };
 
 export default function About() {
+    const insets = useSafeAreaInsets();
+
     const [author, setAuthor] = useState<GithubUser | null>(null);
     const [repo, setRepo] = useState<GithubRepo | null>(null);
     const [loading, setLoading] = useState(true);
@@ -65,7 +68,12 @@ export default function About() {
     return (
         <Animated.ScrollView
             style={styles.container}
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                {
+                    paddingBottom: insets.bottom + 32,
+                },
+            ]}
             showsVerticalScrollIndicator={false}
             onScroll={onScroll}
             scrollEventThrottle={16}
