@@ -77,22 +77,29 @@ const Home = () => {
                             style={styles.featuredCardImage}
                             contentFit="cover"
                         />
-                        <View style={styles.featuredCardOverlay} />
+                        <LinearGradient
+                            colors={["rgba(0,0,0,0.45)", "transparent"]}
+                            style={styles.featuredCardTopGradient}
+                        />
 
                         <LinearGradient
-                            colors={["transparent", "rgba(0, 0, 0, 0.7)"]}
-                            style={{
-                                position: "absolute",
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                width: "100%",
-                                height: "100%",
-                            }}
+                            colors={[
+                                "transparent",
+                                "rgba(0,0,0,0.4)",
+                                "rgba(0,0,0,0.9)",
+                            ]}
+                            locations={[0, 0.5, 1]}
+                            style={styles.featuredCardOverlay}
                         />
 
                         <View style={styles.featuredCardContent}>
                             <View style={styles.featuredCardBadge}>
+                                <RemixIcon
+                                    name="star-fill"
+                                    size={13}
+                                    color={Colors.textInverse}
+                                    fallback={null}
+                                />
                                 <Text style={styles.featuredCardBadgeText}>
                                     Featured Article
                                 </Text>
@@ -355,6 +362,14 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFill,
     },
 
+    featuredCardTopGradient: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: "25%",
+    },
+
     featuredCardOverlay: {
         ...StyleSheet.absoluteFill,
     },
@@ -362,14 +377,19 @@ const styles = StyleSheet.create({
     featuredCardContent: {
         flex: 1,
         justifyContent: "flex-end",
-        gap: 4,
+        gap: 10,
         padding: 16,
         paddingBottom: 32,
     },
 
     featuredCardBadge: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
         alignSelf: "flex-start",
-        backgroundColor: "rgba(255,255,255,0.2)",
+        backgroundColor: "rgba(255,255,255,0.18)",
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.3)",
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 999,
@@ -384,16 +404,19 @@ const styles = StyleSheet.create({
     },
 
     featuredCardTitle: {
-        fontSize: 28,
+        fontSize: 32,
+        lineHeight: 38,
+        letterSpacing: -0.5,
         fontFamily: "Fraunces-SemiBold",
         color: Colors.textInverse,
     },
 
     featuredCardDescription: {
         fontSize: 14,
+        lineHeight: 21,
         fontFamily: "DMSans-Medium",
-        marginBottom: 12,
-        color: "rgba(255,255,255,0.8)",
+        marginBottom: 8,
+        color: "rgba(255,255,255,0.85)",
     },
 
     featuredCardButton: {
