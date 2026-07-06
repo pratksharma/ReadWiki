@@ -24,7 +24,7 @@ export default function OnThisDayEvent({
     onPress,
 }: OnThisDayEventProps) {
     return (
-        <View style={styles.row}>
+        <View style={[styles.row, isFirst && { marginTop: 12 }]}>
             <View style={styles.timeline}>
                 {!isFirst && <View style={styles.lineTop} />}
                 <View style={styles.dot} />
@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         paddingLeft: 12,
-        paddingBottom: 28,
     },
 
     year: {

@@ -1,3 +1,4 @@
+import ArticleCard from "@/components/ArticleCard";
 import { useSolidHeader } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
 import OnThisDayEvent from "@/components/OnThisDayEvent";
@@ -8,14 +9,7 @@ import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-    FlatList,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Home = () => {
@@ -166,7 +160,7 @@ const Home = () => {
 
                                 <LinearGradient
                                     colors={["transparent", "rgba(0,0,0,1)"]}
-                                    style={styles.trendingGradient}
+                                    style={styles.overlayGradient}
                                 />
 
                                 <View style={styles.imageCardContent}>
@@ -194,16 +188,14 @@ const Home = () => {
                                 </Text>
                             </View>
                             <View style={styles.sectionContent}>
-                                <FlatList
-                                    data={trendingArticles}
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                    keyExtractor={(item, index) =>
-                                        item.titles.normalized + index
-                                    }
-                                    contentContainerStyle={styles.trendingList}
-                                    renderItem={({ item }) => (
-                                        <Pressable
+                                {trendingArticles.map(
+                                    (item: any, index: number) => (
+                                        <ArticleCard
+                                            key={item.titles.normalized + index}
+                                            tag={`${item.views.toLocaleString()} views`}
+                                            title={item.titles.normalized}
+                                            subtitle={item.extract}
+                                            image={item.thumbnail?.source}
                                             onPress={() =>
                                                 router.push({
                                                     pathname:
@@ -215,51 +207,9 @@ const Home = () => {
                                                     },
                                                 })
                                             }
-                                            style={({ pressed }) => [
-                                                styles.trendingCard,
-                                                pressed && styles.cardPressed,
-                                            ]}
-                                        >
-                                            {item.thumbnail && (
-                                                <Image
-                                                    source={
-                                                        item.thumbnail.source
-                                                    }
-                                                    contentFit="cover"
-                                                    style={styles.trendingImage}
-                                                />
-                                            )}
-
-                                            <LinearGradient
-                                                colors={[
-                                                    "transparent",
-                                                    "rgba(0,0,0,1)",
-                                                ]}
-                                                style={styles.trendingGradient}
-                                            />
-
-                                            <View
-                                                style={styles.trendingContent}
-                                            >
-                                                <Text
-                                                    style={styles.trendingTitle}
-                                                    numberOfLines={2}
-                                                >
-                                                    {item.titles.normalized}
-                                                </Text>
-
-                                                <Text
-                                                    style={
-                                                        styles.trendingDescription
-                                                    }
-                                                    numberOfLines={3}
-                                                >
-                                                    {item.extract}
-                                                </Text>
-                                            </View>
-                                        </Pressable>
-                                    )}
-                                />
+                                        />
+                                    ),
+                                )}
                             </View>
 
                             <View
@@ -503,50 +453,11 @@ const styles = StyleSheet.create({
     sectionContent: {
         // gap: 10,
     },
-
-    trendingList: {
-        paddingHorizontal: 16,
-        gap: 16,
-    },
-
-    trendingCard: {
-        width: 280,
-        height: 280,
-        borderRadius: 16,
-        overflow: "hidden",
-        backgroundColor: Colors.surfaceMuted,
-        position: "relative",
-    },
-
-    trendingImage: {
-        ...StyleSheet.absoluteFill,
-    },
-
-    trendingGradient: {
+    overlayGradient: {
         height: "50%",
         position: "absolute",
         left: 0,
         right: 0,
         bottom: 0,
-    },
-
-    trendingContent: {
-        flex: 1,
-        justifyContent: "flex-end",
-        padding: 16,
-        gap: 8,
-    },
-
-    trendingTitle: {
-        fontFamily: "Fraunces-SemiBold",
-        color: Colors.textInverse,
-        fontSize: 20,
-    },
-
-    trendingDescription: {
-        fontFamily: "DMSans-Medium",
-        color: "rgba(255,255,255,0.8)",
-        fontSize: 14,
-        lineHeight: 20,
     },
 });
