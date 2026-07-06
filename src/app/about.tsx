@@ -1,15 +1,10 @@
 import { useScreenScroll } from "@/components/HeaderScroll";
+import Loader from "@/components/Loader";
 import Colors from "@/constants/Colors";
 import { Image } from "expo-image";
 import * as Linking from "expo-linking";
 import { useEffect, useState } from "react";
-import {
-    ActivityIndicator,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
 import RemixIcon from "react-native-remix-icon";
 
@@ -126,7 +121,9 @@ export default function About() {
             <Text style={styles.sectionTitle}>Author</Text>
 
             {loading ? (
-                <ActivityIndicator color={Colors.primary} />
+                <View style={{ alignItems: "center" }}>
+                    <Loader />
+                </View>
             ) : (
                 author && (
                     <View style={styles.card}>

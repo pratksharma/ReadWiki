@@ -1,11 +1,11 @@
 import ArticleCard from "@/components/ArticleCard";
 import { useStaticHeader } from "@/components/HeaderScroll";
+import Loader from "@/components/Loader";
 import Colors from "@/constants/Colors";
 import { searchArticles } from "@/services/wikipedia";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-    ActivityIndicator,
     FlatList,
     Pressable,
     StyleSheet,
@@ -117,7 +117,7 @@ const Search = () => {
 
             {loading ? (
                 <View style={styles.loaderContainer}>
-                    <ActivityIndicator size="large" />
+                    <Loader />
                 </View>
             ) : (
                 <FlatList

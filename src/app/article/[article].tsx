@@ -1,6 +1,7 @@
 import { GlassView } from "@/components/BlurBackdrop";
 import CrossfadeIcon from "@/components/CrossfadeIcon";
 import { useHeaderProgress, useScreenScroll } from "@/components/HeaderScroll";
+import Loader from "@/components/Loader";
 import RichText from "@/components/RichText";
 import Colors from "@/constants/Colors";
 import { parseArticle, type Block } from "@/services/articleParser";
@@ -10,13 +11,7 @@ import { getArticleSummary, getFullArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-    ActivityIndicator,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -129,7 +124,7 @@ const Article = () => {
     if (loading) {
         return (
             <View style={styles.loader}>
-                <ActivityIndicator size="large" color={Colors.primary} />
+                <Loader />
             </View>
         );
     }

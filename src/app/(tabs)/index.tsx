@@ -1,5 +1,6 @@
 import ArticleCard from "@/components/ArticleCard";
 import { useSolidHeader } from "@/components/HeaderScroll";
+import Loader from "@/components/Loader";
 import PrimaryButton from "@/components/PrimaryButton";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle } from "@/services/wikipedia";
@@ -8,7 +9,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
     FlatList,
     Pressable,
     ScrollView,
@@ -58,7 +58,7 @@ const Home = () => {
         <View style={styles.container}>
             {loading ? (
                 <View style={styles.loaderContainer}>
-                    <ActivityIndicator size="large" color={Colors.primary} />
+                    <Loader />
                     <Text style={styles.loadingText}>Loading...</Text>
                 </View>
             ) : (

@@ -1,17 +1,11 @@
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import {
-    ActivityIndicator,
-    Dimensions,
-    FlatList,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
 
-import PrimaryButton from "@/components/PrimaryButton";
 import { useSolidHeader } from "@/components/HeaderScroll";
+import Loader from "@/components/Loader";
+import PrimaryButton from "@/components/PrimaryButton";
 import { getRandomArticles } from "@/services/wikipedia";
 
 const { height } = Dimensions.get("window");
@@ -141,7 +135,7 @@ const Flow = () => {
                     blurRadius={30}
                 />
                 <View style={styles.overlay} />
-                <ActivityIndicator size="large" color="#fff" />
+                <Loader />
             </View>
         );
     }
@@ -177,7 +171,7 @@ const Flow = () => {
                             blurRadius={30}
                         />
                         <View style={styles.overlay} />
-                        <ActivityIndicator size="large" color="#fff" />
+                        <Loader />
                     </View>
                 ) : null
             }
