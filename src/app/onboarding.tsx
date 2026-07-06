@@ -20,7 +20,7 @@ const { width } = Dimensions.get("window");
 const SLIDES = [
     {
         icon: "compass-3-line",
-        title: "Welcome to WikiAtlas",
+        title: "Welcome to ReadWiki",
         description:
             "A clean, modern way to explore Wikipedia — featured articles, the image of the day and more, all in one place.",
     },
@@ -92,9 +92,7 @@ const Onboarding = () => {
                 showsHorizontalScrollIndicator={false}
                 onMomentumScrollEnd={(event) =>
                     setIndex(
-                        Math.round(
-                            event.nativeEvent.contentOffset.x / width,
-                        ),
+                        Math.round(event.nativeEvent.contentOffset.x / width),
                     )
                 }
                 renderItem={({ item }) => (
@@ -116,7 +114,9 @@ const Onboarding = () => {
                 )}
             />
 
-            <View style={[styles.footer, { paddingBottom: insets.bottom + 24 }]}>
+            <View
+                style={[styles.footer, { paddingBottom: insets.bottom + 24 }]}
+            >
                 {/* Dots */}
                 <View style={styles.dots}>
                     {SLIDES.map((_, dotIndex) => (

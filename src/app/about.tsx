@@ -9,7 +9,7 @@ import Animated from "react-native-reanimated";
 import RemixIcon from "react-native-remix-icon";
 
 const GITHUB_USER = "https://api.github.com/users/pratksharma";
-const GITHUB_REPO = "https://api.github.com/repos/pratksharma/WikiAtlas";
+const GITHUB_REPO = "https://api.github.com/repos/pratksharma/readwiki";
 
 type GithubUser = {
     avatar_url: string;
@@ -76,7 +76,7 @@ export default function About() {
                     style={styles.icon}
                 />
 
-                <Text style={styles.title}>WikiAtlas</Text>
+                <Text style={styles.title}>ReadWiki</Text>
 
                 <Text style={styles.version}>Version 1.0.0</Text>
 
@@ -167,7 +167,7 @@ export default function About() {
 
             <View style={styles.footer}>
                 <Text style={styles.footerText}>
-                    WikiAtlas is open source and uses the Wikimedia APIs to
+                    ReadWiki is open source and uses the Wikimedia APIs to
                     provide access to Wikipedia content.
                 </Text>
 

@@ -1,58 +1,58 @@
 {
-    "expo": {
-        "name": "WikiAtlas",
-        "slug": "WikiAtlas",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/images/icon.png",
-        "scheme": "wikiatlas",
-        "userInterfaceStyle": "automatic",
-        "ios": {
-            "icon": "./assets/expo.icon"
-        },
-        "android": {
-            "adaptiveIcon": {
-                "backgroundColor": "#E6F4FE",
-                "foregroundImage": "./assets/images/android-icon-foreground.png",
-                "backgroundImage": "./assets/images/android-icon-background.png",
-                "monochromeImage": "./assets/images/android-icon-monochrome.png"
-            },
-            "predictiveBackGestureEnabled": false,
-            "package": "com.pratksharma.WikiAtlas"
-        },
-        "web": {
-            "output": "static",
-            "favicon": "./assets/images/favicon.png"
-        },
-        "plugins": [
-            "expo-router",
-            [
-                "expo-splash-screen",
-                {
-                    "backgroundColor": "#ffffff",
-                    "android": {
-                        "image": "./assets/images/icon.png",
-                        "imageWidth": 76
-                    }
-                }
-            ],
-            "expo-image",
-            [
-                "expo-notifications",
-                {
-                    "icon": "./assets/images/notification-icon.png"
-                }
-            ]
-        ],
-        "experiments": {
-            "typedRoutes": true,
-            "reactCompiler": true
-        },
-        "extra": {
-            "router": {},
-            "eas": {
-                "projectId": "87fde997-135e-4491-b67b-42b64537ea93"
-            }
+  "expo": {
+    "name": "ReadWiki",
+    "slug": "ReadWiki",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "readwiki",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "icon": "./assets/expo.icon"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#f2f3e4",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.pratksharma.readwiki"
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#f2f3e4",
+          "android": {
+            "image": "./assets/images/icon.png",
+            "imageWidth": 76
+          }
         }
+      ],
+      "expo-image",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification-icon.png"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "9dc82086-93fc-4f6c-babd-7f4ce00ca7f9"
+      }
     }
+  }
 }

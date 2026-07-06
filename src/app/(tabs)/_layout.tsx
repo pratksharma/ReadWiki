@@ -26,7 +26,7 @@ export default function RootLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: "WikiAtlas",
+                    title: "ReadWiki",
                     tabBarLabel: "Home",
                     tabBarIcon: ({ focused, color }) => (
                         <RemixIcon

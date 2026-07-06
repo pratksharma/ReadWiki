@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/banner.jpg" alt="WikiAtlas Banner" width="100%" />
+  <img src="./assets/banner.jpg" alt="ReadWiki Banner" width="100%" />
 </p>
 
 <img src="https://img.shields.io/badge/%F0%9F%94%B4%20Work%20In%20Progress-000000?style=for-the-badge"/>
@@ -11,7 +11,7 @@
 
 ## About
 
-WikiAtlas is an open-source Wikipedia reader designed for mobile devices. Built with React Native and Expo, it provides a fast, intuitive, and distraction-free way to explore the world's largest encyclopedia.
+ReadWiki is an open-source Wikipedia reader designed for mobile devices. Built with React Native and Expo, it provides a fast, intuitive, and distraction-free way to explore the world's largest encyclopedia.
 
 The app focuses on readability, performance, and simplicity, making it easy to discover new topics and dive deep into articles from anywhere.
 
@@ -34,8 +34,8 @@ The app focuses on readability, performance, and simplicity, making it easy to d
 - Expo Router
 - Wikimedia APIs
 
-## Why WikiAtlas?
+## Why ReadWiki?
 
 Wikipedia contains an incredible amount of human knowledge, but reading and discovering articles on mobile can often feel outdated or cluttered.
 
-WikiAtlas reimagines the experience with modern mobile design principles, prioritizing speed, readability, and effortless navigation..
+ReadWiki reimagines the experience with modern mobile design principles, prioritizing speed, readability, and effortless navigation..

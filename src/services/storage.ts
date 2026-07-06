@@ -1,12 +1,12 @@
 import { Directory, File, Paths } from "expo-file-system";
 
 // A tiny synchronous JSON store built on top of expo-file-system.
-// Each "key" is saved as its own <key>.json file inside a `wikiatlas`
+// Each "key" is saved as its own <key>.json file inside a `readwiki`
 // folder in the app's document directory (which is safe from being
 // cleared by the system). We keep it simple: read the whole file,
 // parse it, write the whole file back.
 
-const DIR = new Directory(Paths.document, "wikiatlas");
+const DIR = new Directory(Paths.document, "readwiki");
 
 const getFile = (key: string) => new File(DIR, `${key}.json`);
 

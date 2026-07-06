@@ -1,14 +1,11 @@
+import { useScreenScroll } from "@/components/HeaderScroll";
 import Colors from "@/constants/Colors";
 import {
     FONT_SCALES,
     setPreference,
     usePreferences,
 } from "@/services/preferences";
-import {
-    clearSavedArticles,
-    useSavedArticles,
-} from "@/services/savedArticles";
-import { useScreenScroll } from "@/components/HeaderScroll";
+import { clearSavedArticles, useSavedArticles } from "@/services/savedArticles";
 import { router } from "expo-router";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
@@ -57,8 +54,7 @@ const Settings = () => {
 
                 <View style={styles.chips}>
                     {FONT_SCALES.map((option) => {
-                        const active =
-                            preferences.fontScale === option.value;
+                        const active = preferences.fontScale === option.value;
 
                         return (
                             <Pressable
@@ -148,7 +144,10 @@ const Settings = () => {
                 />
             </Pressable>
 
-            <Pressable style={styles.item} onPress={() => router.push("/about")}>
+            <Pressable
+                style={styles.item}
+                onPress={() => router.push("/about")}
+            >
                 <View style={styles.left}>
                     <View style={styles.iconContainer}>
                         <RemixIcon
@@ -162,7 +161,7 @@ const Settings = () => {
                     <View style={styles.itemTextWrap}>
                         <Text style={styles.title}>About</Text>
                         <Text style={styles.subtitle}>
-                            Learn more about WikiAtlas
+                            Learn more about ReadWiki
                         </Text>
                     </View>
                 </View>
