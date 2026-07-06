@@ -1,6 +1,6 @@
-import ArticleCard from "@/components/ArticleCard";
 import { useScreenScroll } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
+import OnThisDayEvent from "@/components/OnThisDayEvent";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle } from "@/services/wikipedia";
 import { router } from "expo-router";
@@ -43,19 +43,19 @@ const OnThisDay = () => {
                 contentContainerStyle={styles.listContent}
                 onScroll={onScroll}
                 scrollEventThrottle={16}
-                renderItem={({ item }) => {
+                renderItem={({ item, index }) => {
                     const article = item.pages?.[0];
 
-                    if (!article) {
-                        return null;
-                    }
                     return (
-                        <ArticleCard
-                            title={article.normalizedtitle}
-                            subtitle={item.text}
-                            tag={item.year}
-                            image={article.thumbnail?.source}
+                        <OnThisDayEvent
+                            year={item.year}
+                            text={item.text}
+                            title={article?.normalizedtitle}
+                            image={article?.thumbnail?.source}
+                            isFirst={index === 0}
+                            isLast={index === onThisDayArticles.length - 1}
                             onPress={() =>
+                                article &&
                                 router.push({
                                     pathname: "/article/[article]",
                                     params: {
@@ -92,22 +92,5 @@ const styles = StyleSheet.create({
     listContent: {
         paddingTop: 100,
         paddingBottom: 24,
-    },
-    header: {
-        paddingHorizontal: 16,
-        paddingTop: 16,
-        paddingBottom: 20,
-    },
-    title: {
-        fontSize: 32,
-        color: Colors.text,
-        fontFamily: "DMSans-Bold",
-        letterSpacing: -1,
-        marginBottom: 6,
-    },
-    subtitle: {
-        fontSize: 15,
-        color: Colors.textSecondary,
-        fontFamily: "DMSans-Medium",
     },
 });

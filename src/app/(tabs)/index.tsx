@@ -1,6 +1,6 @@
-import ArticleCard from "@/components/ArticleCard";
 import { useSolidHeader } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
+import OnThisDayEvent from "@/components/OnThisDayEvent";
 import PrimaryButton from "@/components/PrimaryButton";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle } from "@/services/wikipedia";
@@ -290,22 +290,22 @@ const Home = () => {
                                     (item: any, index: number) => {
                                         const article = item.pages?.[0];
 
-                                        if (!article) {
-                                            return null;
-                                        }
                                         return (
-                                            <ArticleCard
-                                                key={
-                                                    article.normalizedtitle +
-                                                    index
-                                                }
-                                                title={article.normalizedtitle}
-                                                subtitle={item.text}
-                                                tag={item.year}
+                                            <OnThisDayEvent
+                                                key={`${item.year}-${index}`}
+                                                year={item.year}
+                                                text={item.text}
+                                                title={article?.normalizedtitle}
                                                 image={
-                                                    article.thumbnail?.source
+                                                    article?.thumbnail?.source
+                                                }
+                                                isFirst={index === 0}
+                                                isLast={
+                                                    index ===
+                                                    onThisDayArticles.length - 1
                                                 }
                                                 onPress={() =>
+                                                    article &&
                                                     router.push({
                                                         pathname:
                                                             "/article/[article]",
@@ -328,7 +328,7 @@ const Home = () => {
                                 }}
                             >
                                 <PrimaryButton
-                                    text={`More On This Day Articles`}
+                                    text={`More On This Day`}
                                     iconName="arrow-right-long-fill"
                                     iconPosition="right"
                                     theme="dark"
