@@ -10,6 +10,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import RemixIcon from "react-native-remix-icon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Home = () => {
@@ -159,22 +160,36 @@ const Home = () => {
                                 />
 
                                 <LinearGradient
-                                    colors={["transparent", "rgba(0,0,0,1)"]}
+                                    colors={["transparent", "rgba(0,0,0,0.9)"]}
+                                    locations={[0.25, 1]}
                                     style={styles.overlayGradient}
                                 />
 
                                 <View style={styles.imageCardContent}>
-                                    <Text style={styles.imageCardTitle}>
-                                        Author: {imageOfTheDay.artist.text}
-                                    </Text>
-
                                     {!!imageOfTheDay.description?.text && (
                                         <Text
-                                            style={styles.imageCardDescription}
+                                            style={styles.imageCardCaption}
                                             numberOfLines={3}
                                         >
                                             {imageOfTheDay.description.text}
                                         </Text>
+                                    )}
+
+                                    {!!imageOfTheDay.artist?.text && (
+                                        <View style={styles.imageCardByline}>
+                                            <RemixIcon
+                                                name="camera-3-line"
+                                                size={14}
+                                                color="rgba(255,255,255,0.85)"
+                                                fallback={null}
+                                            />
+                                            <Text
+                                                style={styles.imageCardAuthor}
+                                                numberOfLines={1}
+                                            >
+                                                {imageOfTheDay.artist.text}
+                                            </Text>
+                                        </View>
                                     )}
                                 </View>
                             </Pressable>
@@ -422,19 +437,27 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "flex-end",
         padding: 16,
-        gap: 8,
+        gap: 10,
     },
 
-    imageCardTitle: {
-        fontSize: 20,
+    imageCardCaption: {
+        fontSize: 18,
+        lineHeight: 24,
         color: Colors.textInverse,
         fontFamily: "Fraunces-SemiBold",
     },
 
-    imageCardDescription: {
-        fontSize: 14,
+    imageCardByline: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+    },
+
+    imageCardAuthor: {
+        flex: 1,
+        fontSize: 13,
         fontFamily: "DMSans-Medium",
-        color: "rgba(255,255,255,0.8)",
+        color: "rgba(255,255,255,0.85)",
     },
 
     section: {
