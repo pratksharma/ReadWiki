@@ -3,9 +3,9 @@ import { router } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
 
+import Button from "@/components/Button";
 import { useSolidHeader } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
-import PrimaryButton from "@/components/PrimaryButton";
 import { getRandomArticles } from "@/services/wikipedia";
 
 const { height } = Dimensions.get("window");
@@ -106,8 +106,10 @@ const Flow = () => {
                     </Text>
 
                     <View style={{ alignItems: "flex-start" }}>
-                        <PrimaryButton
+                        <Button
+                            variant="primary"
                             text="Read More"
+                            mode="light"
                             iconName="arrow-right-long-fill"
                             onPress={() =>
                                 router.push({

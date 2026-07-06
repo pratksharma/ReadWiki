@@ -2,7 +2,7 @@ import ArticleCard from "@/components/ArticleCard";
 import { useSolidHeader } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
 import OnThisDayEvent from "@/components/OnThisDayEvent";
-import PrimaryButton from "@/components/PrimaryButton";
+import Button from "@/components/Button";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
@@ -124,10 +124,11 @@ const Home = () => {
                                 </Text>
                             )}
                             <View style={{ alignItems: "flex-start" }}>
-                                <PrimaryButton
+                                <Button
                                     text="Read More"
                                     iconName="arrow-right-long-fill"
-                                    theme="light"
+                                    variant="primary"
+                                    mode="light"
                                     onPress={() =>
                                         router.push({
                                             pathname: "/article/[article]",
@@ -240,11 +241,11 @@ const Home = () => {
                                     marginTop: 10,
                                 }}
                             >
-                                <PrimaryButton
+                                <Button
                                     text={`More Trending Articles`}
                                     iconName="arrow-right-long-fill"
                                     iconPosition="right"
-                                    theme="dark"
+                                    variant="secondary"
                                     onPress={() => router.navigate("/trending")}
                                 />
                             </View>
@@ -299,11 +300,11 @@ const Home = () => {
                                     marginTop: 10,
                                 }}
                             >
-                                <PrimaryButton
+                                <Button
                                     text={`More On This Day`}
                                     iconName="arrow-right-long-fill"
                                     iconPosition="right"
-                                    theme="dark"
+                                    variant="secondary"
                                     onPress={() =>
                                         router.navigate("/on-this-day")
                                     }
