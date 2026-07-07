@@ -1,16 +1,119 @@
-import { Image } from "expo-image";
-import { router } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
-import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
-
-import Button from "@/components/Button";
 import { useSolidHeader } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
+import Colors from "@/constants/Colors";
+import { toggleSavedArticle, useIsSaved } from "@/services/savedArticles";
 import { getRandomArticles } from "@/services/wikipedia";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import {
+    Dimensions,
+    FlatList,
+    Pressable,
+    Share,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
+import Animated, {
+    Easing,
+    useAnimatedStyle,
+    useSharedValue,
+    withRepeat,
+    withTiming,
+} from "react-native-reanimated";
+import RemixIcon from "react-native-remix-icon";
 
 const { height } = Dimensions.get("window");
 
 const BATCH_SIZE = 20;
+
+// Build a canonical Wikipedia URL for sharing. The random-article query returns
+// `fullurl`, but fall back to constructing one from the title just in case.
+const articleUrl = (item: any) =>
+    item.fullurl ??
+    item.canonicalurl ??
+    `https://en.wikipedia.org/wiki/${encodeURIComponent(
+        String(item.title).replace(/ /g, "_"),
+    )}`;
+
+// A translucent circular action button (save / share).
+const CircleButton = ({
+    icon,
+    onPress,
+}: {
+    icon: string;
+    onPress: () => void;
+}) => (
+    <Pressable
+        onPress={onPress}
+        style={({ pressed }) => [
+            styles.circle,
+            pressed && styles.circlePressed,
+        ]}
+        hitSlop={8}
+    >
+        <RemixIcon
+            name={icon as any}
+            size={22}
+            color={Colors.textInverse}
+            fallback={null}
+        />
+    </Pressable>
+);
+
+// Save button lives in its own component so it can subscribe to the saved store
+// and flip its icon the moment the article is bookmarked.
+const SaveButton = ({ item }: { item: any }) => {
+    const saved = useIsSaved(item.title);
+
+    return (
+        <CircleButton
+            icon={saved ? "bookmark-fill" : "bookmark-line"}
+            onPress={() =>
+                toggleSavedArticle({
+                    title: item.title,
+                    description: item.extract,
+                    thumbnail: item.thumbnail?.source,
+                    savedAt: Date.now(),
+                })
+            }
+        />
+    );
+};
+
+// Gently bobbing "swipe up" hint shown on the first card only.
+const SwipeHint = () => {
+    const offset = useSharedValue(0);
+
+    useEffect(() => {
+        offset.value = withRepeat(
+            withTiming(-8, {
+                duration: 900,
+                easing: Easing.inOut(Easing.quad),
+            }),
+            -1,
+            true,
+        );
+    }, [offset]);
+
+    const style = useAnimatedStyle(() => ({
+        transform: [{ translateY: offset.value }],
+    }));
+
+    return (
+        <Animated.View style={[styles.hint, style]} pointerEvents="none">
+            <RemixIcon
+                name="arrow-up-double-line"
+                size={18}
+                color="rgba(255,255,255,0.85)"
+                fallback={null}
+            />
+            <Text style={styles.hintText}>Swipe for more</Text>
+        </Animated.View>
+    );
+};
 
 const Flow = () => {
     const [articles, setArticles] = useState<any[]>([]);
@@ -58,73 +161,126 @@ const Flow = () => {
         loadInitial();
     }, []);
 
-    const renderItem = useCallback(({ item }: any) => {
-        const thumbnail = item.thumbnail?.source;
+    const openArticle = useCallback((title: string) => {
+        router.push({
+            pathname: "/article/[article]",
+            params: { article: title },
+        });
+    }, []);
 
-        const aspectRatio =
-            item.thumbnail?.width && item.thumbnail?.height
-                ? item.thumbnail.width / item.thumbnail.height
-                : 1;
+    const shareArticle = useCallback(async (item: any) => {
+        try {
+            await Share.share({
+                message: `${item.title} — ${articleUrl(item)}`,
+                url: articleUrl(item),
+                title: item.title,
+            });
+        } catch {
+            // User dismissed the share sheet; nothing to do.
+        }
+    }, []);
 
-        return (
-            <View style={styles.page}>
-                <Image
-                    source={
-                        thumbnail
-                            ? thumbnail
-                            : require("../../../assets/gradient-background.jpg")
-                    }
-                    style={styles.background}
-                    contentFit="cover"
-                    blurRadius={30}
-                />
-                <View style={styles.overlay} />
+    const renderItem = useCallback(
+        ({ item, index }: any) => {
+            const thumbnail = item.thumbnail?.source;
 
-                <View style={styles.content}>
-                    {thumbnail && (
-                        <View style={styles.imageContainer}>
-                            <Image
-                                source={{ uri: thumbnail }}
-                                contentFit="contain"
-                                style={[
-                                    styles.thumbnail,
-                                    {
-                                        aspectRatio,
-                                    },
+            return (
+                <View style={styles.page}>
+                    <Image
+                        source={
+                            thumbnail
+                                ? thumbnail
+                                : require("../../../assets/gradient-background.jpg")
+                        }
+                        style={styles.background}
+                        contentFit="cover"
+                        blurRadius={40}
+                    />
+
+                    {/* Flat dark overlay over every blurred backdrop so the
+                        blur reads consistently regardless of the image. */}
+                    <View style={styles.overlay} />
+
+                    {/* Top scrim keeps the header/status bar legible; the
+                        stronger bottom scrim anchors the text. */}
+                    <LinearGradient
+                        colors={["rgba(0,0,0,0.5)", "transparent"]}
+                        style={styles.topScrim}
+                    />
+                    <LinearGradient
+                        colors={[
+                            "transparent",
+                            "rgba(0,0,0,0.5)",
+                            "rgba(0,0,0,0.92)",
+                        ]}
+                        locations={[0, 0.45, 1]}
+                        style={styles.bottomScrim}
+                    />
+
+                    <View style={styles.content}>
+                        {thumbnail && (
+                            <View style={styles.imageCard}>
+                                <Image
+                                    source={{ uri: thumbnail }}
+                                    contentFit="cover"
+                                    style={styles.thumbnail}
+                                    transition={200}
+                                />
+                            </View>
+                        )}
+
+                        <View style={styles.badge}>
+                            <RemixIcon
+                                name="shuffle-line"
+                                size={13}
+                                color={Colors.textInverse}
+                                fallback={null}
+                            />
+                            <Text style={styles.badgeText}>Random Article</Text>
+                        </View>
+
+                        <Text style={styles.title} numberOfLines={2}>
+                            {item.title}
+                        </Text>
+
+                        <Text style={styles.extract} numberOfLines={4}>
+                            {item.extract}
+                        </Text>
+
+                        <View style={styles.actions}>
+                            <Pressable
+                                style={({ pressed }) => [
+                                    styles.readButton,
+                                    pressed && styles.readButtonPressed,
                                 ]}
-                                transition={200}
+                                onPress={() => openArticle(item.title)}
+                            >
+                                <Text style={styles.readButtonText}>
+                                    Read Article
+                                </Text>
+                                <RemixIcon
+                                    name="arrow-right-long-fill"
+                                    size={18}
+                                    color={Colors.text}
+                                    fallback={null}
+                                />
+                            </Pressable>
+
+                            <SaveButton item={item} />
+
+                            <CircleButton
+                                icon="share-forward-line"
+                                onPress={() => shareArticle(item)}
                             />
                         </View>
-                    )}
-
-                    <Text style={styles.title} numberOfLines={3}>
-                        {item.title}
-                    </Text>
-
-                    <Text style={styles.extract} numberOfLines={4}>
-                        {item.extract}
-                    </Text>
-
-                    <View style={{ alignItems: "flex-start" }}>
-                        <Button
-                            variant="primary"
-                            text="Read More"
-                            mode="light"
-                            iconName="arrow-right-long-fill"
-                            onPress={() =>
-                                router.push({
-                                    pathname: "/article/[article]",
-                                    params: {
-                                        article: item.title,
-                                    },
-                                })
-                            }
-                        />
                     </View>
+
+                    {index === 0 && <SwipeHint />}
                 </View>
-            </View>
-        );
-    }, []);
+            );
+        },
+        [openArticle, shareArticle],
+    );
 
     if (loading) {
         return (
@@ -134,7 +290,7 @@ const Flow = () => {
                     style={styles.background}
                     contentFit="cover"
                     transition={200}
-                    blurRadius={30}
+                    blurRadius={40}
                 />
                 <View style={styles.overlay} />
                 <Loader />
@@ -170,7 +326,7 @@ const Flow = () => {
                             style={styles.background}
                             contentFit="cover"
                             transition={200}
-                            blurRadius={30}
+                            blurRadius={40}
                         />
                         <View style={styles.overlay} />
                         <Loader />
@@ -194,7 +350,7 @@ const styles = StyleSheet.create({
     page: {
         flex: 1,
         height,
-        justifyContent: "center",
+        justifyContent: "flex-end",
     },
 
     background: {
@@ -206,35 +362,137 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0,0,0,.55)",
     },
 
-    content: {
-        flex: 1,
-        justifyContent: "center",
-        paddingHorizontal: 16,
+    topScrim: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: "22%",
     },
 
-    imageContainer: {
-        width: "100%",
-        maxHeight: 280,
-        marginBottom: 16,
+    bottomScrim: {
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: "80%",
+    },
+
+    content: {
+        paddingHorizontal: 20,
+        // Clear the floating tab bar (~pill height + its 16 bottom margin).
+        paddingBottom: 130,
+        gap: 14,
+    },
+
+    imageCard: {
+        alignSelf: "flex-start",
+        width: "70%",
+        height: 260,
+        borderRadius: 20,
+        overflow: "hidden",
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.15)",
+        backgroundColor: "rgba(255,255,255,0.06)",
     },
 
     thumbnail: {
         width: "100%",
-        maxHeight: 280,
-        borderRadius: 16,
+        height: "100%",
+    },
+
+    badge: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+        alignSelf: "flex-start",
+        backgroundColor: "rgba(255,255,255,0.18)",
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.3)",
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 999,
+    },
+
+    badgeText: {
+        textTransform: "uppercase",
+        fontSize: 11,
+        letterSpacing: 1,
+        fontFamily: "DMSans-Bold",
+        color: Colors.textInverse,
     },
 
     title: {
-        color: "#fff",
-        fontSize: 24,
+        color: Colors.textInverse,
+        fontSize: 28,
+        letterSpacing: -0.5,
         fontFamily: "Fraunces-SemiBold",
     },
 
     extract: {
-        marginTop: 16,
-        marginBottom: 22,
         color: "rgba(255,255,255,0.9)",
         fontSize: 14,
+        lineHeight: 20,
         fontFamily: "DMSans-Medium",
+    },
+
+    actions: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 12,
+        marginTop: 6,
+    },
+
+    readButton: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 6,
+        backgroundColor: Colors.surface,
+        paddingVertical: 14,
+        borderRadius: 999,
+    },
+
+    readButtonPressed: {
+        filter: "brightness(0.9)",
+        transform: [{ scale: 0.98 }],
+    },
+
+    readButtonText: {
+        fontFamily: "DMSans-SemiBold",
+        fontSize: 15,
+        color: Colors.text,
+    },
+
+    circle: {
+        width: 52,
+        height: 52,
+        borderRadius: 999,
+        alignItems: "center",
+        justifyContent: "center",
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.25)",
+        backgroundColor: "rgba(255,255,255,0.14)",
+    },
+
+    circlePressed: {
+        opacity: 0.7,
+        transform: [{ scale: 0.94 }],
+    },
+
+    hint: {
+        position: "absolute",
+        top: "14%",
+        alignSelf: "center",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+    },
+
+    hintText: {
+        color: "rgba(255,255,255,0.85)",
+        fontSize: 13,
+        fontFamily: "DMSans-SemiBold",
     },
 });
