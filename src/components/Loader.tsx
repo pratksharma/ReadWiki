@@ -1,3 +1,4 @@
+import Colors from "@/constants/Colors";
 import { ContainedLoadingIndicator, Host } from "@expo/ui/jetpack-compose";
 import { ActivityIndicator, Platform, StyleSheet } from "react-native";
 
@@ -7,7 +8,10 @@ const Loader = () => {
     }
     return (
         <Host matchContents>
-            <ContainedLoadingIndicator />
+            <ContainedLoadingIndicator
+                containerColor={Colors.primary}
+                color={Colors.background}
+            />
         </Host>
     );
 };
