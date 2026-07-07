@@ -121,6 +121,7 @@ export default function RootLayout() {
                         options={{ title: "" }}
                     />
                     <Stack.Screen name="trending" options={{ title: "Trending" }} />
+                    <Stack.Screen name="news" options={{ title: "In the News" }} />
                     <Stack.Screen
                         name="on-this-day"
                         options={{ title: "On This Day" }}

@@ -1,10 +1,12 @@
 import ArticleCard from "@/components/ArticleCard";
 import { useSolidHeader } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
+import NewsCard from "@/components/NewsCard";
 import OnThisDayEvent from "@/components/OnThisDayEvent";
 import Button from "@/components/Button";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle } from "@/services/wikipedia";
+import { stripHtml } from "@/utils/html";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
@@ -17,6 +19,7 @@ const Home = () => {
     const [featuredArticle, setFeaturedArticle] = useState<any>(null);
     const [trendingArticles, setTrendingArticles] = useState<any>([]);
     const [imageOfTheDay, setImageOfTheDay] = useState<any>([]);
+    const [news, setNews] = useState<any[]>([]);
     const [onThisDayArticles, setOnThisDayArticles] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -31,6 +34,7 @@ const Home = () => {
             setFeaturedArticle(data.tfa);
             setTrendingArticles(data.mostread?.articles.slice(0, 3) || []);
             setImageOfTheDay(data.image);
+            setNews(data.news?.slice(0, 3) || []);
             setOnThisDayArticles(data.onthisday.slice(0, 3) || []);
         } catch (error) {
             console.error(error);
@@ -247,6 +251,55 @@ const Home = () => {
                                     iconPosition="right"
                                     variant="secondary"
                                     onPress={() => router.navigate("/trending")}
+                                />
+                            </View>
+                        </View>
+                    )}
+                    {news.length > 0 && (
+                        <View style={styles.section}>
+                            <View>
+                                <Text style={styles.sectionTitle}>
+                                    In the News
+                                </Text>
+                            </View>
+                            <View style={styles.sectionContent}>
+                                {news.map((item: any, index: number) => {
+                                    const article = item.links?.[0];
+
+                                    return (
+                                        <NewsCard
+                                            key={`${item.story}-${index}`}
+                                            story={stripHtml(item.story)}
+                                            title={article?.normalizedtitle}
+                                            image={article?.thumbnail?.source}
+                                            onPress={() =>
+                                                article &&
+                                                router.push({
+                                                    pathname:
+                                                        "/article/[article]",
+                                                    params: {
+                                                        article:
+                                                            article.normalizedtitle,
+                                                    },
+                                                })
+                                            }
+                                        />
+                                    );
+                                })}
+                            </View>
+
+                            <View
+                                style={{
+                                    alignItems: "center",
+                                    marginTop: 10,
+                                }}
+                            >
+                                <Button
+                                    text={`More News`}
+                                    iconName="arrow-right-long-fill"
+                                    iconPosition="right"
+                                    variant="secondary"
+                                    onPress={() => router.navigate("/news")}
                                 />
                             </View>
                         </View>
