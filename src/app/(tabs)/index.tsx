@@ -1,9 +1,9 @@
 import ArticleCard from "@/components/ArticleCard";
+import Button from "@/components/Button";
 import { useSolidHeader } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
 import NewsCard from "@/components/NewsCard";
 import OnThisDayEvent from "@/components/OnThisDayEvent";
-import Button from "@/components/Button";
 import Colors from "@/constants/Colors";
 import { getFeaturedArticle } from "@/services/wikipedia";
 import { stripHtml } from "@/utils/html";
@@ -58,7 +58,6 @@ const Home = () => {
             {loading ? (
                 <View style={styles.loaderContainer}>
                     <Loader />
-                    <Text style={styles.loadingText}>Loading...</Text>
                 </View>
             ) : (
                 <ScrollView
@@ -496,6 +495,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.surface,
         borderWidth: 1,
         borderColor: Colors.border,
+        marginTop: 12,
         marginHorizontal: 16,
         height: 300,
     },
