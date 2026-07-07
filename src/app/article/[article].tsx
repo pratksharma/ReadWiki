@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
 
     hero: {
         width: "100%",
-        backgroundColor: Colors.surfaceMuted,
+        backgroundColor: Colors.backgroundMuted,
     },
 
     title: {
@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
 
     image: {
         width: "100%",
-        backgroundColor: Colors.surfaceMuted,
+        backgroundColor: Colors.backgroundMuted,
     },
 
     caption: {

@@ -90,7 +90,7 @@ const Settings = () => {
                         <RemixIcon
                             name="delete-bin-line"
                             size={22}
-                            color={Colors.primary}
+                            color={Colors.accent}
                             fallback={null}
                         />
                     </View>
@@ -123,7 +123,7 @@ const Settings = () => {
                         <RemixIcon
                             name="compass-3-line"
                             size={22}
-                            color={Colors.primary}
+                            color={Colors.accent}
                             fallback={null}
                         />
                     </View>
@@ -153,7 +153,7 @@ const Settings = () => {
                         <RemixIcon
                             name="information-line"
                             size={22}
-                            color={Colors.primary}
+                            color={Colors.accent}
                             fallback={null}
                         />
                     </View>
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 16,
         borderRadius: 999,
-        backgroundColor: Colors.surfaceMuted,
+        backgroundColor: Colors.backgroundMuted,
         borderWidth: 1,
         borderColor: Colors.border,
     },
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
         borderRadius: 21,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: Colors.surfaceMuted,
+        backgroundColor: Colors.backgroundMuted,
         marginRight: 14,
     },
     itemTextWrap: {

@@ -157,7 +157,7 @@ export default function About() {
                                     <RemixIcon
                                         name="global-line"
                                         size={16}
-                                        color={Colors.primary}
+                                        color={Colors.accent}
                                     />
 
                                     <Text style={styles.portfolioText}>
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         gap: 6,
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.backgroundMuted,
         paddingHorizontal: 14,
         paddingVertical: 8,
         borderRadius: 999,
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
         alignSelf: "flex-start",
     },
     portfolioText: {
-        color: Colors.primary,
+        color: Colors.accent,
         fontFamily: "DMSans-Medium",
     },
     stats: {

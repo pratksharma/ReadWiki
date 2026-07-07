@@ -64,7 +64,7 @@ export default function ArticleCard({
                     <RemixIcon
                         name="bookmark-fill"
                         size={22}
-                        color={Colors.primary}
+                        color={Colors.accent}
                         fallback={null}
                     />
                 </Pressable>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         width: 72,
         height: 72,
         borderRadius: 8,
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.backgroundMuted,
         alignItems: "center",
         justifyContent: "center",
     },
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     tag: {
         fontSize: 12,
         color: Colors.textSecondary,
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.backgroundMuted,
         fontFamily: "DMSans-SemiBold",
         paddingVertical: 2,
         paddingHorizontal: 8,

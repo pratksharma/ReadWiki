@@ -101,7 +101,7 @@ const Onboarding = () => {
                             <RemixIcon
                                 name={item.icon}
                                 size={56}
-                                color={Colors.primary}
+                                color={Colors.accent}
                                 fallback={null}
                             />
                         </View>
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
         width: 140,
         height: 140,
         borderRadius: 70,
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.backgroundMuted,
         alignItems: "center",
         justifyContent: "center",
         marginBottom: 40,

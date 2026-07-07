@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
         width: 36,
         height: 36,
         borderRadius: 8,
-        backgroundColor: Colors.surfaceMuted,
+        backgroundColor: Colors.backgroundMuted,
         alignItems: "center",
         justifyContent: "center",
     },
