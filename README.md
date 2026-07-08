@@ -1,3 +1,5 @@
+# ReadWiki
+
 <p align="center">
   <img src="./assets/banner.jpg" alt="ReadWiki Banner" width="100%" />
 </p>
