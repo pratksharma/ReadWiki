@@ -11,7 +11,7 @@ export default function DidYouKnowCard({ text }: DidYouKnowCardProps) {
         <View style={styles.card}>
             <View style={styles.iconContainer}>
                 <RemixIcon
-                    name="lightbulb-fill"
+                    name="lightbulb-line"
                     size={18}
                     color={Colors.accent}
                     fallback={null}

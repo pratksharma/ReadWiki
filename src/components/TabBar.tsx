@@ -64,11 +64,7 @@ export default function TabBar({
                 ]}
             />
 
-            <GlassView
-                style={styles.container}
-                intensity={60}
-                tint="light"
-            >
+            <GlassView style={styles.container} intensity={60} tint="light">
                 <Animated.View
                     style={[
                         styles.indicator,
