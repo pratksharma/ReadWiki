@@ -81,8 +81,6 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.background,
         paddingHorizontal: 16,
         paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: Colors.border,
     },
 
     cardPressed: {
