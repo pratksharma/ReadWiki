@@ -1,19 +1,18 @@
+import DidYouKnowCard from "@/components/DidYouKnowCard";
 import { useScreenScroll } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
-import OnThisDayEvent from "@/components/OnThisDayEvent";
 import Colors from "@/constants/Colors";
 import { getFeaturedData } from "@/services/wikipedia";
-import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const OnThisDay = () => {
+const DidYouKnow = () => {
     const insets = useSafeAreaInsets();
 
     const [loading, setLoading] = useState(true);
-    const [onThisDayArticles, setOnThisDayArticles] = useState<any[]>([]);
+    const [facts, setFacts] = useState<any[]>([]);
     const onScroll = useScreenScroll();
 
     useEffect(() => {
@@ -23,7 +22,7 @@ const OnThisDay = () => {
     const loadData = async () => {
         try {
             const data = await getFeaturedData();
-            setOnThisDayArticles(data.onthisday || []);
+            setFacts(data.dyk || []);
         } catch (error) {
             console.error(error);
         } finally {
@@ -42,62 +41,42 @@ const OnThisDay = () => {
     return (
         <View style={styles.container}>
             <Animated.FlatList
-                data={onThisDayArticles}
+                data={facts}
+                onScroll={onScroll}
+                scrollEventThrottle={16}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={(item, index) => `${item.story}-${index}`}
                 contentContainerStyle={[
                     styles.listContent,
                     {
                         paddingBottom: insets.bottom + 32,
                     },
                 ]}
-                onScroll={onScroll}
-                scrollEventThrottle={16}
-                renderItem={({ item, index }) => {
-                    const article = item.pages?.[0];
-
-                    return (
-                        <OnThisDayEvent
-                            year={item.year}
-                            text={item.text}
-                            title={article?.normalizedtitle}
-                            image={article?.thumbnail?.source}
-                            isFirst={index === 0}
-                            isLast={index === onThisDayArticles.length - 1}
-                            onPress={() =>
-                                article &&
-                                router.push({
-                                    pathname: "/article/[article]",
-                                    params: {
-                                        article: article.normalizedtitle,
-                                    },
-                                })
-                            }
-                        />
-                    );
-                }}
-                keyExtractor={(item, index) =>
-                    `${item.text}-${index}` ||
-                    `${item.pages?.[0].title}-${index}`
-                }
-                showsVerticalScrollIndicator={false}
+                renderItem={({ item, index }) => (
+                    <DidYouKnowCard text={item.text} key={index} />
+                )}
             />
         </View>
     );
 };
 
-export default OnThisDay;
+export default DidYouKnow;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.background,
     },
+
     loaderContainer: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: Colors.background,
     },
+
     listContent: {
         paddingTop: 100,
+        // paddingHorizontal: 20,
     },
 });

@@ -8,7 +8,7 @@ export const Colors = {
     // Backgrounds
     background: "#f2f3e4", // unchanged — warm cream
     backgroundSecondary: "#EAEBDA",
-    backgroundMuted: "#DBDCC7", // darker shade of the bg — accent chips, fallbacks, icon boxes
+    backgroundMuted: "#e2e3cc", // darker shade of the bg — accent chips, fallbacks, icon boxes
     surface: "#FBFBF6", // warm white card
     surfaceMuted: "#EFEFE7", // warm muted surface
 

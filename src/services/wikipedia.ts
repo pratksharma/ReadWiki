@@ -2,7 +2,7 @@ import { getFeaturedDataCache, setFeaturedDataCache } from "./cache";
 
 const BASE_URL = "https://api.wikimedia.org";
 
-export const getFeaturedArticle = async () => {
+export const getFeaturedData = async () => {
     try {
         const cachedData = getFeaturedDataCache();
 

@@ -111,7 +111,10 @@ export default function RootLayout() {
                         ),
                     }}
                 >
-                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                    <Stack.Screen
+                        name="(tabs)"
+                        options={{ headerShown: false }}
+                    />
                     <Stack.Screen
                         name="onboarding"
                         options={{ headerShown: false }}
@@ -120,8 +123,18 @@ export default function RootLayout() {
                         name="article/[article]"
                         options={{ title: "" }}
                     />
-                    <Stack.Screen name="trending" options={{ title: "Trending" }} />
-                    <Stack.Screen name="news" options={{ title: "In the News" }} />
+                    <Stack.Screen
+                        name="trending"
+                        options={{ title: "Trending" }}
+                    />
+                    <Stack.Screen
+                        name="news"
+                        options={{ title: "In the News" }}
+                    />
+                    <Stack.Screen
+                        name="did-you-know"
+                        options={{ title: "Did You Know?" }}
+                    />
                     <Stack.Screen
                         name="on-this-day"
                         options={{ title: "On This Day" }}

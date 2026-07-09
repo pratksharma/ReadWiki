@@ -2,7 +2,7 @@ import { useScreenScroll } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
 import NewsCard from "@/components/NewsCard";
 import Colors from "@/constants/Colors";
-import { getFeaturedArticle } from "@/services/wikipedia";
+import { getFeaturedData } from "@/services/wikipedia";
 import { stripHtml } from "@/utils/html";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -23,7 +23,7 @@ const News = () => {
 
     const loadData = async () => {
         try {
-            const data = await getFeaturedArticle();
+            const data = await getFeaturedData();
             setNews(data.news || []);
         } catch (error) {
             console.error(error);

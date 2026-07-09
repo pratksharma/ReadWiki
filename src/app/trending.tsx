@@ -2,7 +2,7 @@ import ArticleCard from "@/components/ArticleCard";
 import { useScreenScroll } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
 import Colors from "@/constants/Colors";
-import { getFeaturedArticle } from "@/services/wikipedia";
+import { getFeaturedData } from "@/services/wikipedia";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -22,7 +22,7 @@ const Trending = () => {
 
     const loadData = async () => {
         try {
-            const data = await getFeaturedArticle();
+            const data = await getFeaturedData();
             setTrendingArticles(data.mostread?.articles || []);
         } catch (error) {
             console.error(error);

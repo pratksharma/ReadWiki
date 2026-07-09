@@ -1,11 +1,12 @@
 import ArticleCard from "@/components/ArticleCard";
 import Button from "@/components/Button";
+import DidYouKnowCard from "@/components/DidYouKnowCard";
 import { useSolidHeader } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
 import NewsCard from "@/components/NewsCard";
 import OnThisDayEvent from "@/components/OnThisDayEvent";
 import Colors from "@/constants/Colors";
-import { getFeaturedArticle } from "@/services/wikipedia";
+import { getFeaturedData } from "@/services/wikipedia";
 import { stripHtml } from "@/utils/html";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -21,6 +22,7 @@ const Home = () => {
     const [imageOfTheDay, setImageOfTheDay] = useState<any>([]);
     const [news, setNews] = useState<any[]>([]);
     const [onThisDayArticles, setOnThisDayArticles] = useState<any[]>([]);
+    const [facts, setFacts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -29,23 +31,20 @@ const Home = () => {
 
     const loadData = async () => {
         try {
-            const data = await getFeaturedArticle();
+            const data = await getFeaturedData();
 
             setFeaturedArticle(data.tfa);
             setTrendingArticles(data.mostread?.articles.slice(0, 3) || []);
             setImageOfTheDay(data.image);
             setNews(data.news?.slice(0, 3) || []);
             setOnThisDayArticles(data.onthisday.slice(0, 3) || []);
+            setFacts(data.dyk.slice(0, 3) || []);
         } catch (error) {
             console.error(error);
         } finally {
             setLoading(false);
         }
     };
-
-    const textColor = featuredArticle?.thumbnail?.source
-        ? Colors.textInverse
-        : Colors.textInverse;
 
     const insets = useSafeAreaInsets();
 
@@ -144,68 +143,6 @@ const Home = () => {
                             </View>
                         </View>
                     </View>
-                    {imageOfTheDay && (
-                        <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>
-                                Image of the Day
-                            </Text>
-                            <Pressable
-                                style={({ pressed }) => [
-                                    styles.imageCard,
-                                    pressed && styles.cardPressed,
-                                ]}
-                                onPress={() => {
-                                    router.navigate({
-                                        pathname: "/image/[image]",
-                                        params: {
-                                            image: imageOfTheDay.thumbnail
-                                                .source,
-                                        },
-                                    });
-                                }}
-                            >
-                                <Image
-                                    source={imageOfTheDay.thumbnail?.source}
-                                    style={styles.imageCardImage}
-                                    contentFit="cover"
-                                />
-
-                                <LinearGradient
-                                    colors={["transparent", "rgba(0,0,0,0.9)"]}
-                                    locations={[0.25, 1]}
-                                    style={styles.overlayGradient}
-                                />
-
-                                <View style={styles.imageCardContent}>
-                                    {!!imageOfTheDay.description?.text && (
-                                        <Text
-                                            style={styles.imageCardCaption}
-                                            numberOfLines={3}
-                                        >
-                                            {imageOfTheDay.description.text}
-                                        </Text>
-                                    )}
-
-                                    {!!imageOfTheDay.artist?.text && (
-                                        <View style={styles.imageCardByline}>
-                                            <RemixIcon
-                                                name="camera-3-line"
-                                                size={14}
-                                                color="rgba(255,255,255,0.85)"
-                                                fallback={null}
-                                            />
-                                            <Text
-                                                style={styles.imageCardAuthor}
-                                                numberOfLines={1}
-                                            >
-                                                {imageOfTheDay.artist.text}
-                                            </Text>
-                                        </View>
-                                    )}
-                                </View>
-                            </Pressable>
-                        </View>
-                    )}
                     {trendingArticles.length > 0 && (
                         <View style={styles.section}>
                             <View>
@@ -299,6 +236,104 @@ const Home = () => {
                                     iconPosition="right"
                                     variant="secondary"
                                     onPress={() => router.navigate("/news")}
+                                />
+                            </View>
+                        </View>
+                    )}
+                    {imageOfTheDay && (
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>
+                                Image of the Day
+                            </Text>
+                            <Pressable
+                                style={({ pressed }) => [
+                                    styles.imageCard,
+                                    pressed && styles.cardPressed,
+                                ]}
+                                onPress={() => {
+                                    router.navigate({
+                                        pathname: "/image/[image]",
+                                        params: {
+                                            image: imageOfTheDay.thumbnail
+                                                .source,
+                                        },
+                                    });
+                                }}
+                            >
+                                <Image
+                                    source={imageOfTheDay.thumbnail?.source}
+                                    style={styles.imageCardImage}
+                                    contentFit="cover"
+                                />
+
+                                <LinearGradient
+                                    colors={["transparent", "rgba(0,0,0,0.9)"]}
+                                    locations={[0.25, 1]}
+                                    style={styles.overlayGradient}
+                                />
+
+                                <View style={styles.imageCardContent}>
+                                    {!!imageOfTheDay.description?.text && (
+                                        <Text
+                                            style={styles.imageCardCaption}
+                                            numberOfLines={3}
+                                        >
+                                            {imageOfTheDay.description.text}
+                                        </Text>
+                                    )}
+
+                                    {!!imageOfTheDay.artist?.text && (
+                                        <View style={styles.imageCardByline}>
+                                            <RemixIcon
+                                                name="camera-3-line"
+                                                size={14}
+                                                color="rgba(255,255,255,0.85)"
+                                                fallback={null}
+                                            />
+                                            <Text
+                                                style={styles.imageCardAuthor}
+                                                numberOfLines={1}
+                                            >
+                                                {imageOfTheDay.artist.text}
+                                            </Text>
+                                        </View>
+                                    )}
+                                </View>
+                            </Pressable>
+                        </View>
+                    )}
+                    {facts.length > 0 && (
+                        <View style={styles.section}>
+                            <View>
+                                <Text style={styles.sectionTitle}>
+                                    Did You Know?
+                                </Text>
+                            </View>
+                            <View style={styles.sectionContent}>
+                                {facts.map((item: any, index: number) => {
+                                    return (
+                                        <DidYouKnowCard
+                                            text={item.text}
+                                            key={index}
+                                        />
+                                    );
+                                })}
+                            </View>
+
+                            <View
+                                style={{
+                                    alignItems: "center",
+                                    marginTop: 10,
+                                }}
+                            >
+                                <Button
+                                    text={`More Did You Know`}
+                                    iconName="arrow-right-long-fill"
+                                    iconPosition="right"
+                                    variant="secondary"
+                                    onPress={() =>
+                                        router.navigate("/did-you-know")
+                                    }
                                 />
                             </View>
                         </View>
