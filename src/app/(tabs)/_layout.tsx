@@ -30,7 +30,7 @@ export default function RootLayout() {
                     tabBarLabel: "Home",
                     tabBarIcon: ({ focused, color }) => (
                         <RemixIcon
-                            name={focused ? "home-5-fill" : "home-5-line"}
+                            name={focused ? "home-4-fill" : "home-4-line"}
                             size={TAB_ICON_SIZE}
                             color={color as string}
                             fallback={null}

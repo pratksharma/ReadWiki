@@ -51,7 +51,7 @@ export default function NewsCard({
                 {!!title && (
                     <View style={styles.byline}>
                         <RemixIcon
-                            name="arrow-right-line"
+                            name="corner-down-right-line"
                             size={14}
                             color={Colors.textSecondary}
                             fallback={null}
