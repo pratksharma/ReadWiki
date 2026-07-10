@@ -259,7 +259,7 @@ const Flow = () => {
                                     Read Article
                                 </Text>
                                 <RemixIcon
-                                    name="arrow-right-long-fill"
+                                    name="arrow-right-s-line"
                                     size={18}
                                     color={Colors.text}
                                     fallback={null}

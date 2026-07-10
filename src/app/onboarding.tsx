@@ -141,7 +141,7 @@ const Onboarding = () => {
                         {isLast ? "Get Started" : "Next"}
                     </Text>
                     <RemixIcon
-                        name="arrow-right-long-fill"
+                        name="arrow-right-s-line"
                         size={18}
                         color={Colors.textInverse}
                         fallback={null}

@@ -77,7 +77,7 @@ const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
                             onPress={() => router.back()}
                         >
                             <RemixIcon
-                                name="arrow-left-long-fill"
+                                name="arrow-left-s-line"
                                 size={20}
                                 color={Colors.text}
                                 fallback={null}

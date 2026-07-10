@@ -76,7 +76,7 @@ export default function OnThisDayEvent({
                         </Text>
 
                         <RemixIcon
-                            name="arrow-right-line"
+                            name="arrow-right-s-line"
                             size={18}
                             color={Colors.textSecondary}
                             fallback={null}

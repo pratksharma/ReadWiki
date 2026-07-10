@@ -128,7 +128,7 @@ const Home = () => {
                             <View style={{ alignItems: "flex-start" }}>
                                 <Button
                                     text="Read More"
-                                    iconName="arrow-right-long-fill"
+                                    iconName="arrow-right-s-line"
                                     variant="primary"
                                     mode="light"
                                     onPress={() =>
@@ -183,7 +183,7 @@ const Home = () => {
                             >
                                 <Button
                                     text={`More Trending Articles`}
-                                    iconName="arrow-right-long-fill"
+                                    iconName="arrow-right-s-line"
                                     iconPosition="right"
                                     variant="secondary"
                                     onPress={() => router.navigate("/trending")}
@@ -232,7 +232,7 @@ const Home = () => {
                             >
                                 <Button
                                     text={`More News`}
-                                    iconName="arrow-right-long-fill"
+                                    iconName="arrow-right-s-line"
                                     iconPosition="right"
                                     variant="secondary"
                                     onPress={() => router.navigate("/news")}
@@ -328,7 +328,7 @@ const Home = () => {
                             >
                                 <Button
                                     text={`More Did You Know`}
-                                    iconName="arrow-right-long-fill"
+                                    iconName="arrow-right-s-line"
                                     iconPosition="right"
                                     variant="secondary"
                                     onPress={() =>
@@ -389,7 +389,7 @@ const Home = () => {
                             >
                                 <Button
                                     text={`More On This Day`}
-                                    iconName="arrow-right-long-fill"
+                                    iconName="arrow-right-s-line"
                                     iconPosition="right"
                                     variant="secondary"
                                     onPress={() =>
