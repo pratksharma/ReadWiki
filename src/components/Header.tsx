@@ -64,7 +64,7 @@ const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
                 ]}
             >
                 <LinearGradient
-                    colors={["rgba(0,0,0,0.7)", "transparent"]}
+                    colors={["rgba(0,0,0,0.5)", "transparent"]}
                     style={StyleSheet.absoluteFill}
                 />
             </Animated.View>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     },
 
     pill: {
-        paddingVertical: 8,
+        paddingVertical: 6,
         paddingHorizontal: 12,
         borderRadius: 100,
         backgroundColor: Colors.surface,

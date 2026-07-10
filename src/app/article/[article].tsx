@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
     },
 
     saveButton: {
-        paddingVertical: 8,
+        paddingVertical: 6,
         paddingHorizontal: 12,
         borderRadius: 100,
         backgroundColor: Colors.surface,

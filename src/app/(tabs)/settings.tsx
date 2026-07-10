@@ -10,8 +10,11 @@ import { router } from "expo-router";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
 import RemixIcon from "react-native-remix-icon";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Settings = () => {
+    const insets = useSafeAreaInsets();
+
     const preferences = usePreferences();
     const savedArticles = useSavedArticles();
     const onScroll = useScreenScroll();
@@ -38,7 +41,12 @@ const Settings = () => {
     return (
         <Animated.ScrollView
             style={styles.container}
-            contentContainerStyle={styles.content}
+            contentContainerStyle={[
+                styles.content,
+                {
+                    paddingBottom: insets.bottom + 80,
+                },
+            ]}
             showsVerticalScrollIndicator={false}
             onScroll={onScroll}
             scrollEventThrottle={16}
@@ -187,7 +195,6 @@ const styles = StyleSheet.create({
     content: {
         padding: 16,
         paddingTop: 120,
-        paddingBottom: 32,
         gap: 12,
     },
     sectionTitle: {

@@ -55,7 +55,7 @@ export default function TabBar({
             ]}
         >
             <LinearGradient
-                colors={["transparent", "rgba(0,0,0,0.7)"]}
+                colors={["transparent", "rgba(0,0,0,0.5)"]}
                 style={[
                     styles.gradient,
                     {
