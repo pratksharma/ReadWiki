@@ -1,5 +1,3 @@
-import { GlassView } from "@/components/BlurBackdrop";
-import CrossfadeIcon from "@/components/CrossfadeIcon";
 import { useHeaderProgress } from "@/components/HeaderScroll";
 import Colors from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
@@ -12,6 +10,7 @@ import Animated, {
     useAnimatedReaction,
     useAnimatedStyle,
 } from "react-native-reanimated";
+import RemixIcon from "react-native-remix-icon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface HeaderProps {
@@ -73,14 +72,16 @@ const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
             <View style={styles.headerContent}>
                 <View style={styles.leftContainer}>
                     {canGoBack && (
-                        <Pressable onPress={() => router.back()}>
-                            <GlassView style={styles.pill}>
-                                <CrossfadeIcon
-                                    name="arrow-left-long-fill"
-                                    size={20}
-                                    progress={progress}
-                                />
-                            </GlassView>
+                        <Pressable
+                            style={styles.pill}
+                            onPress={() => router.back()}
+                        >
+                            <RemixIcon
+                                name="arrow-left-long-fill"
+                                size={20}
+                                color={Colors.text}
+                                fallback={null}
+                            />
                         </Pressable>
                     )}
 
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 12,
         borderRadius: 100,
+        backgroundColor: Colors.surface,
     },
 
     logo: {

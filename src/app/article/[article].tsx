@@ -1,6 +1,4 @@
-import { GlassView } from "@/components/BlurBackdrop";
-import CrossfadeIcon from "@/components/CrossfadeIcon";
-import { useHeaderProgress, useScreenScroll } from "@/components/HeaderScroll";
+import { useScreenScroll } from "@/components/HeaderScroll";
 import Loader from "@/components/Loader";
 import RichText from "@/components/RichText";
 import Colors from "@/constants/Colors";
@@ -13,6 +11,7 @@ import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
+import RemixIcon from "react-native-remix-icon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Metadata used for the article header and for saving the article.
@@ -40,10 +39,10 @@ const openImage = (src: string) => {
 // file so it can share the loaded metadata.
 const SaveButton = ({ meta }: { meta: ArticleMeta }) => {
     const saved = useIsSaved(meta.title);
-    const progress = useHeaderProgress();
 
     return (
         <Pressable
+            style={styles.saveButton}
             onPress={() =>
                 toggleSavedArticle({
                     title: meta.title,
@@ -53,13 +52,12 @@ const SaveButton = ({ meta }: { meta: ArticleMeta }) => {
                 })
             }
         >
-            <GlassView style={styles.saveButton}>
-                <CrossfadeIcon
-                    name={saved ? "bookmark-fill" : "bookmark-line"}
-                    size={20}
-                    progress={progress}
-                />
-            </GlassView>
+            <RemixIcon
+                name={saved ? "bookmark-fill" : "bookmark-line"}
+                size={20}
+                color={Colors.text}
+                fallback={null}
+            />
         </Pressable>
     );
 };
@@ -390,5 +388,6 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 12,
         borderRadius: 100,
+        backgroundColor: Colors.surface,
     },
 });

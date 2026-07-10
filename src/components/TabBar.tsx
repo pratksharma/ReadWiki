@@ -1,4 +1,4 @@
-import { GlassView } from "@/components/BlurBackdrop";
+// import { View } from "@/components/BlurBackdrop";
 import Colors from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import type { BottomTabBarProps } from "expo-router/js-tabs";
@@ -64,7 +64,7 @@ export default function TabBar({
                 ]}
             />
 
-            <GlassView style={styles.container} intensity={60} tint="light">
+            <View style={styles.container}>
                 <Animated.View
                     style={[
                         styles.indicator,
@@ -127,7 +127,7 @@ export default function TabBar({
                         </Pressable>
                     );
                 })}
-            </GlassView>
+            </View>
         </View>
     );
 }
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         // Translucent tint so the pill still reads as a surface behind the frost.
-        backgroundColor: "rgba(255,255,255,0.45)",
+        backgroundColor: Colors.surface,
         borderRadius: 999,
         padding: CONTAINER_PADDING,
         marginHorizontal: HORIZONTAL_MARGIN,
