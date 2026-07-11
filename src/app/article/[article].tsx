@@ -42,7 +42,10 @@ const SaveButton = ({ meta }: { meta: ArticleMeta }) => {
 
     return (
         <Pressable
-            style={styles.saveButton}
+            style={({ pressed }) => [
+                styles.saveButton,
+                pressed && styles.saveButtonPressed,
+            ]}
             onPress={() =>
                 toggleSavedArticle({
                     title: meta.title,
@@ -388,6 +391,11 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
         paddingHorizontal: 12,
         borderRadius: 100,
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.backgroundMuted,
+    },
+
+    saveButtonPressed: {
+        filter: "brightness(0.9)",
+        transform: [{ scale: 0.98 }],
     },
 });

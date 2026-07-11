@@ -73,7 +73,10 @@ const Header = ({ title, canGoBack = false, rightComponent }: HeaderProps) => {
                 <View style={styles.leftContainer}>
                     {canGoBack && (
                         <Pressable
-                            style={styles.pill}
+                            style={({ pressed }) => [
+                                styles.pill,
+                                pressed && styles.pillPressed,
+                            ]}
                             onPress={() => router.back()}
                         >
                             <RemixIcon
@@ -125,8 +128,10 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
         paddingHorizontal: 12,
         borderRadius: 100,
-        backgroundColor: Colors.surface,
+        backgroundColor: Colors.backgroundMuted,
     },
+
+    pillPressed: { filter: "brightness(0.9)", transform: [{ scale: 0.98 }] },
 
     logo: {
         fontSize: 28,
