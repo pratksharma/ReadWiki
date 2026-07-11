@@ -190,7 +190,7 @@ const Flow = () => {
                         source={
                             thumbnail
                                 ? thumbnail
-                                : require("../../../assets/gradient-background.jpg")
+                                : require("../../../assets/fallback.jpg")
                         }
                         style={styles.background}
                         contentFit="cover"
@@ -286,7 +286,7 @@ const Flow = () => {
         return (
             <View style={styles.loading}>
                 <Image
-                    source={require("../../../assets/gradient-background.jpg")}
+                    source={require("../../../assets/fallback.jpg")}
                     style={styles.background}
                     contentFit="cover"
                     transition={200}
@@ -322,7 +322,7 @@ const Flow = () => {
                 loadingMore ? (
                     <View style={styles.loading}>
                         <Image
-                            source={require("../../../assets/gradient-background.jpg")}
+                            source={require("../../../assets/fallback.jpg")}
                             style={styles.background}
                             contentFit="cover"
                             transition={200}

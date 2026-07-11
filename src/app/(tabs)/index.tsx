@@ -37,8 +37,8 @@ const Home = () => {
             setTrendingArticles(data.mostread?.articles.slice(0, 3) || []);
             setImageOfTheDay(data.image);
             setNews(data.news?.slice(0, 3) || []);
-            setOnThisDayArticles(data.onthisday.slice(0, 3) || []);
-            setFacts(data.dyk.slice(0, 3) || []);
+            setOnThisDayArticles(data.onthisday?.slice(0, 3) || []);
+            setFacts(data.dyk?.slice(0, 3) || []);
         } catch (error) {
             console.error(error);
         } finally {
@@ -74,10 +74,13 @@ const Home = () => {
                             source={
                                 featuredArticle?.thumbnail?.source
                                     ? featuredArticle.thumbnail.source
-                                    : require("../../../assets/gradient-background.jpg")
+                                    : require("../../../assets/fallback.jpg")
                             }
                             style={styles.featuredCardImage}
                             contentFit="cover"
+                            blurRadius={
+                                featuredArticle?.thumbnail?.source ? 0 : 40
+                            }
                         />
                         <LinearGradient
                             colors={["rgba(0,0,0,0.45)", "transparent"]}
