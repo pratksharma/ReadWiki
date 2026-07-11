@@ -181,7 +181,7 @@ const Home = () => {
                             <View
                                 style={{
                                     alignItems: "center",
-                                    marginTop: 10,
+                                    marginTop: 16,
                                 }}
                             >
                                 <Button
@@ -230,7 +230,7 @@ const Home = () => {
                             <View
                                 style={{
                                     alignItems: "center",
-                                    marginTop: 10,
+                                    marginTop: 16,
                                 }}
                             >
                                 <Button
@@ -326,7 +326,7 @@ const Home = () => {
                             <View
                                 style={{
                                     alignItems: "center",
-                                    marginTop: 10,
+                                    marginTop: 16,
                                 }}
                             >
                                 <Button
@@ -387,7 +387,7 @@ const Home = () => {
                             <View
                                 style={{
                                     alignItems: "center",
-                                    marginTop: 10,
+                                    marginTop: 16,
                                 }}
                             >
                                 <Button
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
     sectionContainer: {
         display: "flex",
         flexDirection: "column",
-        gap: 16,
+        gap: 32,
     },
 
     featuredCard: {

@@ -29,7 +29,7 @@ const Button = ({
         ? isLight
             ? Colors.surface
             : Colors.primary
-        : "transparent";
+        : Colors.backgroundMuted;
 
     const textColor = isPrimary && !isLight ? Colors.textInverse : Colors.text;
 
@@ -38,7 +38,6 @@ const Button = ({
             style={({ pressed }) => [
                 styles.button,
                 { backgroundColor },
-                !isPrimary && styles.secondary,
                 pressed && styles.buttonPressed,
             ]}
             onPress={onPress}
@@ -52,7 +51,9 @@ const Button = ({
                 />
             )}
 
-            <Text style={[styles.buttonText, { color: textColor }]}>{text}</Text>
+            <Text style={[styles.buttonText, { color: textColor }]}>
+                {text}
+            </Text>
 
             {!!iconName && iconPosition === "right" && (
                 <RemixIcon
@@ -77,11 +78,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingVertical: 10,
         borderRadius: 999,
-    },
-
-    secondary: {
-        borderWidth: 1,
-        borderColor: Colors.border,
     },
 
     buttonPressed: {
