@@ -9,7 +9,7 @@ import { getArticleSummary, getFullArticle } from "@/services/wikipedia";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Share, StyleSheet, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
 import RemixIcon from "react-native-remix-icon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -37,31 +37,66 @@ const openImage = (src: string) => {
 
 // Header button that saves / unsaves the current article. Kept inside this
 // file so it can share the loaded metadata.
-const SaveButton = ({ meta }: { meta: ArticleMeta }) => {
+
+const articleUrl = (item: any) =>
+    item.fullurl ??
+    item.canonicalurl ??
+    `https://en.wikipedia.org/wiki/${encodeURIComponent(
+        String(item.title).replace(/ /g, "_"),
+    )}`;
+
+const shareArticle = async (item: any) => {
+    try {
+        await Share.share({
+            message: articleUrl(item),
+            url: articleUrl(item),
+            title: item.title,
+        });
+    } catch {
+        // User dismissed the share sheet; nothing to do.
+    }
+};
+const HeaderRight = ({ meta }: { meta: ArticleMeta }) => {
     const saved = useIsSaved(meta.title);
 
     return (
-        <Pressable
-            style={({ pressed }) => [
-                styles.saveButton,
-                pressed && styles.saveButtonPressed,
-            ]}
-            onPress={() =>
-                toggleSavedArticle({
-                    title: meta.title,
-                    description: meta.description,
-                    thumbnail: meta.thumbnail,
-                    savedAt: Date.now(),
-                })
-            }
-        >
-            <RemixIcon
-                name={saved ? "bookmark-fill" : "bookmark-line"}
-                size={20}
-                color={Colors.text}
-                fallback={null}
-            />
-        </Pressable>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+            <Pressable
+                style={({ pressed }) => [
+                    styles.headerRightButton,
+                    pressed && styles.headerRightButtonPressed,
+                ]}
+                onPress={() =>
+                    toggleSavedArticle({
+                        title: meta.title,
+                        description: meta.description,
+                        thumbnail: meta.thumbnail,
+                        savedAt: Date.now(),
+                    })
+                }
+            >
+                <RemixIcon
+                    name={saved ? "bookmark-fill" : "bookmark-line"}
+                    size={20}
+                    color={Colors.text}
+                    fallback={null}
+                />
+            </Pressable>
+            <Pressable
+                style={({ pressed }) => [
+                    styles.headerRightButton,
+                    pressed && styles.headerRightButtonPressed,
+                ]}
+                onPress={() => shareArticle(meta)}
+            >
+                <RemixIcon
+                    name={"share-forward-line"}
+                    size={20}
+                    color={Colors.text}
+                    fallback={null}
+                />
+            </Pressable>
+        </View>
     );
 };
 
@@ -86,7 +121,7 @@ const Article = () => {
     useEffect(() => {
         if (meta) {
             navigation.setOptions({
-                headerRight: () => <SaveButton meta={meta} />,
+                headerRight: () => <HeaderRight meta={meta} />,
             });
         }
     }, [meta, navigation]);
@@ -387,14 +422,14 @@ const styles = StyleSheet.create({
         marginTop: 8,
     },
 
-    saveButton: {
+    headerRightButton: {
         paddingVertical: 6,
         paddingHorizontal: 12,
         borderRadius: 100,
         backgroundColor: Colors.backgroundMuted,
     },
 
-    saveButtonPressed: {
+    headerRightButtonPressed: {
         filter: "brightness(0.9)",
         transform: [{ scale: 0.98 }],
     },

@@ -168,17 +168,17 @@ const Flow = () => {
         });
     }, []);
 
-    const shareArticle = useCallback(async (item: any) => {
+    const shareArticle = async (item: any) => {
         try {
             await Share.share({
-                message: `${item.title} — ${articleUrl(item)}`,
+                message: articleUrl(item),
                 url: articleUrl(item),
                 title: item.title,
             });
         } catch {
             // User dismissed the share sheet; nothing to do.
         }
-    }, []);
+    };
 
     const renderItem = useCallback(
         ({ item, index }: any) => {
