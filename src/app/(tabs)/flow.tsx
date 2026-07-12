@@ -426,7 +426,7 @@ const styles = StyleSheet.create({
         color: Colors.textInverse,
         fontSize: 28,
         letterSpacing: -0.5,
-        fontFamily: "Fraunces-SemiBold",
+        fontFamily: "Fraunces-Medium",
     },
 
     extract: {

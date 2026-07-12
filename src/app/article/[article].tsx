@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 34,
         lineHeight: 40,
-        fontFamily: "Fraunces-SemiBold",
+        fontFamily: "Fraunces-Medium",
         color: Colors.text,
         paddingHorizontal: 16,
         marginTop: 20,
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     },
 
     heading2: {
-        fontFamily: "Fraunces-SemiBold",
+        fontFamily: "Fraunces-Medium",
         color: Colors.text,
         marginTop: 28,
         marginBottom: 12,
@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
     },
 
     heading3: {
-        fontFamily: "Fraunces-SemiBold",
+        fontFamily: "Fraunces-Medium",
         color: Colors.text,
         marginTop: 20,
         marginBottom: 10,

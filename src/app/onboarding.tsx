@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
         lineHeight: 36,
         textAlign: "center",
-        fontFamily: "Fraunces-SemiBold",
+        fontFamily: "Fraunces-Medium",
         color: Colors.text,
     },
     description: {

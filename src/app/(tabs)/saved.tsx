@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     emptyTitle: {
         marginTop: 16,
         fontSize: 20,
-        fontFamily: "Fraunces-SemiBold",
+        fontFamily: "Fraunces-Medium",
         color: Colors.text,
     },
 

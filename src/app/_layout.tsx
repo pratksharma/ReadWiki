@@ -6,22 +6,24 @@ import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
+import { DMSans_400Regular } from "@expo-google-fonts/dm-sans/400Regular";
+import { DMSans_500Medium } from "@expo-google-fonts/dm-sans/500Medium";
+import { DMSans_600SemiBold } from "@expo-google-fonts/dm-sans/600SemiBold";
+import { DMSans_700Bold } from "@expo-google-fonts/dm-sans/700Bold";
+
+import { Fraunces_500Medium } from "@expo-google-fonts/fraunces/500Medium";
+
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
     const preferences = usePreferences();
 
     const [loaded, error] = useFonts({
-        "DMSans-Regular": require("../../assets/fonts/DMSans-Regular.ttf"),
-        "DMSans-Medium": require("../../assets/fonts/DMSans-Medium.ttf"),
-        "DMSans-SemiBold": require("../../assets/fonts/DMSans-SemiBold.ttf"),
-        "DMSans-Bold": require("../../assets/fonts/DMSans-Bold.ttf"),
-        "Fraunces-Thin": require("../../assets/fonts/Fraunces-Thin.ttf"),
-        "Fraunces-Light": require("../../assets/fonts/Fraunces-Light.ttf"),
-        "Fraunces-Regular": require("../../assets/fonts/Fraunces-Regular.ttf"),
-        "Fraunces-SemiBold": require("../../assets/fonts/Fraunces-SemiBold.ttf"),
-        "Fraunces-Bold": require("../../assets/fonts/Fraunces-Bold.ttf"),
-        "Fraunces-Black": require("../../assets/fonts/Fraunces-Black.ttf"),
+        "DMSans-Regular": DMSans_400Regular,
+        "DMSans-Medium": DMSans_500Medium,
+        "DMSans-SemiBold": DMSans_600SemiBold,
+        "DMSans-Bold": DMSans_700Bold,
+        "Fraunces-Medium": Fraunces_500Medium,
     });
 
     useEffect(() => {

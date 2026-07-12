@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     year: {
         fontSize: 20,
         color: Colors.text,
-        fontFamily: "Fraunces-SemiBold",
+        fontFamily: "Fraunces-Medium",
         lineHeight: 22,
     },
 

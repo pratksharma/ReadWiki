@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
         fontSize: 32,
         lineHeight: 38,
         letterSpacing: -0.5,
-        fontFamily: "Fraunces-SemiBold",
+        fontFamily: "Fraunces-Medium",
         color: Colors.textInverse,
     },
 
@@ -559,7 +559,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         lineHeight: 24,
         color: Colors.textInverse,
-        fontFamily: "Fraunces-SemiBold",
+        fontFamily: "Fraunces-Medium",
     },
 
     imageCardByline: {
@@ -582,7 +582,7 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 28,
         color: Colors.text,
-        fontFamily: "Fraunces-SemiBold",
+        fontFamily: "Fraunces-Medium",
         paddingHorizontal: 16,
         marginTop: 16,
         marginBottom: 8,

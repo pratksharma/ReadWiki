@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
 
     logo: {
         fontSize: 28,
-        fontFamily: "Fraunces-SemiBold",
+        fontFamily: "Fraunces-Medium",
     },
 
     rightContainer: {
