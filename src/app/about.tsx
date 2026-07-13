@@ -84,7 +84,7 @@ export default function About() {
                     style={styles.icon}
                 />
 
-                <Text style={styles.title}>ReadWiki</Text>
+                <Text style={styles.appName}>ReadWiki</Text>
 
                 <Text style={styles.version}>Version 1.0.0</Text>
 
@@ -173,6 +173,66 @@ export default function About() {
                 )
             )}
 
+            <Text style={styles.sectionTitle}>WikiPedia</Text>
+
+            <Pressable
+                style={styles.item}
+                onPress={() => Linking.openURL("https://en.wikipedia.org")}
+            >
+                <View style={styles.left}>
+                    <View style={styles.iconContainer}>
+                        <Image
+                            source={require("@/assets/wikipedia-icon.png")}
+                            style={{ height: 24, width: 24 }}
+                        />
+                    </View>
+
+                    <View style={styles.itemTextWrap}>
+                        <Text style={styles.title}>Wikipedia</Text>
+                        <Text style={styles.subtitle}>
+                            Visit the Wikipedia website
+                        </Text>
+                    </View>
+                </View>
+
+                <RemixIcon
+                    name="arrow-right-s-line"
+                    size={22}
+                    color={Colors.textSecondary}
+                    fallback={null}
+                />
+            </Pressable>
+
+            <Pressable
+                style={styles.item}
+                onPress={() =>
+                    Linking.openURL("https://wikimediafoundation.org/support")
+                }
+            >
+                <View style={styles.left}>
+                    <View style={styles.iconContainer}>
+                        <Image
+                            source={require("@/assets/wikimedia-icon.png")}
+                            style={{ height: 22, width: 22 }}
+                        />
+                    </View>
+
+                    <View style={styles.itemTextWrap}>
+                        <Text style={styles.title}>Support Wikipedia</Text>
+                        <Text style={styles.subtitle}>
+                            Donate or contribute to Wikipedia
+                        </Text>
+                    </View>
+                </View>
+
+                <RemixIcon
+                    name="arrow-right-s-line"
+                    size={22}
+                    color={Colors.textSecondary}
+                    fallback={null}
+                />
+            </Pressable>
+
             <View style={styles.footer}>
                 <Text style={styles.footerText}>
                     ReadWiki is open source and uses the Wikimedia APIs to
@@ -196,10 +256,11 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingTop: 120,
         paddingBottom: 32,
+        gap: 12,
     },
     header: {
         alignItems: "center",
-        marginBottom: 32,
+        marginBottom: 16,
     },
     icon: {
         width: 88,
@@ -207,7 +268,7 @@ const styles = StyleSheet.create({
         borderRadius: 22,
         marginBottom: 16,
     },
-    title: {
+    appName: {
         fontSize: 28,
         fontFamily: "DMSans-Bold",
         color: Colors.text,
@@ -243,10 +304,13 @@ const styles = StyleSheet.create({
         color: Colors.text,
     },
     sectionTitle: {
-        fontSize: 18,
-        marginBottom: 12,
-        fontFamily: "DMSans-Bold",
-        color: Colors.text,
+        fontSize: 14,
+        fontFamily: "DMSans-SemiBold",
+        color: Colors.textSecondary,
+        textTransform: "uppercase",
+        letterSpacing: 0.5,
+        marginTop: 8,
+        marginLeft: 4,
     },
     card: {
         flexDirection: "row",
@@ -311,8 +375,44 @@ const styles = StyleSheet.create({
         fontFamily: "DMSans-Regular",
         color: Colors.textSecondary,
     },
+    item: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: 16,
+        borderRadius: 16,
+        backgroundColor: Colors.surface,
+    },
+    left: {
+        flexDirection: "row",
+        alignItems: "center",
+        flex: 1,
+    },
+    iconContainer: {
+        width: 42,
+        height: 42,
+        borderRadius: 21,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: Colors.backgroundMuted,
+        marginRight: 14,
+    },
+    itemTextWrap: {
+        flex: 1,
+    },
+    title: {
+        fontSize: 16,
+        fontFamily: "DMSans-SemiBold",
+        color: Colors.text,
+    },
+    subtitle: {
+        marginTop: 2,
+        fontSize: 13,
+        fontFamily: "DMSans-Regular",
+        color: Colors.textSecondary,
+    },
     footer: {
-        marginTop: 32,
+        marginTop: 16,
         alignItems: "center",
     },
     footerText: {
