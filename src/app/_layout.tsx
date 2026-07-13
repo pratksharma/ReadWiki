@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import { HeaderScrollProvider } from "@/components/HeaderScroll";
+import useNetworkAlert from "@/hooks/useNetworkAlert";
 import { usePreferences } from "@/services/preferences";
 import { useFonts } from "expo-font";
 import { router, Stack } from "expo-router";
@@ -16,6 +17,7 @@ import { Fraunces_500Medium } from "@expo-google-fonts/fraunces/500Medium";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+    useNetworkAlert();
     const preferences = usePreferences();
 
     const [loaded, error] = useFonts({
